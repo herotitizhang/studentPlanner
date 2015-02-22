@@ -7,13 +7,15 @@
 
 package model;
 
+import java.io.Reader;
+import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 
-public class Event implements Comparable{
+public class Event implements EventI, Comparable{
 	
 	private String name = null;
 	private String text = null;
@@ -244,6 +246,20 @@ public class Event implements Comparable{
 		}
 		
 	}
+
+	@Override
+	public void writeTo(Writer writer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void readFrom(Reader reader) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	// TODO checkers
 
 	
 	
