@@ -1,4 +1,4 @@
-package plannerLogic;
+package model;
 
 public class NameInUseException extends Exception {
 	

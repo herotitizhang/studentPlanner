@@ -1,4 +1,4 @@
-package plannerLogic;
+package model;
 
 import java.util.ArrayList;
 

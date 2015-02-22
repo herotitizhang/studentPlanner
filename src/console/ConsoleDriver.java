@@ -4,11 +4,11 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Scanner;
 
-import plannerLogic.Category;
-import plannerLogic.Event;
-import plannerLogic.NameInUseException;
-import plannerLogic.Schedule;
-import plannerLogic.Event.Repeat;
+import model.Category;
+import model.Event;
+import model.NameInUseException;
+import model.Schedule;
+import model.Event.Repeat;
 
 public class ConsoleDriver {
 
