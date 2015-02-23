@@ -16,7 +16,7 @@ public class ConsoleDriver {
 	public static Scanner console = new Scanner(System.in);
 	
 	public static void main(String[] args) {
-		
+		System.out.println("Enter \"help\" to see a list of available commands");
 		while (console.hasNextLine()){
 			String userInput = console.nextLine();
 			processUserInput(userInput);
@@ -152,9 +152,12 @@ public class ConsoleDriver {
 				printHelp();
 			}
 			
+		} else if (userInput.startsWith("exit")) { 
+			System.out.println("Bye");
+			System.exit(0);
 		} else {
 			printHelp();
-		}
+		} 
 	}
 
 	private static void printHelp(){
@@ -164,7 +167,8 @@ public class ConsoleDriver {
 		System.out.println("list_ctgrs - lists all the categories in the schedule.");
 		System.out.println("create_event - creates an event and add it to the corresponding category.");
 		System.out.println("list_events <category_name> - lists all the events in an category.");
-
+		System.out.println("exit - quit the program");
+		System.out.println("help - see a list of commands");
 	}
 
 }

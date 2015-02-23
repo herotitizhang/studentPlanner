@@ -1,0 +1,74 @@
+<?xml version ="1.0" encoding="UTF-8" ?>
+<project name="AddressBook" default="run" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
+    <property name="src" value="src"/>
+    <property name="dest" value="bin"/>
+    <property name="output" value="output"/>  <!-- this folder contains the jar file -->
+	<property environment="env"/>
+	
+    <target name="init">
+        <mkdir dir="${dest}"/>
+        <mkdir dir="${output}"/>
+    </target>
+    
+    <target name="compile">
+        <echo>Start compiling...</echo>
+        <javac srcdir="${src}" destdir="${dest}" includeantruntime="yes"/>
+        <echo>Finish compiling!</echo>
+    </target>
+    
+	<!-- TODO to be modified -->
+    <target name="buildGUI" depends="compile">
+    	<echo>Start generating the jar file...</echo>
+    	<!-- for fx:jar element to be used -->
+    	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+    	    	 uri="javafx:com.sun.javafx.tools.ant"
+    	    	 classpath="${env.JAVA_HOME}/lib/ant-javafx.jar" />
+   		<fx:jar destfile="${output}/AddressBook.jar">
+    		<fx:application mainClass="gui.AddressBookApp"/> 
+ 	    	<!-- things to include into result jar file. 
+ 	    		we can't use basedir attribute here -->
+    		<fileset dir="${dest}"/>
+    	</fx:jar>
+    	<echo>The jar file has been generated</echo>
+    </target>
+	
+    <target name="buildConsole" depends="compile">
+        <echo>Start generating the jar file...</echo>
+        <jar basedir="${dest}" jarfile="${output}/Console.jar">
+            <manifest>
+    			<attribute name="Main-Class" value="ConsoleDriver"/>
+  			</manifest>
+        </jar>
+        <echo>The jar file has been generated</echo>
+    </target>
+    
+	<!-- TODO to be modified -->
+    <!-- fork attribute is necessary otherwise the entire program quits when ant is done -->
+    <target name="run" depends="buildGUI">
+        <java classname="gui.AddressBookApp" fork="yes" classpath="${output}/AddressBook.jar"/> 
+    </target>
+    
+	<target name="runConsole" depends="buildConsole">
+        <java classname="console.ConsoleDriver" fork="yes" classpath="${output}/Console.jar"/> 
+    </target>
+    
+    <!-- remove both jar file and class files -->
+    <target name="clean">
+        <echo>Start cleaning...</echo>
+	        <delete includeEmptyDirs="true">
+	            <fileset dir=".">
+	            	<include name="*.tsv"/>
+	            	<include name="*.cfg"/>
+	            	<include name="*.txt"/>
+	            </fileset>
+		        <fileset dir="${dest}">
+					<include name="*/**" />
+		   		</fileset>
+		   		<fileset dir="${output}">
+					 <include name="*.jar"/>
+		   		</fileset>
+			</delete>
+        <echo>Finishing cleaning...</echo>
+    </target>
+    
+</project>

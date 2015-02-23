@@ -249,14 +249,12 @@ public class Event implements EventI, Comparable{
 
 	@Override
 	public void writeTo(Writer writer) {
-		// TODO Auto-generated method stub
-		
+		//	TODO wait for Ned's input on this
 	}
 
 	@Override
 	public void readFrom(Reader reader) {
-		// TODO Auto-generated method stub
-		
+		//	TODO wait for Ned's input on this
 	}
 	
 	// TODO checkers
