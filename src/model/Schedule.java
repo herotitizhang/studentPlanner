@@ -6,68 +6,64 @@
 
 package model;
 
+import java.io.Reader;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 // TODO add interfaces for each class
 
-public class Schedule {
+public class Schedule implements ScheduleI{
 
-	HashMap<String, Category> categories = new HashMap<String, Category>(); // TODO add a default category in the beginning
-	List<Event> uncategorizedEvents = new ArrayList<Event>(); 
+	HashMap<String, CategoryI> categories = new HashMap<String, CategoryI>(); // TODO add a default category in the beginning
+	
+	public Schedule() {
+		categories.put("default", new Category("default"));
+	}
 	
 	/**
 	 * Returns an ordered list of all of the events 
 	 * taking place during the specified week (by start time)
 	 * @return
 	 */
+	@Override
 	public WeeklySchedule eventsDuring(/*Week*/) { // TODO look for a Week object
 		
 		return null;
 	}
 
 	/**
-	 * Saves Schedule to server (or Disk)
-	 */
-	public void save() {
-		//TODO save to server
-	}
-	
-	/**
-	 * Connects to server (or disk) and retrieves schedule
-	 */
-	public static Schedule load() {
-		//TODO save to server
-		return null;
-	}
-	
-	/**
 	 * @return a master list of events
 	 */
-	public List<Event> getEvents() {
-		ArrayList<Event> toBeReturned = new ArrayList<Event>();
-		toBeReturned.addAll(uncategorizedEvents); // TODO different from architecture
+	@Override
+	public List<EventI> getAllSortedEvents() {
+		ArrayList<EventI> toBeReturned = new ArrayList<EventI>();
 		
-		for (Category category: categories.values()) {
+		for (CategoryI category: categories.values()) {
 			toBeReturned.addAll(category.getAllEvents());
 		}
 		
-		Collections.sort(toBeReturned);
+		Collections.sort(toBeReturned); // TODO ttest if it's sorted (if Event's compareTo is invoked)
 		return toBeReturned;
 	}
 	
 	/**
 	 * @return a list of categories
 	 */
-	public List<Category> getCategories() {
-		return new ArrayList<Category>(categories.values());
+	@Override
+	public List<CategoryI> getCategories() {
+		return new ArrayList<CategoryI>(categories.values());
 	}
 	
-	// TODO different from architecture. can keep hashmap
-	public HashMap<String, Category> getCategoriesMap() {
+	/**
+	 * @return the map
+	 */
+	@Override
+	public HashMap<String, CategoryI> getCategoriesMap() {
 		return categories;
 	}
 	
@@ -77,16 +73,32 @@ public class Schedule {
 	 * @return
 	 * @throws NameInUseException
 	 */
-	public Category addCategory(String category) throws NameInUseException {
+	@Override
+	public CategoryI addCategory(String category) throws NameInUseException {
+		if (category.trim().length() == 0) category = "default";
 		if (categories.containsKey(category)) throw new NameInUseException(category);
 		categories.put(category, new Category(category));
 		return categories.get(category);
 	}
-	
+		
 	/**
 	 * Removes the category with the referenced name
 	 */
-	public void removeCategory(String category) {
-		categories.remove(category);
+	@Override
+	public CategoryI removeCategory(String category) {
+		return categories.remove(category);
 	}
+
+	@Override
+	public boolean checkConflict(EventI event) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean checkConflict(CategoryI obligation) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

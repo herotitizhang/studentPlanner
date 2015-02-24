@@ -12,34 +12,42 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class Category {
+public class Category implements CategoryI{
 	
 	private String name = ""; //TODO different from architecture. added the name attribute.
-	private List<Event> events = new ArrayList<Event>(); 
+	private List<EventI> events = new ArrayList<EventI>(); 
 	
 	public Category (String name) {
 		this.name = name;
 	}
 	
-	public void addEvent(Event event) {
+	@Override
+	public boolean addEvent(EventI event) {
 		if (!events.contains(event) && event != null) {
 			events.add(event);
 			event.setCategory(this);
+			return true;
 		}
+		return false;
 	}
 	
-	public void removeEvent(Event event) {
+	@Override
+	public boolean removeEvent(EventI event) {
 		if (events.contains(event)) {
 			events.remove(event); // this line must come before the next line
 			event.setCategory(null);
+			return true;
 		}
+		return false;
 	}
 	
-	public List<Event> getAllEvents() {
+	@Override
+	public List<EventI> getAllEvents() {
 		Collections.sort(events);  
 		return events;
 	}
 	
+	@Override
 	public void removeAllEvents() {
 		events.clear();
 	}
@@ -48,4 +56,20 @@ public class Category {
 	public String toString() {
 		return this.name;
 	}
+
+	@Override
+	public boolean checkEvent(EventI event) {
+		return false;
+	}
+
+	@Override
+	public List<EventI> getCore() {
+		return null;
+	}
+
+	@Override
+	public List<EventI> getChildren() {
+		return null;
+	}
+
 }

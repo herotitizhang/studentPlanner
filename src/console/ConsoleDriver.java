@@ -5,7 +5,9 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 import model.Category;
+import model.CategoryI;
 import model.Event;
+import model.EventI;
 import model.NameInUseException;
 import model.Schedule;
 import model.Event.Repeat;
@@ -44,7 +46,7 @@ public class ConsoleDriver {
 				printHelp();
 			}
 		} else if (userInput.equals("list_ctgrs")) {
-			for (Category category: schedule.getCategories()) {
+			for (CategoryI category: schedule.getCategories()) {
 				System.out.println(category);
 			}
 		} else if (userInput.equals("create_event")){
@@ -113,18 +115,18 @@ public class ConsoleDriver {
 			
 			// get repeat NONE, WEEKLY, MONTHLY, YEARLY;
 			System.out.println("Do you want it to repeat weekly, monthly, yearly or does not repeat? [W/M/Y/N]");
-			Event.Repeat repeat = Event.Repeat.NONE;
+			EventI.Repeat repeat = EventI.Repeat.NONE;
 			temp = console.nextLine();
 			if (temp.equalsIgnoreCase("weekly") || temp.equalsIgnoreCase("w"))
-				repeat = Event.Repeat.WEEKLY;
+				repeat = EventI.Repeat.WEEKLY;
 			else if (temp.equalsIgnoreCase("monthly") || temp.equalsIgnoreCase("m"))
-				repeat = Event.Repeat.MONTHLY;
+				repeat = EventI.Repeat.MONTHLY;
 			else if (temp.equalsIgnoreCase("yearly") || temp.equalsIgnoreCase("y"))
-				repeat = Event.Repeat.YEARLY;
+				repeat = EventI.Repeat.YEARLY;
 
 			// get category
 			System.out.println("What category is it?");
-			Category category = null;
+			CategoryI category = null;
 			temp = console.nextLine();
 			if (schedule.getCategoriesMap().containsKey(temp)){
 				category = schedule.getCategoriesMap().get(temp);
@@ -143,8 +145,8 @@ public class ConsoleDriver {
 			String[] tokens = userInput.split("\\s+");
 			if (tokens.length == 2) {
 				if (schedule.getCategoriesMap().containsKey(tokens[1])) {
-					Category category = schedule.getCategoriesMap().get(tokens[1]);
-					for (Event event: category.getAllEvents()) {
+					CategoryI category = schedule.getCategoriesMap().get(tokens[1]);
+					for (EventI event: category.getAllEvents()) {
 						System.out.println(event);
 					}
 				}
@@ -165,7 +167,8 @@ public class ConsoleDriver {
 		System.out.println("add_ctgr <category_name> - adds a category to the schedule.");
 		System.out.println("rm_ctgr <category_name> - removes a category from the schedule.");
 		System.out.println("list_ctgrs - lists all the categories in the schedule.");
-		System.out.println("create_event - creates an event and add it to the corresponding category.");
+		System.out.println("create_event - creates an event and add it to the corresponding category. Note: not entering anything or entering "
+				+ "only white space will make the event fall under the \"default\" category.");
 		System.out.println("list_events <category_name> - lists all the events in an category.");
 		System.out.println("exit - quit the program");
 		System.out.println("help - see a list of commands");

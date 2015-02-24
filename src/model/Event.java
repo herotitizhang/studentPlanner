@@ -7,15 +7,12 @@
 
 package model;
 
-import java.io.Reader;
-import java.io.Writer;
+import java.io.Serializable;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 
-public class Event implements EventI, Comparable{
+public class Event implements EventI{
 	
 	private String name = null;
 	private String text = null;
@@ -28,10 +25,10 @@ public class Event implements EventI, Comparable{
 	private GregorianCalendar alertTime = null;
 	
 	// no repeat by default
-	private Repeat repeating = Repeat.NONE;  
+	private EventI.Repeat repeating = EventI.Repeat.NONE;  
 	
 	// TODO needs to instantiate the default category
-	private Category category = null;  
+	private CategoryI category = null;  
 	
 	/**
 	 * A constructor that sets basic and necessary attributes
@@ -42,10 +39,10 @@ public class Event implements EventI, Comparable{
 	 * @param repeating
 	 */
 	public Event(String name, GregorianCalendar startTime, GregorianCalendar endTime,
-			boolean alert, Repeat repeating){
+			boolean alert, EventI.Repeat repeating){
 		this.name = name;
 		this.startTime = startTime;
-		this.endTime = endTime;
+		this.endTime = endTime; // TODO check that endTime is after startTime
 		this.alert = alert;
 		this.repeating = repeating;
 	}
@@ -60,7 +57,7 @@ public class Event implements EventI, Comparable{
 	 * @param category
 	 */
 	public Event(String name, GregorianCalendar startTime, GregorianCalendar endTime,
-			boolean alert, Repeat repeating, Category category){
+			boolean alert, EventI.Repeat repeating, CategoryI category){
 		this(name, startTime, endTime, alert, repeating);
 		setCategory(category);
 	}
@@ -79,7 +76,7 @@ public class Event implements EventI, Comparable{
 	 */
 	public Event(String name, String text, GregorianCalendar startTime, 
 			GregorianCalendar endTime, boolean alert, String alertText,
-			GregorianCalendar alertTime, Repeat repeating, Category category){
+			GregorianCalendar alertTime, EventI.Repeat repeating, CategoryI category){
 		this(name, startTime, endTime, alert, repeating, category);
 		this.text = text;
 		if (alert) {
@@ -88,52 +85,64 @@ public class Event implements EventI, Comparable{
 		}
 	}
 	
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	@Override
 	public String getText() {
 		return text;
 	}
 
+	@Override
 	public void setText(String text) {
 		this.text = text;
 	}
 
+	@Override
 	public GregorianCalendar getStartTime() {
 		return startTime;
 	}
 
+	@Override
 	public void setStartTime(GregorianCalendar startTime) {
 		this.startTime = startTime;
 	}
 
+	@Override
 	public GregorianCalendar getEndTime() {
 		return endTime;
 	}
 
+	@Override
 	public void setEndTime(GregorianCalendar endTime) {
 		this.endTime = endTime;
 	}
 
+	@Override
 	public boolean hasAlert() {
 		return alert;
 	}
 
+	@Override
 	public void setAlert(boolean alert) {
 		this.alert = alert;
 	}
 
+	@Override
 	public String getAlertText() {
 		if (hasAlert()) return alertText;
 		return null; // TODO throw an exception? necessary because an Alert text being null
 		              // can either mean the alert is not set or the alertText is not set
 	}
-
+	
+	@Override
 	public void setAlertText(String alertText) {
 		if (hasAlert()) {
 			this.alertText = alertText;
@@ -143,12 +152,14 @@ public class Event implements EventI, Comparable{
 			
 	}
 
+	@Override
 	public GregorianCalendar getAlertTime() {
 		if (hasAlert()) return alertTime;
 		return null; // TODO throw an exception?
 
 	}
 
+	@Override
 	public void setAlertTime(GregorianCalendar alertTime) {
 		if (hasAlert()) {
 			this.alertTime = alertTime;
@@ -157,20 +168,24 @@ public class Event implements EventI, Comparable{
 		}
 	}
 
-	public Repeat getRepeating() {
+	@Override
+	public model.EventI.Repeat getRepeating() {
 		return repeating;
 	}
 
-	public void setRepeating(Repeat repeating) {
+	@Override
+	public void setRepeating(model.EventI.Repeat repeating) {
 		this.repeating = repeating;
 	}
 
-	public Category getCategory() {
+	@Override
+	public CategoryI getCategory() {
 		return category;
 	}
 
-	public void setCategory(Category category) {
-		if (this.category == category) return; // for case 3
+	@Override
+	public void setCategory(CategoryI category) {
+		if (this.category == category) return; // for case 3 shown below
 		
 		if (this.category == null && category != null) { // case 1
 			this.category = category;
@@ -179,11 +194,11 @@ public class Event implements EventI, Comparable{
 			this.category.removeEvent(this);
 			this.category = null;
 		} else if (this.category != null && category != null) { // case 3
-			this.category.removeEvent(this); // TODO assume an event can only belong to one category
+			this.category.removeEvent(this);
 			this.category = category;
 			this.category.addEvent(this);
 		} else { // case 4: this.category == null && category == null
-
+			// do nothing
 		}
 	}
 	
@@ -247,18 +262,8 @@ public class Event implements EventI, Comparable{
 		
 	}
 
-	@Override
-	public void writeTo(Writer writer) {
-		//	TODO wait for Ned's input on this
-	}
+	
 
-	@Override
-	public void readFrom(Reader reader) {
-		//	TODO wait for Ned's input on this
-	}
-	
-	// TODO checkers
+	// TODO checkers !!!
 
-	
-	
 }
