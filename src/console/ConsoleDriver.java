@@ -34,6 +34,8 @@ public class ConsoleDriver {
 				} catch (NameInUseException e) {
 					System.out.println("The name "+ e.getName()+" is used!");
 					e.printStackTrace();
+				} finally {
+					System.out.println();
 				}
 			} else {
 				printHelp();
@@ -42,6 +44,7 @@ public class ConsoleDriver {
 			String[] tokens = userInput.split("\\s+");
 			if (tokens.length == 2) {
 				schedule.removeCategory(tokens[1]);
+				System.out.println();
 			} else {
 				printHelp();
 			}
@@ -49,6 +52,7 @@ public class ConsoleDriver {
 			for (CategoryI category: schedule.getCategories()) {
 				System.out.println(category);
 			}
+			System.out.println();
 		} else if (userInput.equals("create_event")){
 			// get name
 			System.out.println("Please enter the event name.");
@@ -61,11 +65,11 @@ public class ConsoleDriver {
 			// get startTime
 			System.out.println("Please enter the start time in such a format yyyy-mm-dd-hh-mm.");
 			String temp = console.nextLine();
-			String[] tokens = temp.split("-");
+			String[] tokens = temp.trim().split("-");
 			while (tokens.length != 5) {
 				System.out.println("Invalid format. Enter it again.");
 				temp = console.nextLine();
-				tokens = temp.split("-");
+				tokens = temp.trim().split("-");
 			}
 			GregorianCalendar startTime = new GregorianCalendar(Integer.parseInt(tokens[0]),
 					Integer.parseInt(tokens[1])-1, Integer.parseInt(tokens[2]), 
@@ -74,11 +78,11 @@ public class ConsoleDriver {
 			// get endTime
 			System.out.println("Please enter the end time in such a format yyyy-mm-dd-hh-mm.");
 			temp = console.nextLine();
-			tokens = temp.split("-");
+			tokens = temp.trim().split("-");
 			while (tokens.length != 5) {
 				System.out.println("Invalid format. Enter it again.");
 				temp = console.nextLine();
-				tokens = temp.split("-");
+				tokens = temp.trim().split("-");
 			}
 			GregorianCalendar endTime = new GregorianCalendar(Integer.parseInt(tokens[0]),
 					Integer.parseInt(tokens[1])-1, Integer.parseInt(tokens[2]), 
@@ -102,11 +106,11 @@ public class ConsoleDriver {
 				// get alertTime
 				System.out.println("Please enter the alert time in such a format yyyy-mm-dd-hh-mm.");
 				temp = console.nextLine();
-				tokens = temp.split("-");
+				tokens = temp.trim().split("-");
 				while (tokens.length != 5) {
 					System.out.println("Invalid format. Enter it again.");
 					temp = console.nextLine();
-					tokens = temp.split("-");
+					tokens = temp.trim().split("-");
 				}
 				alertTime = new GregorianCalendar(Integer.parseInt(tokens[0]),
 						Integer.parseInt(tokens[1])-1, Integer.parseInt(tokens[2]), 
@@ -128,7 +132,9 @@ public class ConsoleDriver {
 			System.out.println("What category is it?");
 			CategoryI category = null;
 			temp = console.nextLine();
-			if (schedule.getCategoriesMap().containsKey(temp)){
+			if (temp.trim().length() == 0) {
+				category = schedule.getCategoriesMap().get("default");
+			} else if (schedule.getCategoriesMap().containsKey(temp)){
 				category = schedule.getCategoriesMap().get(temp);
 			} else {
 				try {
@@ -141,6 +147,8 @@ public class ConsoleDriver {
 			
 			new Event(name, text, startTime, endTime, alert, alertText,
 					alertTime, repeat, category); // the constructor will add the event to the category
+			System.out.println();
+
 		} else if (userInput.startsWith("list_events")) {
 			String[] tokens = userInput.split("\\s+");
 			if (tokens.length == 2) {
@@ -150,6 +158,7 @@ public class ConsoleDriver {
 						System.out.println(event);
 					}
 				}
+				System.out.println();
 			} else {
 				printHelp();
 			}
@@ -172,6 +181,7 @@ public class ConsoleDriver {
 		System.out.println("list_events <category_name> - lists all the events in an category.");
 		System.out.println("exit - quit the program");
 		System.out.println("help - see a list of commands");
+		System.out.println();
 	}
 
 }

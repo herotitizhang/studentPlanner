@@ -86,6 +86,7 @@ public class Schedule implements ScheduleI{
 	 */
 	@Override
 	public CategoryI removeCategory(String category) {
+		if (category.equals("default")) return null;
 		return categories.remove(category);
 	}
 
