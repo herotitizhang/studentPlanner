@@ -216,12 +216,15 @@ public class Event implements EventI{
 		.append("Alert exists: ").append(alert).append(newLine);
 		
 		if (alert) {
-			sb.append("Alert text: ").append(alertText).append(newLine)
-			.append("Alert time: ").append(formatter.format(alertTime.getTime())).append(newLine);
+			sb.append("Alert text: ").append(alertText).append(newLine);
+			if (alertTime != null) {
+				sb.append("Alert time: ").append(formatter.format(alertTime.getTime())).append(newLine);
+
+			}
 		}
 		
 		sb.append("Repeating: ").append(repeating).append(newLine)
-		.append("Category: ").append(category.toString()).append(newLine);
+		.append("Category: ").append(category.toString());
 		
 		return sb.toString();
 	

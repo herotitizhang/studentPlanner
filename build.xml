@@ -60,12 +60,14 @@
 	            	<include name="*.tsv"/>
 	            	<include name="*.cfg"/>
 	            	<include name="*.txt"/>
+	            	<include name="*.SAV"/>
 	            </fileset>
 		        <fileset dir="${dest}">
 					<include name="*/**" />
 		   		</fileset>
 		   		<fileset dir="${output}">
-					 <include name="*.jar"/>
+					<include name="*.jar"/>
+	            	<include name="*.SAV"/>
 		   		</fileset>
 			</delete>
         <echo>Finishing cleaning...</echo>

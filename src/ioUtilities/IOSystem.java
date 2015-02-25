@@ -28,11 +28,11 @@ public class IOSystem {
 		BufferedInputStream bufferedIn = null;
 		DataInputStream dataIn = null;
 		try {
-			fileIn = new FileInputStream(fileName);
+			fileIn = new FileInputStream(fileName+".SAV");
 			bufferedIn = new BufferedInputStream(fileIn);
 			dataIn = new DataInputStream(bufferedIn);
 
-			File file = new File (fileName);
+			File file = new File (fileName+".SAV");
 			byte[] toBeConverted = new byte[file.length() > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) file.length()];
 			dataIn.readFully(toBeConverted);
 			
@@ -56,7 +56,7 @@ public class IOSystem {
 		
 		
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			System.out.println("The save file is not found!");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -78,7 +78,7 @@ public class IOSystem {
 		FileOutputStream fileOut = null;
 		BufferedOutputStream bufferedOut = null;
 		try {
-			fileOut = new FileOutputStream(fileName);
+			fileOut = new FileOutputStream(fileName+".SAV");
 			bufferedOut = new BufferedOutputStream(fileOut);
 			bufferedOut.write(getByteArray(schedule));
 		} catch (FileNotFoundException e) {
@@ -86,8 +86,8 @@ public class IOSystem {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			closeCloseable(fileOut);
-			closeCloseable(bufferedOut);
+//			closeCloseable(fileOut);
+			closeCloseable(bufferedOut); // TODO we need to close either fileOut or bufferedOut but not both (don't understand why)
 		}
 	}
 	
@@ -119,6 +119,7 @@ public class IOSystem {
 			try {
 				toBeClosed.close();
 			} catch (IOException e) {
+				System.out.println(toBeClosed.getClass());
 				e.printStackTrace();
 			}
 		}
