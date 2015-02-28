@@ -1,78 +1,97 @@
 <?xml version ="1.0" encoding="UTF-8" ?>
 <project name="StudentPlanner" default="run" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
-    <property name="src" value="src"/>
-    <property name="dest" value="bin"/>
-    <property name="output" value="output"/>  <!-- this folder contains the jar file -->
+	<property name="src" value="src"/>
+	<property name="dest" value="bin"/>
+	<property name="output" value="output"/>
+	<!-- this folder contains the jar file -->
 	<property environment="env"/>
-	
-    <target name="init">
-        <mkdir dir="${dest}"/>
-        <mkdir dir="${output}"/>
-    </target>
-    
-    <target name="compile" depends="init">
-        <echo>Start compiling...</echo>
-    	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
-    	    	 uri="javafx:com.sun.javafx.tools.ant"
-    	    	 classpath="${env.JAVA_HOME}/lib/ant-javafx.jar" />
-    	
+
+	<target name="init">
+		<mkdir dir="${dest}"/>
+		<mkdir dir="${output}"/>
+	</target>
+
+	<target name="compile" depends="init">
+		<echo>Start compiling...</echo>
 		<javac srcdir="${src}" destdir="${dest}" includeAntRuntime="false"/>
-        <echo>Finish compiling!</echo>
-    </target>
-    
-    <target name="buildGUI" depends="compile">
-    	<echo>Start generating the jar file...</echo>
-    	<!-- for fx:jar element to be used -->
-    	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+
+		<!-- copy all the fxml files -->
+		<copy todir="${dest}/gui/fxml">
+			<fileset dir="${src}/gui/fxml">
+				<include name="*.fxml" />
+			</fileset>
+		</copy>
+
+		<!-- copy all the css files -->
+		<copy todir="${dest}/gui/css">
+			<fileset dir="${src}/gui/css">
+				<include name="*.css" />
+			</fileset>
+		</copy>
+		
+		<!-- copy all the png files -->
+		<copy todir="${dest}/gui/resources">
+			<fileset dir="${src}/gui/resources">
+				<include name="*.png" />
+			</fileset>
+		</copy>
+
+		<echo>Finish compiling!</echo>
+	</target>
+
+	<target name="buildGUI" depends="compile">
+		<echo>Start generating the jar file...</echo>
+		<!-- for fx:jar element to be used -->
+		<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
     	    	 uri="javafx:com.sun.javafx.tools.ant"
     	    	 classpath="${env.JAVA_HOME}/lib/ant-javafx.jar" />
-   		<fx:jar destfile="${output}/StudentPlanner.jar">
-    		<fx:application mainClass="gui.StudentPlanner"/> 
- 	    	<!-- things to include into result jar file. 
+		<fx:jar destfile="${output}/StudentPlanner.jar">
+			<fx:application mainClass="gui.StudentPlanner"/>
+			<!-- things to include into result jar file. 
  	    		we can't use basedir attribute here -->
-    		<fileset dir="${dest}"/>
-    	</fx:jar>
-    	<echo>The jar file has been generated</echo>
-    </target>
-	
-    <target name="buildConsole" depends="compile">
-        <echo>Start generating the jar file...</echo>
-        <jar basedir="${dest}" jarfile="${output}/Console.jar">
-            <manifest>
-    			<attribute name="Main-Class" value="console.ConsoleDriver"/>
-  			</manifest>
-        </jar>
-        <echo>The jar file has been generated</echo>
-    </target>
-    
-    <!-- fork attribute is necessary otherwise the entire program quits when ant is done -->
-    <target name="run" depends="buildGUI">
-        <java classname="gui.StudentPlanner" fork="yes" classpath="${output}/StudentPlanner.jar"/> 
-    </target>
-    
+			<fileset dir="${dest}"/>
+		</fx:jar>
+		<echo>The jar file has been generated</echo>
+	</target>
+
+	<target name="buildConsole" depends="compile">
+		<echo>Start generating the jar file...</echo>
+		<jar basedir="${dest}" jarfile="${output}/Console.jar">
+			<manifest>
+				<attribute name="Main-Class" value="console.ConsoleDriver"/>
+			</manifest>
+		</jar>
+		<echo>The jar file has been generated</echo>
+	</target>
+
+	<!-- fork attribute is necessary otherwise the entire program quits when ant is done -->
+	<target name="run" depends="buildGUI">
+		<java classname="gui.StudentPlanner" fork="yes" classpath="${output}/StudentPlanner.jar"/>
+	</target>
+
 	<target name="runConsole" depends="buildConsole">
-        <java classname="console.ConsoleDriver" fork="yes" classpath="${output}/Console.jar"/> 
-    </target>
-    
-    <!-- remove both jar file and class files -->
-    <target name="clean">
-        <echo>Start cleaning...</echo>
-	        <delete includeEmptyDirs="true">
-	            <fileset dir=".">
-	            	<include name="*.tsv"/>
-	            	<include name="*.cfg"/>
-	            	<include name="*.txt"/>
-	            	<include name="*.SAV"/>
-	            </fileset>
-		        <fileset dir="${dest}">
-					<include name="*/**" />
-		   		</fileset>
-		   		<fileset dir="${output}">
-					<include name="*.jar"/>
-	            	<include name="*.SAV"/>
-		   		</fileset>
-			</delete>
-        <echo>Finishing cleaning...</echo>
-    </target>
-    
+		<java classname="console.ConsoleDriver" fork="yes" classpath="${output}/Console.jar"/>
+	</target>
+
+	<!-- remove both jar file and class files -->
+	<target name="clean">
+		<echo>Start cleaning...</echo>
+		<delete includeEmptyDirs="true">
+			<fileset dir=".">
+				<include name="*.tsv"/>
+				<include name="*.cfg"/>
+				<include name="*.txt"/>
+				<include name="*.SAV"/>
+			</fileset>
+			<fileset dir="${dest}">
+				<include name="*/**" />
+			</fileset>
+			<fileset dir="${output}">
+				<include name="*.jar"/>
+				<include name="*.SAV"/>
+			</fileset>
+		</delete>
+		<echo>Finishing cleaning...</echo>
+	</target>
+
 </project>
