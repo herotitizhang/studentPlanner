@@ -1,5 +1,5 @@
 <?xml version ="1.0" encoding="UTF-8" ?>
-<project name="AddressBook" default="run" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
+<project name="StudentPlanner" default="run" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
     <property name="src" value="src"/>
     <property name="dest" value="bin"/>
     <property name="output" value="output"/>  <!-- this folder contains the jar file -->
@@ -10,21 +10,24 @@
         <mkdir dir="${output}"/>
     </target>
     
-    <target name="compile">
+    <target name="compile" depends="init">
         <echo>Start compiling...</echo>
-        <javac srcdir="${src}" destdir="${dest}" includeantruntime="yes"/>
+    	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+    	    	 uri="javafx:com.sun.javafx.tools.ant"
+    	    	 classpath="${env.JAVA_HOME}/lib/ant-javafx.jar" />
+    	
+		<javac srcdir="${src}" destdir="${dest}" includeAntRuntime="false"/>
         <echo>Finish compiling!</echo>
     </target>
     
-	<!-- TODO to be modified -->
     <target name="buildGUI" depends="compile">
     	<echo>Start generating the jar file...</echo>
     	<!-- for fx:jar element to be used -->
     	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
     	    	 uri="javafx:com.sun.javafx.tools.ant"
     	    	 classpath="${env.JAVA_HOME}/lib/ant-javafx.jar" />
-   		<fx:jar destfile="${output}/AddressBook.jar">
-    		<fx:application mainClass="gui.AddressBookApp"/> 
+   		<fx:jar destfile="${output}/StudentPlanner.jar">
+    		<fx:application mainClass="gui.StudentPlanner"/> 
  	    	<!-- things to include into result jar file. 
  	    		we can't use basedir attribute here -->
     		<fileset dir="${dest}"/>
@@ -42,10 +45,9 @@
         <echo>The jar file has been generated</echo>
     </target>
     
-	<!-- TODO to be modified -->
     <!-- fork attribute is necessary otherwise the entire program quits when ant is done -->
     <target name="run" depends="buildGUI">
-        <java classname="gui.AddressBookApp" fork="yes" classpath="${output}/AddressBook.jar"/> 
+        <java classname="gui.StudentPlanner" fork="yes" classpath="${output}/StudentPlanner.jar"/> 
     </target>
     
 	<target name="runConsole" depends="buildConsole">
