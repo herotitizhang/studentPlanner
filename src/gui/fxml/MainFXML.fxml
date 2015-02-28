@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" styleClass="backgroud" prefHeight="743.0" prefWidth="1000.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="gui.controllers.MainFXMLController">
+   <children>
+      <TabPane prefHeight="743.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab id="taskTab">
+            <content>
+                <fx:include fx:id="taskView" source="DashboardViewFXML.fxml"/>
+            </content>
+          </Tab>
+          <Tab id="scheduleTab">
+            <content>
+              <fx:include fx:id="scheduleView" source="ScheduleViewFXML.fxml"/>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+   <stylesheets> <URL value="@../css/mainfxml.css" /></stylesheets>
+</AnchorPane>

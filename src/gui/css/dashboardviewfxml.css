@@ -1,0 +1,31 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.hbox-header {
+    -fx-font-size: 22;
+    -fx-background-color: #2C3E50;
+}
+
+.hbox-header .label {
+    -fx-padding: 10 10 10 10;
+    -fx-text-fill: #EEEEEE;
+    -fx-font-family: 'Slabo 27px', serif;
+}
+
+.hbox-header .label {
+    -fx-padding: 8 8 8 8;
+}
+
+.hbox-header .button {
+    -fx-background-color: rgba(255,255,255,0.0);
+    -fx-graphic: url('../resources/add_white.png');
+}
+
+.hbox-header:hover {
+    -fx-graphic: url('../resources/add_yellow.png');
+}
+
+#taskList, #classList, #taskTable {
+    -fx-background-color: #ECECEC;
+}
