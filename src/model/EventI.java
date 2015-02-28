@@ -3,6 +3,8 @@ package model;
 import java.io.Serializable;
 import java.util.GregorianCalendar;
 
+import model.EventI.Priority;
+
 public interface EventI extends Serializable, Comparable  {
 
 	// this interface was here because we needed to implement writeTo/readFrom
@@ -44,6 +46,10 @@ public interface EventI extends Serializable, Comparable  {
 
 	public void setRepeating(Repeat repeating);
 
+	public Priority getPriority();
+
+	public void setPriority(Priority priority);
+	
 	public CategoryI getCategory();
 
 	public void setCategory(CategoryI category);
@@ -51,5 +57,10 @@ public interface EventI extends Serializable, Comparable  {
 	public enum Repeat {
 		NONE, WEEKLY, MONTHLY, YEARLY;
 	}
+	
+	public enum Priority {
+		LOW, MEDIUM, HIGH, URGENT;
+	}
+
 	
 }

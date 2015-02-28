@@ -27,6 +27,9 @@ public class Event implements EventI{
 	// no repeat by default
 	private EventI.Repeat repeating = EventI.Repeat.NONE;  
 	
+	// medium priority by default
+	private EventI.Priority priority = EventI.Priority.MEDIUM;
+	
 	// TODO needs to instantiate the default category
 	private CategoryI category = null;  
 	
@@ -76,9 +79,11 @@ public class Event implements EventI{
 	 */
 	public Event(String name, String text, GregorianCalendar startTime, 
 			GregorianCalendar endTime, boolean alert, String alertText,
-			GregorianCalendar alertTime, EventI.Repeat repeating, CategoryI category){
+			GregorianCalendar alertTime, EventI.Repeat repeating, 
+			EventI.Priority priority, CategoryI category){
 		this(name, startTime, endTime, alert, repeating, category);
 		this.text = text;
+		this.priority = priority;
 		if (alert) {
 			this.alertText = alertText;
 			this.alertTime = alertTime;
@@ -170,12 +175,22 @@ public class Event implements EventI{
 
 	@Override
 	public model.EventI.Repeat getRepeating() {
-		return repeating;
+		return this.repeating;
 	}
 
 	@Override
 	public void setRepeating(model.EventI.Repeat repeating) {
 		this.repeating = repeating;
+	}
+	
+	@Override
+	public model.EventI.Priority getPriority() {
+		return this.priority;
+	}
+
+	@Override
+	public void setPriority(model.EventI.Priority priority) {
+		this.priority = priority;
 	}
 
 	@Override

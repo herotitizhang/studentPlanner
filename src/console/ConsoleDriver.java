@@ -147,7 +147,18 @@ public class ConsoleDriver {
 				repeat = EventI.Repeat.MONTHLY;
 			else if (temp.equalsIgnoreCase("yearly") || temp.equalsIgnoreCase("y"))
 				repeat = EventI.Repeat.YEARLY;
-
+			
+			// get priority LOW, MEDIUM, HIGH, URGENT;
+			System.out.println("What is the priority of the event (low, medium, high or urgent) ? [L/M/H/U]");
+			EventI.Priority priority = EventI.Priority.MEDIUM;
+			temp = console.nextLine();
+			if (temp.equalsIgnoreCase("low") || temp.equalsIgnoreCase("l"))
+				priority = EventI.Priority.LOW;
+			else if (temp.equalsIgnoreCase("high") || temp.equalsIgnoreCase("h"))
+				priority = EventI.Priority.HIGH;
+			else if (temp.equalsIgnoreCase("urgent") || temp.equalsIgnoreCase("u"))
+				priority = EventI.Priority.URGENT;
+			
 			// get category
 			System.out.println("What category is it? Below are existing categories:");
 			for (CategoryI category: schedule.getCategories()) 
@@ -169,7 +180,7 @@ public class ConsoleDriver {
 			}
 			
 			new Event(name, text, startTime, endTime, alert, alertText,
-					alertTime, repeat, category); // the constructor will add the event to the category
+					alertTime, repeat, priority, category); // the constructor will add the event to the category
 			System.out.println("An event named \""+name+"\" has been created!");
 			System.out.println();
 		} else if (userInput.startsWith("edit_event")) { 
