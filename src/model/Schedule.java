@@ -10,9 +10,12 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import model.EventI.Priority;
 
 
 // TODO add interfaces for each class
@@ -51,6 +54,67 @@ public class Schedule implements ScheduleI{
 		return toBeReturned;
 	}
 	
+	@Override
+	public List<EventI> getEvents(String categoryToLookFor) {
+
+		for (String category: categories.keySet()) {
+			if (category.equals(categoryToLookFor)) {
+				return categories.get(category).getAllEvents();
+			}
+ 		}
+		
+		return null;
+	}
+	
+	@Override
+	public List<EventI> getEvents(CategoryI categoryToLookFor) {
+
+		for (CategoryI category: categories.values()) {
+			if (category.equals(categoryToLookFor)) {
+				return category.getAllEvents();
+			}
+ 		}
+		
+		return null;
+	}
+
+	@Override
+	public List<EventI> getEvents(Priority priority) {
+
+		ArrayList<EventI> toBeReturned = new ArrayList<EventI>();
+		
+		for (CategoryI category: categories.values()) {
+			for (EventI event: category.getAllEvents()) {
+				if (priority == event.getPriority()) {
+					toBeReturned.add(event);
+				}	
+				
+			}
+		}
+		
+		return toBeReturned;
+	}
+
+	@Override
+	public List<EventI> getEvents(GregorianCalendar startTime,
+			GregorianCalendar endTime) {
+		
+		ArrayList<EventI> toBeReturned = new ArrayList<EventI>();
+
+		for (CategoryI category : categories.values()) {
+			for (EventI event : category.getAllEvents()) {
+				if (startTime.compareTo(event.getStartTime()) <= 0
+					&& endTime.compareTo(event.getEndTime()) >= 0) {
+					
+					toBeReturned.add(event);
+				}
+
+			}
+		}
+
+		return toBeReturned;
+	}
+	
 	/**
 	 * @return a list of categories
 	 */
@@ -80,7 +144,20 @@ public class Schedule implements ScheduleI{
 		categories.put(category, new Category(category));
 		return categories.get(category);
 	}
-		
+
+	/**
+	 * Creates a new category of the given name, and returns it
+	 * @param category
+	 * @return
+	 * @throws NameInUseException
+	 */
+	@Override
+	public CategoryI addCategory(Category category) throws NameInUseException {
+		if (categories.containsKey(category.getName())) throw new NameInUseException(category.getName());
+		categories.put(category.getName(), category);
+		return categories.get(category);
+	}
+	
 	/**
 	 * Removes the category with the referenced name
 	 */

@@ -25,10 +25,10 @@ public class Event implements EventI{
 	private GregorianCalendar alertTime = null;
 	
 	// no repeat by default
-	private EventI.Repeat repeating = EventI.Repeat.NONE;  
+	private Repeat repeating = Repeat.NONE;  
 	
 	// medium priority by default
-	private EventI.Priority priority = EventI.Priority.MEDIUM;
+	private Priority priority = Priority.MEDIUM;
 	
 	// TODO needs to instantiate the default category
 	private CategoryI category = null;  
@@ -42,7 +42,7 @@ public class Event implements EventI{
 	 * @param repeating
 	 */
 	public Event(String name, GregorianCalendar startTime, GregorianCalendar endTime,
-			boolean alert, EventI.Repeat repeating){
+			boolean alert, Repeat repeating){
 		this.name = name;
 		this.startTime = startTime;
 		this.endTime = endTime; // TODO check that endTime is after startTime
@@ -60,7 +60,7 @@ public class Event implements EventI{
 	 * @param category
 	 */
 	public Event(String name, GregorianCalendar startTime, GregorianCalendar endTime,
-			boolean alert, EventI.Repeat repeating, CategoryI category){
+			boolean alert, Repeat repeating, CategoryI category){
 		this(name, startTime, endTime, alert, repeating);
 		setCategory(category);
 	}
@@ -79,8 +79,8 @@ public class Event implements EventI{
 	 */
 	public Event(String name, String text, GregorianCalendar startTime, 
 			GregorianCalendar endTime, boolean alert, String alertText,
-			GregorianCalendar alertTime, EventI.Repeat repeating, 
-			EventI.Priority priority, CategoryI category){
+			GregorianCalendar alertTime, Repeat repeating, 
+			Priority priority, CategoryI category){
 		this(name, startTime, endTime, alert, repeating, category);
 		this.text = text;
 		this.priority = priority;
@@ -174,22 +174,22 @@ public class Event implements EventI{
 	}
 
 	@Override
-	public model.EventI.Repeat getRepeating() {
+	public Repeat getRepeating() {
 		return this.repeating;
 	}
 
 	@Override
-	public void setRepeating(model.EventI.Repeat repeating) {
+	public void setRepeating(Repeat repeating) {
 		this.repeating = repeating;
 	}
 	
 	@Override
-	public model.EventI.Priority getPriority() {
+	public Priority getPriority() {
 		return this.priority;
 	}
 
 	@Override
-	public void setPriority(model.EventI.Priority priority) {
+	public void setPriority(Priority priority) {
 		this.priority = priority;
 	}
 
@@ -267,9 +267,6 @@ public class Event implements EventI{
 		return 0;
 	}
 	
-	public enum Repeat {
-		NONE, WEEKLY, MONTHLY, YEARLY;
-	}
 	
 	public class EventComparator implements Comparator<Event> {
 
@@ -279,8 +276,6 @@ public class Event implements EventI{
 		}
 		
 	}
-
-	
 
 	// TODO checkers !!!
 

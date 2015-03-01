@@ -29,6 +29,8 @@ public interface CategoryI extends Serializable {
 	 might be cut in the future
 	 */
 	
+	public String getName();
+	
 	public List<EventI> getAllEvents();
 	
 	public void removeAllEvents();

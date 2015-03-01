@@ -43,7 +43,7 @@ public class Category implements CategoryI{
 	
 	@Override
 	public List<EventI> getAllEvents() {
-		Collections.sort(events);  
+		Collections.sort(events);  // sorted based on Event.compareTo
 		return events;
 	}
 	
@@ -52,8 +52,9 @@ public class Category implements CategoryI{
 		events.clear();
 	}
 	
+	// the same as toString implementation, but it's better to keep them separate
 	@Override
-	public String toString() {
+	public String getName() {
 		return this.name;
 	}
 
@@ -70,6 +71,11 @@ public class Category implements CategoryI{
 	@Override
 	public List<EventI> getChildren() {
 		return null;
+	}
+	
+	@Override
+	public String toString() {
+		return this.name;
 	}
 
 }
