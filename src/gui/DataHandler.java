@@ -16,6 +16,7 @@ import model.CategoryI;
 import model.Event;
 import model.EventI.Repeat;
 import model.EventI;
+import model.EventI.Priority;
 import model.NameInUseException;
 import model.Schedule;
 
@@ -94,6 +95,7 @@ public class DataHandler {
     
     public void deleteCurrentEvent() throws ItemNotFoundException {
         EventI event = getCurrentEvent();
+        setCurrentEvent(null);
         event.getCategory().removeEvent(event);
         eventList.remove(event);
     }
@@ -111,7 +113,7 @@ public class DataHandler {
      */
     public boolean addEvent(String name, String text, String start, 
 			String end, boolean hasAlert, String alertText, String alertTimeString, 
-                        Repeat repeat, CategoryI category) {
+                        Repeat repeat, Priority priority, CategoryI category) {
         
         String[] startTokens = start.split("-");
         GregorianCalendar startTime = new GregorianCalendar(Integer.parseInt(startTokens[0]),
@@ -125,7 +127,7 @@ public class DataHandler {
         GregorianCalendar alertTime = new GregorianCalendar(Integer.parseInt(alertTokens[0]),
                         Integer.parseInt(alertTokens[1])-1, Integer.parseInt(alertTokens[2]), 
                         Integer.parseInt(alertTokens[3]), Integer.parseInt(alertTokens[4]));
-        Event newEvent = new Event(name, text, startTime, endTime, hasAlert, alertText, alertTime, repeat, category);
+        Event newEvent = new Event(name, text, startTime, endTime, hasAlert, alertText, alertTime, repeat, priority, category);
         eventList.add(newEvent);
         if (!categoryList.contains(category)) {
             categoryList.add(category);

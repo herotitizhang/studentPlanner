@@ -10,13 +10,15 @@ import gui.ItemNotFoundException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import model.Event;
 import model.EventI;
 import model.EventI.Repeat;
 
@@ -36,6 +38,7 @@ public class DisplayEventFXMLController implements Initializable {
     @FXML TextField alertTextInput;
     @FXML TextField categoryInput;
     @FXML Button submitButton;
+    @FXML ListView eventListView;
     
     /**
      * Triggered when user elects to delete selected event
@@ -43,9 +46,17 @@ public class DisplayEventFXMLController implements Initializable {
     @FXML
     private void handleDeleteButtonAction() {
         try {
+            closeWindow();
+            /* refresh eventListView */
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/DashboardViewFXML.fxml"));
+            Parent root = (Parent) loader.load();
+            DashboardViewFXMLController controller = loader.getController();
+            controller.resetEventListView();
             DataHandler.getInstance().deleteCurrentEvent();
         } catch (ItemNotFoundException e) {
             System.err.println("Oops, there's no event selected.");
+        } catch (Exception e) {
+            System.err.println("Probably an issue loading fxml doc");
         }
     }
     
@@ -98,6 +109,12 @@ public class DisplayEventFXMLController implements Initializable {
         alertTextInput.setEditable(editable);
         categoryInput.setEditable(editable);
     }
+    
+    private void closeWindow() {
+        Scene scene = nameInput.getScene();
+        Stage stage = (Stage) scene.getWindow();
+        stage.close();
+    }
 
     /**
      * Initializes the controller class by setting content and disabling editing
@@ -111,9 +128,7 @@ public class DisplayEventFXMLController implements Initializable {
             submitButton.setVisible(false);
         } catch (ItemNotFoundException e) {
             System.err.println("Sorry, an error occured");
-            Scene scene = nameInput.getScene();
-            Stage stage = (Stage) scene.getWindow();
-            stage.close();
+            closeWindow();
         }
     }    
     

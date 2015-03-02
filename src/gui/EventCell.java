@@ -27,6 +27,8 @@ public class EventCell extends ListCell<Event> {
             data = new EventData();
             data.setEvent(event);
             setGraphic(data.getBox());
+        } else {
+            setGraphic(null);
         }
     }
     
@@ -53,6 +55,7 @@ public class EventCell extends ListCell<Event> {
                 throw new RuntimeException(e);
             }
         }
+        
 
         public void setEvent(Event ev){
            name.setText(ev.getName());

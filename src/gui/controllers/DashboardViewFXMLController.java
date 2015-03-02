@@ -25,7 +25,12 @@ import javafx.util.Callback;
 import model.Event;
 import gui.EventCell;
 import gui.ItemNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import model.Category;
 import model.EventI;
 
@@ -101,24 +106,20 @@ public class DashboardViewFXMLController implements Initializable {
     /**
      * Adds listener to open information window when user selects an event
      */
-    private void addEventListViewListener() {
-        eventListView.getSelectionModel().selectedItemProperty().addListener(
-                new ChangeListener<Event>() {
+    private void addEventListViewClickHandler() {
+        eventListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void changed(ObservableValue<? extends Event> ov, 
-                    Event oldEvent, Event newEvent) {
-                if (newEvent != null) {
-                    try {
-                        System.out.println("event changed");
-                        DataHandler.getInstance().setCurrentEvent(newEvent);
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../fxml/DisplayEventFXML.fxml"));
-                        Parent root1 = (Parent) fxmlLoader.load();
-                        Stage stage = new Stage();
-                        stage.setScene(new Scene(root1));  
-                        stage.show();
-                    } catch(Exception e) {
-                       e.printStackTrace();
-                    }                                    
+            public void handle(MouseEvent event) {
+                try {
+                    EventI newEvent = (Event) eventListView.getSelectionModel().getSelectedItem();
+                    DataHandler.getInstance().setCurrentEvent(newEvent);
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../fxml/DisplayEventFXML.fxml"));
+                    Parent root1 = (Parent) fxmlLoader.load();
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(root1));
+                    stage.show();
+                } catch (IOException ex) {
+                    Logger.getLogger(DashboardViewFXMLController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -156,6 +157,16 @@ public class DashboardViewFXMLController implements Initializable {
             }
         });
     }
+    
+    public void resetEventListView() {
+        try {
+            eventListView.getItems().remove(DataHandler.getInstance().getCurrentEvent());
+            eventListView.setItems(null);
+            eventListView.setItems(DataHandler.getInstance().getEventList());
+        } catch (ItemNotFoundException ex) {
+            Logger.getLogger(DashboardViewFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
         
     /**
      * Initializes list of events
@@ -163,7 +174,7 @@ public class DashboardViewFXMLController implements Initializable {
     private void initEventBox() {
         eventListView.setItems(DataHandler.getInstance().getEventList());
         setEventListViewCellFactory();
-        addEventListViewListener();
+        addEventListViewClickHandler();
     }
     
     /**

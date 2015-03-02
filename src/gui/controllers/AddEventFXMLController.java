@@ -15,6 +15,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import model.EventI;
+import model.EventI.Priority;
 import model.EventI.Repeat;
 
 /**
@@ -40,8 +42,8 @@ public class AddEventFXMLController implements Initializable {
     @FXML
     private void handleSubmitButtonAction() {
         if (DataHandler.getInstance().addEvent(nameInput.getText(), textInput.getText(), startTimeInput.getText(), 
-                endTimeInput.getText(), alertBoolInput.isSelected(), alertTextInput.getText(), 
-                alertTimeInput.getText(), Repeat.NONE, DataHandler.getInstance().getCategory(categoryInput.getText()))) {
+                endTimeInput.getText(), alertBoolInput.isSelected(), alertTextInput.getText(), alertTimeInput.getText(), 
+                Repeat.NONE, Priority.HIGH, DataHandler.getInstance().getCategory(categoryInput.getText()))) {
             Scene scene = submitButton.getScene();
             Stage stage = (Stage) scene.getWindow();
             stage.close();
