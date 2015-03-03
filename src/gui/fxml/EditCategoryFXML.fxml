@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="140.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.EditCategoryFXMLController">
+    <GridPane xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10" layoutX="20.0" layoutY="30.0" >
+        <Label text="Name:"
+            GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="nameInput"
+            GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Label fx:id="errorLabel" GridPane.columnIndex="0" GridPane.rowIndex="2" />  
+    </GridPane>
+    <Button fx:id="submitButton" layoutX="20.0" layoutY="90.0" text="Submit" 
+            onAction="#handleSubmitButtonAction" mnemonicParsing="false" />
+</AnchorPane>

@@ -47,6 +47,7 @@ public class DashboardViewFXMLController implements Initializable {
     @FXML private ListView eventListView;
     @FXML private ListView categoryListView;
     @FXML Button deleteCategoryButton;
+    @FXML Button editCategoryButton;
     
     /**
      * Triggered when user elects to add an event
@@ -55,7 +56,7 @@ public class DashboardViewFXMLController implements Initializable {
     @FXML
     protected void handleAddEventButtonAction(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../fxml/AddEventFXML.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/AddEventFXML.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root1));  
@@ -72,7 +73,20 @@ public class DashboardViewFXMLController implements Initializable {
     @FXML
     protected void handleAddCategoryButtonAction(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../fxml/AddCategoryFXML.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/AddCategoryFXML.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root1));  
+            stage.show();
+        } catch(Exception e) {
+           e.printStackTrace();
+        }
+    }
+    
+    @FXML
+    protected void handleEditCategoryButtonAction(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/EditCategoryFXML.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root1));  
@@ -95,9 +109,9 @@ public class DashboardViewFXMLController implements Initializable {
      * Sets event cells for display
      */
     private void setEventListViewCellFactory() {
-        eventListView.setCellFactory(new Callback<ListView<Event>, javafx.scene.control.ListCell<Event>>() {
+        eventListView.setCellFactory(new Callback<ListView<EventI>, javafx.scene.control.ListCell<EventI>>() {
             @Override
-            public ListCell<Event> call(ListView<Event> listView) {
+            public ListCell<EventI> call(ListView<EventI> listView) {
                 return new EventCell();
             }
         });
@@ -111,9 +125,9 @@ public class DashboardViewFXMLController implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 try {
-                    EventI newEvent = (Event) eventListView.getSelectionModel().getSelectedItem();
+                    EventI newEvent = (EventI) eventListView.getSelectionModel().getSelectedItem();
                     DataHandler.getInstance().setCurrentEvent(newEvent);
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../fxml/DisplayEventFXML.fxml"));
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/DisplayEventFXML.fxml"));
                     Parent root1 = (Parent) fxmlLoader.load();
                     Stage stage = new Stage();
                     stage.setScene(new Scene(root1));
@@ -150,6 +164,7 @@ public class DashboardViewFXMLController implements Initializable {
                     try {
                         DataHandler.getInstance().setCurrentCategory(newCat);
                         deleteCategoryButton.setVisible(true);
+                        editCategoryButton.setVisible(true);
                     } catch(Exception e) {
                        e.printStackTrace();
                     }                                    
@@ -159,13 +174,8 @@ public class DashboardViewFXMLController implements Initializable {
     }
     
     public void resetEventListView() {
-        try {
-            eventListView.getItems().remove(DataHandler.getInstance().getCurrentEvent());
-            eventListView.setItems(null);
-            eventListView.setItems(DataHandler.getInstance().getEventList());
-        } catch (ItemNotFoundException ex) {
-            Logger.getLogger(DashboardViewFXMLController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        eventListView.setItems(null);
+        eventListView.setItems(DataHandler.getInstance().getEventList());
     }
         
     /**
@@ -194,6 +204,7 @@ public class DashboardViewFXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         deleteCategoryButton.setVisible(false);
+        editCategoryButton.setVisible(false);
         initEventBox();
         initCategoryBox();
     }

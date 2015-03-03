@@ -15,7 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import model.EventI;
 import model.EventI.Priority;
 import model.EventI.Repeat;
 

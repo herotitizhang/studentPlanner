@@ -6,6 +6,7 @@
 package gui.controllers;
 
 import gui.DataHandler;
+import gui.EventCell;
 import gui.ItemNotFoundException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -48,7 +49,7 @@ public class DisplayEventFXMLController implements Initializable {
         try {
             closeWindow();
             /* refresh eventListView */
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/DashboardViewFXML.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/DashboardViewFXML.fxml"));
             Parent root = (Parent) loader.load();
             DashboardViewFXMLController controller = loader.getController();
             controller.resetEventListView();
@@ -74,10 +75,21 @@ public class DisplayEventFXMLController implements Initializable {
      */
     @FXML
     private void handleSubmitButtonAction() {
-        DataHandler.getInstance().updateEvent(nameInput.getText(), textInput.getText(), startTimeInput.getText(), 
+        try {
+            closeWindow();
+            /* refresh eventListView */
+            DataHandler.getInstance().updateEvent(nameInput.getText(), textInput.getText(), startTimeInput.getText(), 
                 endTimeInput.getText(), alertBoolInput.isSelected(), alertTextInput.getText(), 
                 alertTimeInput.getText(), Repeat.NONE, DataHandler.getInstance().getCategory(categoryInput.getText()));
-        setEditableFields(false);
+            EventCell cell = (EventCell) eventListView.getSelectionModel().getSelectedItem();
+            cell.updateItem(DataHandler.getInstance().getCurrentEvent(), true);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/DashboardViewFXML.fxml"));
+            Parent root = (Parent) loader.load();
+            DashboardViewFXMLController controller = loader.getController();
+            controller.resetEventListView();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     /**
