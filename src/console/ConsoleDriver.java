@@ -1,13 +1,12 @@
 package console;
 
-import ioUtilities.IOSystem;
-
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
+import utilities.IOSystem;
 import model.CategoryI;
 import model.Event;
 import model.EventI;

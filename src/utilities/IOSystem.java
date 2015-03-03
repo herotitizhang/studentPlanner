@@ -1,4 +1,4 @@
-package ioUtilities;
+package utilities;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

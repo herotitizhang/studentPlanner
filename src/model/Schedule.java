@@ -27,17 +27,6 @@ public class Schedule implements ScheduleI{
 	public Schedule() {
 		categories.put("default", new Category("default"));
 	}
-	
-	/**
-	 * Returns an ordered list of all of the events 
-	 * taking place during the specified week (by start time)
-	 * @return
-	 */
-	@Override
-	public WeeklySchedule eventsDuring(/*Week*/) { // TODO look for a Week object
-		
-		return null;
-	}
 
 	/**
 	 * @return a master list of events

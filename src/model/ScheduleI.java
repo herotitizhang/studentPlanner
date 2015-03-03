@@ -11,8 +11,6 @@ import model.EventI.Priority;
 
 public interface ScheduleI extends Serializable{
 	
-	public WeeklySchedule eventsDuring();
-	
 	// TODO sort by category, sort by priority and sort by startTime
 	public List<EventI> getAllSortedEvents();
 
