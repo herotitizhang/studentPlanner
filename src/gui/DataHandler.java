@@ -87,6 +87,13 @@ public class DataHandler {
         return currentCategory;
     }
     
+    public void updateCurrentCategory(String newName) throws ItemNotFoundException {
+        /*
+        if (currentCategory == null) throw new ItemNotFoundException();
+        */
+        //is the backend going to have category editing functionality?
+    }
+    
     public void deleteCurrentCategory() throws ItemNotFoundException {
         CategoryI category = getCurrentCategory();
         schedule.removeCategory(category.toString());
@@ -139,8 +146,30 @@ public class DataHandler {
     
     public void updateEvent(String name, String text, String start, 
 			String end, boolean hasAlert, String alertText, String alertTimeString, 
-                        Repeat repeat, CategoryI category) {
-        // to do: edit current event
+                        Repeat repeat, CategoryI category) throws ItemNotFoundException {
+        
+        EventI event = getCurrentEvent();
+        
+        String[] startTokens = start.split("-");
+        GregorianCalendar startTime = new GregorianCalendar(Integer.parseInt(startTokens[0]),
+                        Integer.parseInt(startTokens[1])-1, Integer.parseInt(startTokens[2]), 
+                        Integer.parseInt(startTokens[3]), Integer.parseInt(startTokens[4]));
+        String[] endTokens = end.split("-");
+        GregorianCalendar endTime = new GregorianCalendar(Integer.parseInt(endTokens[0]),
+                        Integer.parseInt(endTokens[1])-1, Integer.parseInt(endTokens[2]), 
+                        Integer.parseInt(endTokens[3]), Integer.parseInt(endTokens[4]));
+        String[] alertTokens = alertTimeString.split("-");
+        GregorianCalendar alertTime = new GregorianCalendar(Integer.parseInt(alertTokens[0]),
+                        Integer.parseInt(alertTokens[1])-1, Integer.parseInt(alertTokens[2]), 
+                        Integer.parseInt(alertTokens[3]), Integer.parseInt(alertTokens[4]));
+        
+        event.setName(name);
+        event.setText(text);
+        event.setStartTime(startTime);
+        event.setEndTime(endTime);
+        event.setAlert(hasAlert);
+        event.setAlertText(alertText);
+        event.setAlertTime(alertTime);
     }
     
     public void removeEvent(EventI event) {

@@ -12,16 +12,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
 import model.Event;
+import model.EventI;
 
 /**
  * Custom event cell for list display
  */
-public class EventCell extends ListCell<Event> {
+public class EventCell extends ListCell<EventI> {
     
     private EventData data;
     
     @Override
-    public void updateItem(Event event, boolean empty){
+    public void updateItem(EventI event, boolean empty){
         super.updateItem(event, empty);
         if (event != null) {
             data = new EventData();
@@ -57,7 +58,7 @@ public class EventCell extends ListCell<Event> {
         }
         
 
-        public void setEvent(Event ev){
+        public void setEvent(EventI ev){
            name.setText(ev.getName());
         }
         
