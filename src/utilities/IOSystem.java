@@ -130,7 +130,7 @@ public class IOSystem {
 	 * @param obj
 	 * @return
 	 */
-	private static byte[] getByteArray(Object obj) {
+	public static byte[] getByteArray(Object obj) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = null;
 		try {
@@ -150,7 +150,7 @@ public class IOSystem {
 	 * @param byteArray
 	 * @return
 	 */
-	private static Object getObject(byte[] byteArray) {
+	public static Object getObject(byte[] byteArray) {
 		ByteArrayInputStream bais = new ByteArrayInputStream(byteArray);
 		ObjectInputStream ois = null;
 		try {
