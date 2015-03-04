@@ -16,7 +16,7 @@ import java.io.ObjectOutputStream;
 
 import model.ScheduleI;
 
-public class IOSystem {
+public class ClientIOSystem {
 
 	/**
 	 * Load from the local drive 
@@ -37,7 +37,7 @@ public class IOSystem {
 			dataIn.readFully(toBeConverted);
 			
 			Object obj = getObject(toBeConverted);
-			if (obj instanceof ScheduleI) { // TODO not sure if it can do type checking
+			if (obj instanceof ScheduleI) {
 				return (ScheduleI) obj;
 			} else {
 				return null;

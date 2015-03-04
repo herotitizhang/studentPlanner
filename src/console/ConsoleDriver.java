@@ -1,12 +1,15 @@
 package console;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
-import utilities.IOSystem;
+import networkCommunication.ServerCommunicator;
+import networkCommunication.ServerResponse;
+import utilities.ClientIOSystem;
 import model.CategoryI;
 import model.Event;
 import model.EventI;
@@ -50,6 +53,8 @@ public class ConsoleDriver {
 			save(userInput);
 		} else if (userInput.startsWith("load")){
 			load(userInput);
+		} else if (userInput.startsWith("create")){
+			create(userInput);
 		} else if (userInput.equals("exit") || userInput.equals("quit")) { 
 			exit();
 		} else {
@@ -487,7 +492,7 @@ public class ConsoleDriver {
 	public static void save(String userInput) {
 		String[] tokens = userInput.split("\\s+");
 		if (tokens.length == 2) {
-			IOSystem.writeToDisk(schedule, tokens[1]);
+			ClientIOSystem.writeToDisk(schedule, tokens[1]);
 			System.out.println("Schedule has been saved successfully.");
 			System.out.println();
 		} else {
@@ -502,7 +507,7 @@ public class ConsoleDriver {
 			System.out.println("Doing so will overwrite the current schedule. Do you want to continue? [Y/N]");
 			String temp = console.nextLine();
 			if (temp.equalsIgnoreCase("yes") || temp.equalsIgnoreCase("y")) {
-				ScheduleI tempSchedule = IOSystem.loadFromDisk(tokens[1]);
+				ScheduleI tempSchedule = ClientIOSystem.loadFromDisk(tokens[1]);
 				if (tempSchedule != null){
 					schedule = (Schedule) tempSchedule;
 					System.out.println("The content has been loaded successfully");
@@ -515,6 +520,34 @@ public class ConsoleDriver {
 			printHelp();
 		}
 	}
+	
+	public static void create(String userInput) {
+		
+		String[] tokens = userInput.split("\\s+");
+		if (tokens.length == 3) {
+			if (ServerCommunicator.isLoggedIn()) {
+				System.out.println("You have already logged in. Cannot create!");
+				return;
+			}
+			
+			try {
+				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateCreateRequest(tokens[1], tokens[2]));
+				if (serverResponse.isAccepted()) {
+					System.out.println("Registration done successfully! Please save your username and password.");
+					System.out.println("You are now logged in");
+				} else {
+					System.out.println("Server rejected: "+serverResponse.getFailureNotice());
+				}
+				System.out.println();
+			} catch (IOException e) {
+				System.out.println("Error: cannot connect to the Internet!");
+			}
+		} else {
+			printHelp();
+		}
+		
+	}
+
 	
 	public static void exit() {
 		System.out.println("Bye");
@@ -533,6 +566,7 @@ public class ConsoleDriver {
 		System.out.println("list_events_using_times <start_time> <end_time> - lists all the events within the specified time frame.");
 		System.out.println("save <file_name> - save the content of the current schedule into <file_name>.SAV");
 		System.out.println("load <file_name> - load from <file_name>.SAV");
+		System.out.println("create <username> <password> - create a new account");
 		System.out.println("exit or quit - quit the program");
 		System.out.println("help - see a list of commands");
 		System.out.println();

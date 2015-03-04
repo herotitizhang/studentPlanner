@@ -8,17 +8,22 @@ import java.net.UnknownHostException;
 
 import model.ScheduleI;
 import networkCommunication.ClientRequest.RequestType;
-import utilities.IOSystem;
+import utilities.ClientIOSystem;
 
+
+// Note: processing serverResponse should be separate from the functionality provided in this class
 public class ServerCommunicator {
 
-	private static boolean loggedIn = false; // if set to true, the user can not
-												// send LOGIN or CREATE again
+	
+	// if loggedIn is true, the user can not send LOGIN or CREATE request
+	// if loggedIn is false, the user can not send
+	private static boolean loggedIn = false;
+	
 	private static String username = null;
 	private static String password = null;
 	// TODO needs to change the 2 following fields TODO
-	private static String serverIP = "localhost";
-	private static int port = 1025;
+	private static String serverIP = "10.111.220.75";
+	private static int port = 12345;
 
 	/**
 	 * the invoker will call this method like ServerResponse sr =
@@ -26,7 +31,7 @@ public class ServerCommunicator {
 	 * ServerResponse is assigned a value; throw the ConnectionException (which
 	 * extends IOException) and let the invoker handles it
 	 * 
-	 * Note: the ConnectionException indicates that internet is not available,
+	 * Note: the ConnectionException (IOException) indicates that internet is not available,
 	 * in this case the invoker should switch to local save/load.
 	 * 
 	 * throw the unknownhostException (should not happen as long as the serverIP
@@ -35,32 +40,46 @@ public class ServerCommunicator {
 	 * the invoker also needs to check for null due to unexpected disconnection
 	 */
 	public static ServerResponse sendClientRequest(ClientRequest clientRequest)
-			throws IOException, UnknownHostException {
+			throws UnknownHostException {
 
-		if ((!loggedIn) || clientRequest == null) return null;
-		
-		Socket socket = new Socket(serverIP, port);
-		OutputStream out = socket.getOutputStream();
-		out.write(IOSystem.getByteArray(clientRequest));
-		out.flush();
-
-		// start the timer
-		Timer timer = new Timer();
-		new Thread(timer).start();
-
+		// initialization
 		ServerResponse serverResponse = null;
-		while (socket.isConnected() && !timer.timeOut) {
-			if (socket.getInputStream().available() > 0) {
-				InputStream in = socket.getInputStream();
-				byte[] content = new byte[in.available()]; 
-				in.read(content);
-				serverResponse = (ServerResponse) IOSystem.getObject(content);
-				socket.close();
+		Socket socket = null;
+		try {
+			socket = new Socket(serverIP, port);
+		} catch (UnknownHostException e1) {
+			System.out.println("unknown host");
+		} catch (IOException e) {
+			System.out.println("IOException");
+		}
+		
+		try {
+			// send ClientRequest to the server
+			socket.getOutputStream().write(ClientIOSystem.getByteArray(clientRequest));
+			socket.getOutputStream().flush();
+
+			// start the timer so that it won't wait for the server's response forever
+			Timer timer = new Timer();
+			new Thread(timer).start();
+
+			// get Server Response from the server
+			while ((!socket.isClosed()) && socket.isConnected() && !timer.timeOut) {
+				if (socket.getInputStream().available() > 0) {
+					InputStream in = socket.getInputStream();
+					byte[] content = new byte[in.available()]; 
+					in.read(content);
+					serverResponse = (ServerResponse) ClientIOSystem.getObject(content);
+					socket.close();
+				}
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
+		// if it's a create or a login request, and the server's response is positive,
+		// then set the login state to true
 		if ((clientRequest.getType() == RequestType.CREATE || clientRequest.getType() == RequestType.LOGIN)
-				 && (serverResponse!= null) /* && ( serverResponse is ACCEPT TODO TODO TODO) */ ) {
+				 && (serverResponse!= null) && (serverResponse.isAccepted())) {
 			loggedIn = true;
 			username = clientRequest.getUserName();
 			password = clientRequest.getPassword();
@@ -70,7 +89,7 @@ public class ServerCommunicator {
 	 
 	}
 
-	public ClientRequest generateCreateRequest(String username, String password) {
+	public static ClientRequest generateCreateRequest(String username, String password) {
 		ClientRequest request = null;
 		if (!loggedIn) {
 			request = new ClientRequest(RequestType.CREATE);
@@ -80,30 +99,30 @@ public class ServerCommunicator {
 		return request;
 	}
 
-	public ClientRequest generateSaveRequest(ScheduleI schedule) {
+	public static ClientRequest generateSaveRequest(ScheduleI schedule) {
 		ClientRequest request = new ClientRequest(RequestType.SAVE);
 		request.setSchedule(schedule);
 		return request;
 	}
 	
-	public ClientRequest generateLoadRequest() {
+	public static ClientRequest generateLoadRequest() {
 		ClientRequest request = new ClientRequest(RequestType.LOAD);
 		return request;
 	}
 	
-	public ClientRequest generateRequestAuthRequest(String phoneNumber) { // TODO support email 
+	public static ClientRequest generateRequestAuthRequest(String phoneNumber) { // TODO support email 
 		ClientRequest request = new ClientRequest(RequestType.REQUEST_AUTH);
 		request.setPhoneNumber(phoneNumber);
 		return request;
 	}
 	
-	public ClientRequest generateAuthenticateRequest(String authenCode) {
+	public static ClientRequest generateAuthenticateRequest(String authenCode) {
 		ClientRequest request = new ClientRequest(RequestType.AUTH);
 		request.setAuthenCode(authenCode);
 		return request;
 	}
 	
-	public ClientRequest generateAlertRequest(ScheduleI schedule) {
+	public static ClientRequest generateAlertRequest(ScheduleI schedule) {
 		ClientRequest request = new ClientRequest(RequestType.ALERT);
 		request.setSchedule(schedule);
 		return request;
@@ -131,6 +150,8 @@ public class ServerCommunicator {
 
 }
 
+
+// TODO NOT tested
 class Timer implements Runnable {
 
 	public boolean timeOut = false;
