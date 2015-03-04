@@ -84,7 +84,7 @@
 				<include name="*.SAV"/>
 			</fileset>
 			<fileset dir="${dest}">
-				<include name="*/**" />
+				<include name="**/*" />
 			</fileset>
 			<fileset dir="${output}">
 				<include name="*.jar"/>

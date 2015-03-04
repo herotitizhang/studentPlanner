@@ -22,7 +22,7 @@ public class ServerCommunicator {
 	private static String username = null;
 	private static String password = null;
 	// TODO needs to change the 2 following fields TODO
-	private static String serverIP = "10.111.220.75";
+	private static String serverIP = "10.0.0.3";
 	private static int port = 12345;
 
 	/**
@@ -39,19 +39,16 @@ public class ServerCommunicator {
 	 * 
 	 * the invoker also needs to check for null due to unexpected disconnection
 	 */
-	public static ServerResponse sendClientRequest(ClientRequest clientRequest)
-			throws UnknownHostException {
+	public static ServerResponse sendClientRequest(ClientRequest clientRequest) throws IOException{
 
 		// initialization
 		ServerResponse serverResponse = null;
 		Socket socket = null;
 		try {
 			socket = new Socket(serverIP, port);
-		} catch (UnknownHostException e1) {
-			System.out.println("unknown host");
-		} catch (IOException e) {
-			System.out.println("IOException");
-		}
+		} catch (UnknownHostException e) {
+			System.out.println("unknown host"); // should not happen
+		} 
 		
 		try {
 			// send ClientRequest to the server
@@ -93,6 +90,16 @@ public class ServerCommunicator {
 		ClientRequest request = null;
 		if (!loggedIn) {
 			request = new ClientRequest(RequestType.CREATE);
+			request.setUserName(username);
+			request.setPassword(password);
+		}
+		return request;
+	}
+	
+	public static ClientRequest generateLoginRequest(String username, String password) {
+		ClientRequest request = null;
+		if (!loggedIn) {
+			request = new ClientRequest(RequestType.LOGIN);
 			request.setUserName(username);
 			request.setPassword(password);
 		}

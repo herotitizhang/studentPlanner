@@ -55,6 +55,8 @@ public class ConsoleDriver {
 			load(userInput);
 		} else if (userInput.startsWith("create")){
 			create(userInput);
+		} else if (userInput.startsWith("login")){
+			login(userInput);
 		} else if (userInput.equals("exit") || userInput.equals("quit")) { 
 			exit();
 		} else {
@@ -526,7 +528,7 @@ public class ConsoleDriver {
 		String[] tokens = userInput.split("\\s+");
 		if (tokens.length == 3) {
 			if (ServerCommunicator.isLoggedIn()) {
-				System.out.println("You have already logged in. Cannot create!");
+				System.out.println("You have already logged in. Cannot create!"); // TODO you should be able to CREATE
 				return;
 			}
 			
@@ -534,6 +536,32 @@ public class ConsoleDriver {
 				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateCreateRequest(tokens[1], tokens[2]));
 				if (serverResponse.isAccepted()) {
 					System.out.println("Registration done successfully! Please save your username and password.");
+					System.out.println("You are now logged in");
+				} else {
+					System.out.println("Server rejected: "+serverResponse.getFailureNotice());
+				}
+				System.out.println();
+			} catch (IOException e) {
+				System.out.println("Error: cannot connect to the Internet!");
+			}
+		} else {
+			printHelp();
+		}
+		
+	}
+	
+	public static void login(String userInput) {
+		
+		String[] tokens = userInput.split("\\s+");
+		if (tokens.length == 3) {
+			if (ServerCommunicator.isLoggedIn()) {
+				System.out.println("You have already logged in. Cannot login!"); // TODO you should be able to LOGIN...
+				return;
+			}
+			
+			try {
+				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateLoginRequest(tokens[1], tokens[2]));
+				if (serverResponse.isAccepted()) {
 					System.out.println("You are now logged in");
 				} else {
 					System.out.println("Server rejected: "+serverResponse.getFailureNotice());
