@@ -119,6 +119,8 @@ public class ServerCommunicator {
 	
 	public static ClientRequest generateRequestAuthRequest(String phoneNumber) { // TODO support email 
 		ClientRequest request = new ClientRequest(RequestType.REQUEST_AUTH);
+		request.setUserName(username);
+		request.setPassword(password); // not necessary but it's good to include
 		request.setPhoneNumber(phoneNumber);
 		return request;
 	}
@@ -157,15 +159,13 @@ public class ServerCommunicator {
 
 }
 
-
-// TODO NOT tested
 class Timer implements Runnable {
 
 	public boolean timeOut = false;
 
 	public void run() {
 		try {
-			Thread.sleep(5 * 1000); // wait for 5 seconds
+			Thread.sleep(10 * 1000); // wait for 10 seconds
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -51,12 +51,18 @@ public class ConsoleDriver {
 			listEventsBasedOnTimeFrame(userInput); 
 		} else if (userInput.startsWith("save")){
 			save(userInput);
+			// TODO this method should not exist. if a user is offline, then he can not save. he can only load
+			// TODO make a method to check if there is connection. (testConnection)
+			// TODO encryption
+			
 		} else if (userInput.startsWith("load")){
 			load(userInput);
 		} else if (userInput.startsWith("create")){
 			create(userInput);
 		} else if (userInput.startsWith("login")){
 			login(userInput);
+		} else if (userInput.startsWith("request_auth")){
+			requestAuthenticate(userInput);
 		} else if (userInput.equals("exit") || userInput.equals("quit")) { 
 			exit();
 		} else {
@@ -534,6 +540,11 @@ public class ConsoleDriver {
 			
 			try {
 				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateCreateRequest(tokens[1], tokens[2]));
+				if (serverResponse == null) {
+					System.out.println("No response from the server!");
+					System.out.println();
+					return;
+				}
 				if (serverResponse.isAccepted()) {
 					System.out.println("Registration done successfully! Please save your username and password.");
 					System.out.println("You are now logged in");
@@ -561,8 +572,48 @@ public class ConsoleDriver {
 			
 			try {
 				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateLoginRequest(tokens[1], tokens[2]));
+				if (serverResponse == null) {
+					System.out.println("No response from the server!");
+					System.out.println();
+					return;
+				}
+				
 				if (serverResponse.isAccepted()) {
 					System.out.println("You are now logged in");
+				} else {
+					System.out.println("Server rejected: "+serverResponse.getFailureNotice());
+				}
+				System.out.println();
+			} catch (IOException e) {
+				System.out.println("Error: cannot connect to the Internet!");
+			}
+		} else {
+			printHelp();
+		}
+		
+	}
+	
+	public static void requestAuthenticate(String userInput) {
+		
+		String[] tokens = userInput.split("\\s+");
+		if (tokens.length == 2) {
+			if (!ServerCommunicator.isLoggedIn()) {
+				System.out.println("You are not logged-in. Please log in first!"); 
+				return;
+			}
+			
+			try {
+				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateRequestAuthRequest(tokens[1]));
+				if (serverResponse == null) {
+					System.out.println("No response from the server!");
+					System.out.println();
+					return;
+				}
+				
+				if (serverResponse.isAccepted()) {
+					System.out.println("Server has received your authentication request. Please wait for a while.");
+					System.out.println("An authentication text message will arrive in approximately 3 minutes.");
+					System.out.println("If you don't get it, please request the authentication code one more time.");
 				} else {
 					System.out.println("Server rejected: "+serverResponse.getFailureNotice());
 				}
@@ -594,7 +645,8 @@ public class ConsoleDriver {
 		System.out.println("list_events_using_times <start_time> <end_time> - lists all the events within the specified time frame.");
 		System.out.println("save <file_name> - save the content of the current schedule into <file_name>.SAV");
 		System.out.println("load <file_name> - load from <file_name>.SAV");
-		System.out.println("create <username> <password> - create a new account");
+		System.out.println("create <username> <password> - create a new account.");
+		System.out.println("login <username> <password> - log in using you account.");
 		System.out.println("exit or quit - quit the program");
 		System.out.println("help - see a list of commands");
 		System.out.println();
