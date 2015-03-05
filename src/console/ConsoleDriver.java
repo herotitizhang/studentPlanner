@@ -63,6 +63,8 @@ public class ConsoleDriver {
 			login(userInput);
 		} else if (userInput.startsWith("request_auth")){
 			requestAuthenticate(userInput);
+		} else if (userInput.startsWith("auth")){
+			authenticate(userInput);
 		} else if (userInput.equals("exit") || userInput.equals("quit")) { 
 			exit();
 		} else {
@@ -554,6 +556,7 @@ public class ConsoleDriver {
 				System.out.println();
 			} catch (IOException e) {
 				System.out.println("Error: cannot connect to the Internet!");
+				System.out.println();
 			}
 		} else {
 			printHelp();
@@ -586,6 +589,7 @@ public class ConsoleDriver {
 				System.out.println();
 			} catch (IOException e) {
 				System.out.println("Error: cannot connect to the Internet!");
+				System.out.println();
 			}
 		} else {
 			printHelp();
@@ -598,9 +602,12 @@ public class ConsoleDriver {
 		String[] tokens = userInput.split("\\s+");
 		if (tokens.length == 2) {
 			if (!ServerCommunicator.isLoggedIn()) {
-				System.out.println("You are not logged-in. Please log in first!"); 
+				System.out.println("You are not logged-in. Please log in first!");
+				System.out.println();
 				return;
-			}
+			} 
+			ServerCommunicator.setAuthenticated(false);
+			
 			
 			try {
 				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateRequestAuthRequest(tokens[1]));
@@ -611,9 +618,53 @@ public class ConsoleDriver {
 				}
 				
 				if (serverResponse.isAccepted()) {
+					ServerCommunicator.setPhoneNumber(tokens[1]);
 					System.out.println("Server has received your authentication request. Please wait for a while.");
 					System.out.println("An authentication text message will arrive in approximately 3 minutes.");
 					System.out.println("If you don't get it, please request the authentication code one more time.");
+				} else {
+					System.out.println("Server rejected: "+serverResponse.getFailureNotice());
+				}
+				System.out.println();
+			} catch (IOException e) {
+				System.out.println("Error: cannot connect to the Internet!");
+				System.out.println();
+			}
+		} else {
+			printHelp();
+		}
+		
+	}
+	
+	public static void authenticate(String userInput) {
+		String[] tokens = userInput.split("\\s+");
+		if (tokens.length == 2) {
+			if (!ServerCommunicator.isLoggedIn()) {
+				System.out.println("You are not logged-in. Please log in first!"); 
+				System.out.println();
+				return;
+			} else if (ServerCommunicator.isAuthenticated()) {
+				if (ServerCommunicator.getPhoneNumber() ==  null) { 
+					System.out.println("You have not requested authentication in this session yet. Please request authentication first.");
+				} else {
+					System.out.println("You current phone number "+ ServerCommunicator.getPhoneNumber()+ " has already been authenticated.");
+					System.out.println("If you wish to change the phone number associated with your account, request authentication first.");
+				}
+				System.out.println();
+				return;
+			} 
+			
+			try {
+				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateAuthenticateRequest(tokens[1]));
+				if (serverResponse == null) {
+					System.out.println("No response from the server!");
+					System.out.println();
+					return;
+				}
+				
+				if (serverResponse.isAccepted()) {
+					ServerCommunicator.setAuthenticated(true);
+					System.out.println("Your phone number has been authenticated. You can get alerts from the server from now on.");
 				} else {
 					System.out.println("Server rejected: "+serverResponse.getFailureNotice());
 				}
@@ -624,7 +675,6 @@ public class ConsoleDriver {
 		} else {
 			printHelp();
 		}
-		
 	}
 
 	
@@ -643,10 +693,12 @@ public class ConsoleDriver {
 		System.out.println("list_events_using_ctgr <category_name> - lists all the events in an category.");
 		System.out.println("list_events_using_priority <priority> - lists all the events of a specified priority[L/M/H/U].");
 		System.out.println("list_events_using_times <start_time> <end_time> - lists all the events within the specified time frame.");
-		System.out.println("save <file_name> - save the content of the current schedule into <file_name>.SAV");
-		System.out.println("load <file_name> - load from <file_name>.SAV");
-		System.out.println("create <username> <password> - create a new account.");
-		System.out.println("login <username> <password> - log in using you account.");
+		System.out.println("save <file_name> - saves the content of the current schedule into <file_name>.SAV");
+		System.out.println("load <file_name> - loads from <file_name>.SAV");
+		System.out.println("create <username> <password> - creates a new account.");
+		System.out.println("login <username> <password> - logs in using you account.");
+		System.out.println("request_auth <phone_number> - requests an authentication code, which will be sent to you phone.");
+		System.out.println("auth <authentication_code> - enters the authentication code; this command should be entered only after the user has requested authentication.");
 		System.out.println("exit or quit - quit the program");
 		System.out.println("help - see a list of commands");
 		System.out.println();

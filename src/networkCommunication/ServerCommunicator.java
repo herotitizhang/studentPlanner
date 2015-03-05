@@ -21,6 +21,12 @@ public class ServerCommunicator {
 	
 	private static String username = null;
 	private static String password = null;
+	
+	// if not authenticated, then the phone number is not used by the server to send alerts
+	private static boolean authenticated = false;
+	private static String phoneNumber = null;
+	
+	
 	// TODO needs to change the 2 following fields TODO
 	private static String serverIP = "10.0.0.3";
 	private static int port = 12345;
@@ -127,6 +133,8 @@ public class ServerCommunicator {
 	
 	public static ClientRequest generateAuthenticateRequest(String authenCode) {
 		ClientRequest request = new ClientRequest(RequestType.AUTH);
+		request.setUserName(username);
+		request.setPassword(password); // not necessary but it's good to include
 		request.setAuthenCode(authenCode);
 		return request;
 	}
@@ -155,6 +163,22 @@ public class ServerCommunicator {
 
 	public static int getPort() {
 		return port;
+	}
+
+	public static boolean isAuthenticated() {
+		return authenticated;
+	}
+
+	public static void setAuthenticated(boolean authenticated) {
+		ServerCommunicator.authenticated = authenticated;
+	}
+
+	public static String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public static void setPhoneNumber(String phoneNumber) {
+		ServerCommunicator.phoneNumber = phoneNumber;
 	}
 
 }
