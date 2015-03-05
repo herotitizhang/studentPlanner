@@ -21,18 +21,25 @@ import model.ScheduleI;
 
 public class ConsoleDriver {
 
-	public static Schedule schedule = new Schedule();
-	public static Scanner console = new Scanner(System.in);
+	private static Schedule schedule = new Schedule();
+	private static Scanner console = new Scanner(System.in);
 	
 	public static void main(String[] args) {
 		System.out.println("Enter \"help\" to see a list of available commands");
+		if (!ServerCommunicator.checkConnection()) {
+			System.out.println("Note: You are currently not connected to the internet.");
+			System.out.println("All the changes you make cannot be saved.");
+			System.out.println("However, You are able to load from local drive.");
+			System.out.println("Enter \"check_inet\" to see if the client side is connected to the server now.");
+			System.out.println();
+		}
 		while (console.hasNextLine()){
 			String userInput = console.nextLine();
 			processUserInput(userInput);
 		}
 	}
 	
-	public static void processUserInput(String userInput) {
+	private static void processUserInput(String userInput) {
 		if (userInput.startsWith("add_ctgr")){
 			addCategory(userInput);
 		} else if (userInput.startsWith("rm_ctgr")){
@@ -49,14 +56,12 @@ public class ConsoleDriver {
 			listEventsBasedOnPriority(userInput);
 		} else if (userInput.startsWith("list_events_using_times")){
 			listEventsBasedOnTimeFrame(userInput); 
-		} else if (userInput.startsWith("save")){
-			save(userInput);
-			// TODO this method should not exist. if a user is offline, then he can not save. he can only load
-			// TODO make a method to check if there is connection. (testConnection)
-			// TODO encryption
-			
-		} else if (userInput.startsWith("load")){
-			load(userInput);
+		} else if (userInput.equals("check_inet")){
+			checkInternet();
+		} else if (userInput.equals("save")){
+			save();
+		} else if (userInput.equals("load")){
+			load();
 		} else if (userInput.startsWith("create")){
 			create(userInput);
 		} else if (userInput.startsWith("login")){
@@ -72,7 +77,7 @@ public class ConsoleDriver {
 		} 
 	} 
 	
-	public static void addCategory(String userInput) {
+	private static void addCategory(String userInput) {
 		String[] tokens = userInput.split("\\s+");
 		if (tokens.length == 2) {
 			try {
@@ -89,7 +94,7 @@ public class ConsoleDriver {
 		}
 	}
 	
-	public static void removeCategory(String userInput) {
+	private static void removeCategory(String userInput) {
 		String[] tokens = userInput.split("\\s+");
 		if (tokens.length == 2) {
 			if (schedule.removeCategory(tokens[1]) != null) {
@@ -103,14 +108,14 @@ public class ConsoleDriver {
 		}
 	}
 	
-	public static void listCategories() {
+	private static void listCategories() {
 		for (CategoryI category: schedule.getCategories()) {
 			System.out.println(category);
 		}
 		System.out.println();
 	}
 	
-	public static void createEvent() {
+	private static void createEvent() {
 		// get name
 		System.out.println("Please enter the event name.");
 		String name = console.nextLine();
@@ -244,7 +249,7 @@ public class ConsoleDriver {
 		System.out.println();
 	}
 	
-	public static void editEvent(String userInput) {
+	private static void editEvent(String userInput) {
 		if (userInput.length() < 11 // edit_event plus a space after it
 				|| userInput.charAt(10) != ' ') {
 			printHelp();
@@ -422,7 +427,7 @@ public class ConsoleDriver {
 		}
 	}
 	
-	public static void listEventsBasedOnCategory(String userInput) {
+	private static void listEventsBasedOnCategory(String userInput) {
 		String[] tokens = userInput.split("\\s+");
 		if (tokens.length == 2) {
 			List<EventI> events = schedule.getEvents(tokens[1]);
@@ -440,7 +445,7 @@ public class ConsoleDriver {
 		}
 	}
 	
-	public static void listEventsBasedOnPriority(String userInput) {
+	private static void listEventsBasedOnPriority(String userInput) {
 		String[] tokens = userInput.split("\\s+");
 		if (tokens.length == 2) {
 			Priority priority = Priority.MEDIUM; // default
@@ -462,7 +467,7 @@ public class ConsoleDriver {
 		}
 	}
 	
-	public static void listEventsBasedOnTimeFrame(String userInput) {
+	private static void listEventsBasedOnTimeFrame(String userInput) {
 		String[] tokens = userInput.split("\\s+");
 		if (tokens.length == 3) {
 			
@@ -499,39 +504,139 @@ public class ConsoleDriver {
 		}
 	}
 	
-	public static void save(String userInput) {
-		String[] tokens = userInput.split("\\s+");
-		if (tokens.length == 2) {
-			ClientIOSystem.writeToDisk(schedule, tokens[1]);
-			System.out.println("Schedule has been saved successfully.");
-			System.out.println();
+	private static void checkInternet() {
+		if (ServerCommunicator.checkConnection()) {
+			System.out.println("Connected to the server!");
 		} else {
-			printHelp();
+			System.out.println("Not connected to the server!");
 		}
+		System.out.println();
 	}
 	
-	public static void load(String userInput) {
-		String[] tokens = userInput.split("\\s+");
-		if (tokens.length == 2) {
-			System.out.println("Note: you are about to load the content into the current schedule. ");
-			System.out.println("Doing so will overwrite the current schedule. Do you want to continue? [Y/N]");
-			String temp = console.nextLine();
-			if (temp.equalsIgnoreCase("yes") || temp.equalsIgnoreCase("y")) {
-				ScheduleI tempSchedule = ClientIOSystem.loadFromDisk(tokens[1]);
-				if (tempSchedule != null){
-					schedule = (Schedule) tempSchedule;
-					System.out.println("The content has been loaded successfully");
-				}
+	// save to server
+	private static void save() {
+		if (!ServerCommunicator.isLoggedIn()) {
+			System.out.println("You are not logged-in. Please log in first!");
+			System.out.println();
+			return;
+		} 
+		
+		try {
+			ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateSaveRequest(schedule));
+			if (serverResponse == null) {
+				System.out.println("No response from the server! You schedule is not saved.");
+				System.out.println();
+				return;
+			}
+			
+			if (serverResponse.isAccepted()) {
+				System.out.println("You schedule has been saved to the server.");
+				saveLocally(); // it's ok to also save locally since there is no discrepancy in save file
 			} else {
-				System.out.println("You chose not to load.");
+				System.out.println("Server rejected: "+serverResponse.getFailureNotice());
+				System.out.println("You schedule is not saved.");
 			}
 			System.out.println();
-		} else {
-			printHelp();
+		} catch (IOException e) {
+			System.out.println("Error: cannot connect to the Internet! You schedule is not saved.");
+			System.out.println();
 		}
 	}
 	
-	public static void create(String userInput) {
+	// the user is not supposed to not explicitly ask the program to save locally
+	// it's only done when saving to server is successul (save a local copy)
+	private static void saveLocally() {
+		ClientIOSystem.writeToDisk(schedule, ServerCommunicator.getUsername());
+		System.out.println("Schedule has been saved locally to "+ServerCommunicator.getUsername()+".SAV");
+	}
+
+	// load the schedule from the server. In some circumstances load from local drive.
+	private static void load() {
+		
+		System.out.println("Note: you are about to load the content into the current schedule. ");
+		System.out.println("Doing so will overwrite the current schedule. Do you want to continue? [Y/N]");
+		String temp = console.nextLine();
+		if (!(temp.equalsIgnoreCase("yes") || temp.equalsIgnoreCase("y"))) {
+			System.out.println("You chose not to load.");
+			return; 
+		}
+		
+		// internet not available. load from local drive
+		if (!ServerCommunicator.checkConnection()) {
+			System.out.println("No Internet connection.");
+			loadLocally();
+			return;
+		} 
+		
+		// internet is available
+		if (!ServerCommunicator.isLoggedIn()) {
+			System.out.println("You are not logged-in. Please log in first!");
+			System.out.println();
+			return;
+		} 
+		
+		
+		try {
+			
+			ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateLoadRequest());
+			if (serverResponse == null) {
+				System.out.println("No response from the server! You are going to load from local drive.");
+				loadLocally();
+				System.out.println();
+				return;
+			}
+			
+			if (serverResponse.isAccepted()) {
+				schedule = (Schedule) serverResponse.getSchedule();
+				System.out.println("You schedule has been loaded from the server.");
+			} else {
+				loadLocally();
+				System.out.println("Server rejected: "+serverResponse.getFailureNotice());
+				System.out.println("You schedule is loaded from local drive.");
+			}
+			System.out.println();
+		} catch (IOException e) {
+			loadLocally();
+			System.out.println("Error: cannot connect to the Internet! You schedule is loaded from local drive.");
+			System.out.println();
+		}
+	
+	}
+	
+	private static void loadLocally() {
+		System.out.println("Enter the file name you want to load from local drive.");
+		String fileName = console.nextLine();
+		ScheduleI tempSchedule = ClientIOSystem.loadFromDisk(fileName);
+		if (tempSchedule != null){
+			schedule = (Schedule) tempSchedule;
+			System.out.println("The content has been loaded from local drive successfully");
+			System.out.println();
+		}
+	}
+	
+	
+//	private static void loadLocally(String userInput) {
+//		String[] tokens = userInput.split("\\s+");
+//		if (tokens.length == 2) {
+//			System.out.println("Note: you are about to load the content into the current schedule. ");
+//			System.out.println("Doing so will overwrite the current schedule. Do you want to continue? [Y/N]");
+//			String temp = console.nextLine();
+//			if (temp.equalsIgnoreCase("yes") || temp.equalsIgnoreCase("y")) {
+//				ScheduleI tempSchedule = ClientIOSystem.loadFromDisk(tokens[1]);
+//				if (tempSchedule != null){
+//					schedule = (Schedule) tempSchedule;
+//					System.out.println("The content has been loaded successfully");
+//				}
+//			} else {
+//				System.out.println("You chose not to load.");
+//			}
+//			System.out.println();
+//		} else {
+//			printHelp();
+//		}
+//	}
+	
+	private static void create(String userInput) {
 		
 		String[] tokens = userInput.split("\\s+");
 		if (tokens.length == 3) {
@@ -541,6 +646,7 @@ public class ConsoleDriver {
 			}
 			
 			try {
+				// TODO encryption
 				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateCreateRequest(tokens[1], tokens[2]));
 				if (serverResponse == null) {
 					System.out.println("No response from the server!");
@@ -564,7 +670,7 @@ public class ConsoleDriver {
 		
 	}
 	
-	public static void login(String userInput) {
+	private static void login(String userInput) {
 		
 		String[] tokens = userInput.split("\\s+");
 		if (tokens.length == 3) {
@@ -574,6 +680,7 @@ public class ConsoleDriver {
 			}
 			
 			try {
+				// TODO encryption
 				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateLoginRequest(tokens[1], tokens[2]));
 				if (serverResponse == null) {
 					System.out.println("No response from the server!");
@@ -597,7 +704,7 @@ public class ConsoleDriver {
 		
 	}
 	
-	public static void requestAuthenticate(String userInput) {
+	private static void requestAuthenticate(String userInput) {
 		
 		String[] tokens = userInput.split("\\s+");
 		if (tokens.length == 2) {
@@ -636,7 +743,7 @@ public class ConsoleDriver {
 		
 	}
 	
-	public static void authenticate(String userInput) {
+	private static void authenticate(String userInput) {
 		String[] tokens = userInput.split("\\s+");
 		if (tokens.length == 2) {
 			if (!ServerCommunicator.isLoggedIn()) {
@@ -678,7 +785,7 @@ public class ConsoleDriver {
 	}
 
 	
-	public static void exit() {
+	private static void exit() {
 		System.out.println("Bye");
 		System.exit(0);
 	}
@@ -693,8 +800,9 @@ public class ConsoleDriver {
 		System.out.println("list_events_using_ctgr <category_name> - lists all the events in an category.");
 		System.out.println("list_events_using_priority <priority> - lists all the events of a specified priority[L/M/H/U].");
 		System.out.println("list_events_using_times <start_time> <end_time> - lists all the events within the specified time frame.");
-		System.out.println("save <file_name> - saves the content of the current schedule into <file_name>.SAV");
-		System.out.println("load <file_name> - loads from <file_name>.SAV");
+		System.out.println("check_inet - see if the client is connected to the Internet.");
+		System.out.println("save - saves the content of the current schedule to the server side.");
+		System.out.println("load - first trys loading from the server side. If there is no connection, load from local drive.");
 		System.out.println("create <username> <password> - creates a new account.");
 		System.out.println("login <username> <password> - logs in using you account.");
 		System.out.println("request_auth <phone_number> - requests an authentication code, which will be sent to you phone.");

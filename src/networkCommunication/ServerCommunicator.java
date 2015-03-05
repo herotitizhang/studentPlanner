@@ -32,6 +32,23 @@ public class ServerCommunicator {
 	private static int port = 12345;
 
 	/**
+	 * false IP will make it hang...
+	 * @return
+	 */
+	public static boolean checkConnection() {
+		
+		boolean connection = true;
+		try {
+			Socket socket = new Socket(serverIP, port);
+		} catch (IOException e) {
+			connection = false;
+		} 
+		
+		return connection;
+		
+	}
+	
+	/**
 	 * the invoker will call this method like ServerResponse sr =
 	 * ServerCommunicator.sendClientRequest the invoker only proceeds after
 	 * ServerResponse is assigned a value; throw the ConnectionException (which
@@ -114,12 +131,16 @@ public class ServerCommunicator {
 
 	public static ClientRequest generateSaveRequest(ScheduleI schedule) {
 		ClientRequest request = new ClientRequest(RequestType.SAVE);
+		request.setUserName(username);
+		request.setPassword(password); // not necessary but it's good to include
 		request.setSchedule(schedule);
 		return request;
 	}
 	
 	public static ClientRequest generateLoadRequest() {
 		ClientRequest request = new ClientRequest(RequestType.LOAD);
+		request.setUserName(username);
+		request.setPassword(password); // not necessary but it's good to include
 		return request;
 	}
 	
@@ -180,7 +201,7 @@ public class ServerCommunicator {
 	public static void setPhoneNumber(String phoneNumber) {
 		ServerCommunicator.phoneNumber = phoneNumber;
 	}
-
+	
 }
 
 class Timer implements Runnable {
