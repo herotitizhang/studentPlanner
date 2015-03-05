@@ -154,7 +154,7 @@ public class DataHandler {
     
     public void updateEvent(String name, String text, String start, 
 			String end, boolean hasAlert, String alertText, String alertTimeString, 
-                        Repeat repeat, CategoryI category) throws ItemNotFoundException {
+                        Repeat repeat, Priority priority, CategoryI category) throws ItemNotFoundException {
         
         EventI event = getCurrentEvent();
         
@@ -175,6 +175,8 @@ public class DataHandler {
         event.setText(text);
         event.setStartTime(startTime);
         event.setEndTime(endTime);
+        event.setRepeating(repeat);
+        event.setPriority(priority);
         event.setAlert(hasAlert);
         event.setAlertText(alertText);
         event.setAlertTime(alertTime);

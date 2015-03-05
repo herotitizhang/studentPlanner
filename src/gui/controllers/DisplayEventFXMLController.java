@@ -8,11 +8,8 @@ package gui.controllers;
 import gui.DataHandler;
 import gui.EventCell;
 import gui.ItemNotFoundException;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,10 +17,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.EventI;
+import model.EventI.Priority;
 import model.EventI.Repeat;
 
 /**
@@ -37,6 +36,8 @@ public class DisplayEventFXMLController implements Initializable {
     @FXML TextField textInput;
     @FXML TextField startTimeInput;
     @FXML TextField endTimeInput;
+    @FXML ComboBox<Repeat> repeatInput;
+    @FXML ComboBox<Priority> priorityInput;
     @FXML CheckBox alertBoolInput;
     @FXML TextField alertTimeInput;
     @FXML TextField alertTextInput;
@@ -86,7 +87,8 @@ public class DisplayEventFXMLController implements Initializable {
             DashboardViewFXMLController controller = loader.getController();
             DataHandler.getInstance().updateEvent(nameInput.getText(), textInput.getText(), startTimeInput.getText(), 
                 endTimeInput.getText(), alertBoolInput.isSelected(), alertTextInput.getText(), 
-                alertTimeInput.getText(), Repeat.NONE, DataHandler.getInstance().getCategory(categoryInput.getText()));
+                alertTimeInput.getText(), repeatInput.getValue(), priorityInput.getValue(),
+                DataHandler.getInstance().getCategory(categoryInput.getText()));
             EventCell cell = (EventCell) controller.eventListView.getSelectionModel().getSelectedItem();
             controller.resetEventListView();
         } catch (Exception e) {

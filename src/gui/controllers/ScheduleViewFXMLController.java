@@ -5,12 +5,9 @@
  */
 package gui.controllers;
 
-import gui.DataHandler;
-import gui.StudentPlanner;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
-import model.WeeklySchedule;
 
 /**
  * FXML Controller class
