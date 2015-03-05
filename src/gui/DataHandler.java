@@ -144,6 +144,14 @@ public class DataHandler {
         return true;
     }
     
+    public boolean addEvent(EventI event) {
+        eventList.add(event);
+        if (!categoryList.contains(event.getCategory())) {
+            categoryList.add(event.getCategory());
+        }
+        return true;
+    }
+    
     public void updateEvent(String name, String text, String start, 
 			String end, boolean hasAlert, String alertText, String alertTimeString, 
                         Repeat repeat, CategoryI category) throws ItemNotFoundException {

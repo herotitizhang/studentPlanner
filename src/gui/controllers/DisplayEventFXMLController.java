@@ -8,8 +8,11 @@ package gui.controllers;
 import gui.DataHandler;
 import gui.EventCell;
 import gui.ItemNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -78,14 +81,13 @@ public class DisplayEventFXMLController implements Initializable {
         try {
             closeWindow();
             /* refresh eventListView */
-            DataHandler.getInstance().updateEvent(nameInput.getText(), textInput.getText(), startTimeInput.getText(), 
-                endTimeInput.getText(), alertBoolInput.isSelected(), alertTextInput.getText(), 
-                alertTimeInput.getText(), Repeat.NONE, DataHandler.getInstance().getCategory(categoryInput.getText()));
-            EventCell cell = (EventCell) eventListView.getSelectionModel().getSelectedItem();
-            cell.updateItem(DataHandler.getInstance().getCurrentEvent(), true);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/DashboardViewFXML.fxml"));
             Parent root = (Parent) loader.load();
             DashboardViewFXMLController controller = loader.getController();
+            DataHandler.getInstance().updateEvent(nameInput.getText(), textInput.getText(), startTimeInput.getText(), 
+                endTimeInput.getText(), alertBoolInput.isSelected(), alertTextInput.getText(), 
+                alertTimeInput.getText(), Repeat.NONE, DataHandler.getInstance().getCategory(categoryInput.getText()));
+            EventCell cell = (EventCell) controller.eventListView.getSelectionModel().getSelectedItem();
             controller.resetEventListView();
         } catch (Exception e) {
             e.printStackTrace();

@@ -21,10 +21,6 @@ public class ScheduleViewFXMLController implements Initializable {
 
     public void initializeSchedule() {
         
-        //WeeklySchedule weekSched = StudentPlanner.getSchedule().eventsDuring(Week);
-        
-        WeeklySchedule weekSched = DataHandler.getInstance().getSchedule().eventsDuring();
-        
         /* May not be needed depending on WeeklySchedule object */
         String[] days = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
         for (String day : days) {

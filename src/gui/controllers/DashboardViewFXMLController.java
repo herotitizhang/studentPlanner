@@ -26,12 +26,14 @@ import model.Event;
 import gui.EventCell;
 import gui.ItemNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import model.Category;
+import model.CategoryI;
 import model.EventI;
 
 /**
@@ -44,10 +46,11 @@ public class DashboardViewFXMLController implements Initializable {
     ObservableList<Event> eventList;
     ObservableList<Category> categoryList;
 
-    @FXML private ListView eventListView;
+    @FXML public ListView eventListView;
     @FXML private ListView categoryListView;
     @FXML Button deleteCategoryButton;
     @FXML Button editCategoryButton;
+    
     
     /**
      * Triggered when user elects to add an event
@@ -83,6 +86,10 @@ public class DashboardViewFXMLController implements Initializable {
         }
     }
     
+    /**
+     * Triggered when user elects to edit a category
+     * Opens dialog window for entering category information
+     */
     @FXML
     protected void handleEditCategoryButtonAction(ActionEvent event) {
         try {
@@ -96,6 +103,9 @@ public class DashboardViewFXMLController implements Initializable {
         }
     }
     
+    /**
+     * Triggered when user elects to delete a category
+     */
     @FXML
     protected void handleDeleteCategoryButtonAction(ActionEvent event) {
         try {
@@ -173,11 +183,20 @@ public class DashboardViewFXMLController implements Initializable {
         });
     }
     
+    /**
+     * Forces updates of EventCells in eventListView
+     */
     public void resetEventListView() {
-        eventListView.setItems(null);
-        eventListView.setItems(DataHandler.getInstance().getEventList());
+        try {
+            CategoryI c = DataHandler.getInstance().getCurrentEvent().getCategory();
+            EventI e = new Event(null, null, null, null, true, null, null, EventI.Repeat.NONE, EventI.Priority.LOW, c);
+            DataHandler.getInstance().addEvent(e);
+            DataHandler.getInstance().removeEvent(e);
+        } catch (ItemNotFoundException ex) {
+            Logger.getLogger(DashboardViewFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-        
+    
     /**
      * Initializes list of events
      */
