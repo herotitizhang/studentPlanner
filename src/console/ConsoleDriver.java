@@ -513,7 +513,7 @@ public class ConsoleDriver {
 		System.out.println();
 	}
 	
-	// save to server
+	// save to server (and make a local copy on the local drive so that it can be read when the client is offline)
 	private static void save() {
 		if (!ServerCommunicator.isLoggedIn()) {
 			System.out.println("You are not logged-in. Please log in first!");
