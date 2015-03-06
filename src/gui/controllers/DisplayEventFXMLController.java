@@ -109,6 +109,8 @@ public class DisplayEventFXMLController implements Initializable {
         alertTimeInput.setText(event.getAlertTime().toString());
         alertTextInput.setText(event.getAlertText());
         categoryInput.setText(event.getCategory().toString());
+        priorityInput.setValue(event.getPriority());
+        repeatInput.setValue(event.getRepeating());
     }
     
     /**
@@ -124,6 +126,8 @@ public class DisplayEventFXMLController implements Initializable {
         alertTimeInput.setEditable(editable);
         alertTextInput.setEditable(editable);
         categoryInput.setEditable(editable);
+        priorityInput.setEditable(editable);
+        repeatInput.setEditable(editable);
     }
     
     private void closeWindow() {
