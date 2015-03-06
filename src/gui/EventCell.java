@@ -62,8 +62,10 @@ public class EventCell extends ListCell<EventI> {
         public void init(EventI ev) {
             event = ev;
             name.setText(event.getName());
-            Image priority = new Image(returnImageFilePath());
-            priorityImage.setImage(priority);
+            if (event.getPriority() != null) {
+                Image priority = new Image(returnImageFilePath());
+                priorityImage.setImage(priority);
+            }
         }
         
         private String returnImageFilePath() {

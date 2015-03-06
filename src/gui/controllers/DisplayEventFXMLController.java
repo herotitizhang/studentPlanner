@@ -85,12 +85,16 @@ public class DisplayEventFXMLController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/DashboardViewFXML.fxml"));
             Parent root = (Parent) loader.load();
             DashboardViewFXMLController controller = loader.getController();
-            DataHandler.getInstance().updateEvent(nameInput.getText(), textInput.getText(), startTimeInput.getText(), 
+            if (DataHandler.getInstance().updateEvent(nameInput.getText(), textInput.getText(), startTimeInput.getText(), 
                 endTimeInput.getText(), alertBoolInput.isSelected(), alertTextInput.getText(), 
                 alertTimeInput.getText(), repeatInput.getValue(), priorityInput.getValue(),
-                DataHandler.getInstance().getCategory(categoryInput.getText()));
-            EventCell cell = (EventCell) controller.eventListView.getSelectionModel().getSelectedItem();
-            controller.resetEventListView();
+                DataHandler.getInstance().getCategory(categoryInput.getText()))) {
+                    EventCell cell = (EventCell) controller.eventListView.getSelectionModel().getSelectedItem();
+                    controller.resetEventListView();
+            } else {
+                //event couldn't be updated
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

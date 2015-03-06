@@ -130,11 +130,22 @@ public class DataHandler {
         GregorianCalendar endTime = new GregorianCalendar(Integer.parseInt(endTokens[0]),
                         Integer.parseInt(endTokens[1])-1, Integer.parseInt(endTokens[2]), 
                         Integer.parseInt(endTokens[3]), Integer.parseInt(endTokens[4]));
-        String[] alertTokens = alertTimeString.split("-");
-        GregorianCalendar alertTime = new GregorianCalendar(Integer.parseInt(alertTokens[0]),
+        Event newEvent;
+        
+        if (category == null) {
+            newEvent = new Event(name, startTime, endTime, hasAlert, repeat);
+        } else {
+            if ((!alertText.isEmpty()) && (!alertTimeString.isEmpty())) {
+                String[] alertTokens = alertTimeString.split("-");
+                GregorianCalendar alertTime = new GregorianCalendar(Integer.parseInt(alertTokens[0]),
                         Integer.parseInt(alertTokens[1])-1, Integer.parseInt(alertTokens[2]), 
                         Integer.parseInt(alertTokens[3]), Integer.parseInt(alertTokens[4]));
-        Event newEvent = new Event(name, text, startTime, endTime, hasAlert, alertText, alertTime, repeat, priority, category);
+                newEvent = new Event(name, text, startTime, endTime, hasAlert, alertText, alertTime, repeat, priority, category);
+            } else {
+                newEvent = new Event(name, startTime, endTime, hasAlert, repeat, category);
+            }
+        }
+        
         eventList.add(newEvent);
         if (!categoryList.contains(category)) {
             categoryList.add(category);

@@ -9,6 +9,8 @@ import gui.DataHandler;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -57,6 +59,27 @@ public class AddEventFXMLController implements Initializable {
     }
     
     /**
+     * Restricts alert information input until alert is checked
+     */
+    private void initInputRestrictions() {
+        alertTextInput.setEditable(false);
+        alertTimeInput.setEditable(false);
+        alertBoolInput.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                if (alertBoolInput.isSelected()) {
+                    alertTextInput.setEditable(true);
+                    alertTimeInput.setEditable(true);
+                } else {
+                    alertTextInput.setEditable(false);
+                    alertTimeInput.setEditable(false);
+                    alertTextInput.clear();
+                    alertTimeInput.clear();
+                }
+            }
+        });
+    }
+    
+    /**
      * Fills repeatInput ComboBox
      */
     private void initRepeatOptions() {
@@ -77,6 +100,7 @@ public class AddEventFXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initRepeatOptions();
         initPriorityOptions();
+        initInputRestrictions();
     }    
     
 }
