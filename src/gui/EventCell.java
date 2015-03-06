@@ -10,8 +10,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import model.Event;
 import model.EventI;
 
 /**
@@ -26,7 +27,7 @@ public class EventCell extends ListCell<EventI> {
         super.updateItem(event, empty);
         if (event != null) {
             data = new EventData();
-            data.setEvent(event);
+            data.init(event);
             setGraphic(data.getBox());
         } else {
             setGraphic(null);
@@ -43,9 +44,10 @@ public class EventCell extends ListCell<EventI> {
     public class EventData {
 
         @FXML private HBox hBox;
+        @FXML private ImageView priorityImage;
         @FXML private Label name;
         
-        private Event event;
+        private EventI event;
 
         public EventData() {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/EventCellFXML.fxml"));
@@ -57,12 +59,20 @@ public class EventCell extends ListCell<EventI> {
             }
         }
         
-
-        public void setEvent(EventI ev){
-           name.setText(ev.getName());
+        public void init(EventI ev) {
+            event = ev;
+            name.setText(event.getName());
+            Image priority = new Image(returnImageFilePath());
+            priorityImage.setImage(priority);
         }
         
-        public Event getEvent() {
+        private String returnImageFilePath() {
+            String path = "/gui/resources/";
+            String priority = event.getPriority().toString();
+            return path + priority.toLowerCase() + ".png";
+        }
+        
+        public EventI getEvent() {
             return event;
         }
 
