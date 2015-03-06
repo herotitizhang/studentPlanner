@@ -8,11 +8,13 @@ package gui.controllers;
 import gui.DataHandler;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.EventI.Priority;
@@ -29,6 +31,8 @@ public class AddEventFXMLController implements Initializable {
     @FXML TextField textInput;
     @FXML TextField startTimeInput;
     @FXML TextField endTimeInput;
+    @FXML ComboBox<Repeat> repeatInput;
+    @FXML ComboBox<Priority> priorityInput;
     @FXML CheckBox alertBoolInput;
     @FXML TextField alertTimeInput;
     @FXML TextField alertTextInput;
@@ -42,7 +46,7 @@ public class AddEventFXMLController implements Initializable {
     private void handleSubmitButtonAction() {
         if (DataHandler.getInstance().addEvent(nameInput.getText(), textInput.getText(), startTimeInput.getText(), 
                 endTimeInput.getText(), alertBoolInput.isSelected(), alertTextInput.getText(), alertTimeInput.getText(), 
-                Repeat.NONE, Priority.HIGH, DataHandler.getInstance().getCategory(categoryInput.getText()))) {
+                repeatInput.getValue(), priorityInput.getValue(), DataHandler.getInstance().getCategory(categoryInput.getText()))) {
             Scene scene = submitButton.getScene();
             Stage stage = (Stage) scene.getWindow();
             stage.close();
@@ -53,11 +57,26 @@ public class AddEventFXMLController implements Initializable {
     }
     
     /**
+     * Fills repeatInput ComboBox
+     */
+    private void initRepeatOptions() {
+        repeatInput.setItems(FXCollections.observableArrayList(Repeat.values()));
+    }
+    
+    /**
+     * Fills priorityInput ComboBox
+     */
+    private void initPriorityOptions() {
+        priorityInput.setItems(FXCollections.observableArrayList(Priority.values()));
+    }
+    
+    /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        initRepeatOptions();
+        initPriorityOptions();
     }    
     
 }
