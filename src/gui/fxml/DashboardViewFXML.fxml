@@ -6,6 +6,7 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.DashboardViewFXMLController">
  <children>
@@ -26,6 +27,10 @@
             <Button id="addEventButton" onAction="#handleAddEventButtonAction" mnemonicParsing="false" />
         </HBox>
         <ListView fx:id="eventListView" prefHeight="490.0" prefWidth="419.0" />
+    </VBox>
+    <VBox id="optionsBox" layoutX="780.0" layoutY="70.0" spacing="10.0">
+        <ComboBox fx:id="priorityFilterOptions" />
+        <Button fx:id="priorityFilterButton" text="Filter" onAction="#handlePriorityFilterButtonAction" />
     </VBox>
  </children>
  <stylesheets> <URL value="@../css/dashboardviewfxml.css" /></stylesheets>

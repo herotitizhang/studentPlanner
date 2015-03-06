@@ -22,19 +22,20 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import model.Event;
 import gui.EventCell;
 import gui.ItemNotFoundException;
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.input.MouseEvent;
-import model.Category;
 import model.CategoryI;
+import model.Event;
 import model.EventI;
+import model.EventI.Priority;
 
 /**
  * FXML Controller class for Dashboard View
@@ -43,13 +44,15 @@ import model.EventI;
  */
 public class DashboardViewFXMLController implements Initializable {
 
-    ObservableList<Event> eventList;
-    ObservableList<Category> categoryList;
+    ObservableList<EventI> eventList;
+    ObservableList<CategoryI> categoryList;
 
-    @FXML public ListView eventListView;
-    @FXML private ListView categoryListView;
+    @FXML public ListView<EventI> eventListView;
+    @FXML private ListView<CategoryI> categoryListView;
     @FXML Button deleteCategoryButton;
     @FXML Button editCategoryButton;
+    @FXML ComboBox<Priority> priorityFilterOptions;
+    @FXML Button priorityFilterButton;
     
     
     /**
@@ -116,6 +119,41 @@ public class DashboardViewFXMLController implements Initializable {
     }
     
     /**
+     * Triggered when user elects to filter by priority
+     */
+    @FXML
+    protected void handlePriorityFilterButtonAction() {
+        Priority priority = priorityFilterOptions.getValue();
+        ObservableList<EventI> filteredList = FXCollections.observableArrayList();
+        for (Object e : eventListView.getItems().toArray()) {
+            EventI event = (EventI) e;
+            if (event.getPriority() == priority) {
+                filteredList.add(event);
+            }
+        }
+        eventListView.setItems(filteredList);
+        priorityFilterButton.setText("Show all");
+        priorityFilterButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                handleShowAllButtonAction();
+            }
+        });
+    }
+    
+    /**
+     * Triggered when user elects to un-filter by priority
+     */
+    protected void handleShowAllButtonAction() {
+        initEventBox();
+        priorityFilterButton.setText("Filter");
+        priorityFilterButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                handlePriorityFilterButtonAction();
+            }
+        });
+    }
+    
+    /**
      * Sets event cells for display
      */
     private void setEventListViewCellFactory() {
@@ -153,9 +191,9 @@ public class DashboardViewFXMLController implements Initializable {
      * Sets category cells for display
      */
     private void setCategoryListViewCellFactory() {
-        categoryListView.setCellFactory(new Callback<ListView<Category>, javafx.scene.control.ListCell<Category>>() {
+        categoryListView.setCellFactory(new Callback<ListView<CategoryI>, javafx.scene.control.ListCell<CategoryI>>() {
             @Override
-            public ListCell<Category> call(ListView<Category> listView) {
+            public ListCell<CategoryI> call(ListView<CategoryI> listView) {
                 return new CategoryCell();
             }
         });
@@ -166,10 +204,10 @@ public class DashboardViewFXMLController implements Initializable {
      */
     private void addCategoryListViewListener() {
         categoryListView.getSelectionModel().selectedItemProperty().addListener(
-                new ChangeListener<Category>() {
+                new ChangeListener<CategoryI>() {
             @Override
-            public void changed(ObservableValue<? extends Category> ov, 
-                    Category oldCat, Category newCat) {
+            public void changed(ObservableValue<? extends CategoryI> ov, 
+                    CategoryI oldCat, CategoryI newCat) {
                 if (newCat != null) {
                     try {
                         DataHandler.getInstance().setCurrentCategory(newCat);
@@ -195,6 +233,13 @@ public class DashboardViewFXMLController implements Initializable {
         } catch (ItemNotFoundException ex) {
             Logger.getLogger(DashboardViewFXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    /**
+     * Initializes priority filter choices
+     */
+    private void initPriorityFilter() {
+        priorityFilterOptions.setItems(FXCollections.observableArrayList(Priority.values()));
     }
     
     /**
@@ -226,6 +271,7 @@ public class DashboardViewFXMLController implements Initializable {
         editCategoryButton.setVisible(false);
         initEventBox();
         initCategoryBox();
+        initPriorityFilter();
     }
     
 }

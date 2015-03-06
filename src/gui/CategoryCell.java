@@ -11,17 +11,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
-import model.Category;
+import model.CategoryI;
 
 /**
  * Custom category cell for list display
  */
-public class CategoryCell extends ListCell<Category> {
+public class CategoryCell extends ListCell<CategoryI> {
     
     private CategoryData data;
     
     @Override
-    public void updateItem(Category category, boolean empty){
+    public void updateItem(CategoryI category, boolean empty){
         super.updateItem(category, empty);
         if (category != null) {
             data = new CategoryData();
@@ -42,7 +42,7 @@ public class CategoryCell extends ListCell<Category> {
         @FXML private HBox hBox;
         @FXML private Label name;
         
-        private Category category;
+        private CategoryI category;
 
         public CategoryData() {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CategoryCellFXML.fxml"));
@@ -54,11 +54,11 @@ public class CategoryCell extends ListCell<Category> {
             }
         }
 
-        public void setCategory(Category cat){
+        public void setCategory(CategoryI cat){
            name.setText(cat.toString());
         }
         
-        public Category getCategory() {
+        public CategoryI getCategory() {
             return category;
         }
 

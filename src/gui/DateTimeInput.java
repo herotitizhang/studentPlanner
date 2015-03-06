@@ -31,8 +31,8 @@ public class DateTimeInput extends GridPane {
     @FXML
     private ComboBox<String> minuteInput;
     
-    public void TimeInput() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/TimeInputFXML.fxml"));
+    public void DateTimeInput() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/DateTimeInputFXML.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
         try {
