@@ -122,6 +122,10 @@ public class DataHandler {
 			String end, boolean hasAlert, String alertText, String alertTimeString, 
                         Repeat repeat, Priority priority, CategoryI category) {
         
+        if (!hasNecessaryInput(name, start, end)) {
+            return false;
+        }
+        
         String[] startTokens = start.split("-");
         GregorianCalendar startTime = new GregorianCalendar(Integer.parseInt(startTokens[0]),
                         Integer.parseInt(startTokens[1])-1, Integer.parseInt(startTokens[2]), 
@@ -151,7 +155,6 @@ public class DataHandler {
             categoryList.add(category);
         }
         
-        //change to return true if event is created/added correctly, false if not
         return true;
     }
     
@@ -163,9 +166,26 @@ public class DataHandler {
         return true;
     }
     
-    public void updateEvent(String name, String text, String start, 
+    public void deleteEvent(EventI event) {
+        try {
+            if (event == getCurrentEvent()) {
+                deleteCurrentEvent();
+                return;
+            }
+        } catch (ItemNotFoundException ex) {
+            // this is fine
+        }
+        event.getCategory().removeEvent(event);
+        eventList.remove(event);
+    }
+    
+    public boolean updateEvent(String name, String text, String start, 
 			String end, boolean hasAlert, String alertText, String alertTimeString, 
                         Repeat repeat, Priority priority, CategoryI category) throws ItemNotFoundException {
+        
+        if (!hasNecessaryInput(name, start, end)) {
+            return false;
+        }
         
         EventI event = getCurrentEvent();
         
@@ -191,6 +211,8 @@ public class DataHandler {
         event.setAlert(hasAlert);
         event.setAlertText(alertText);
         event.setAlertTime(alertTime);
+        
+        return true;
     }
     
     public void removeEvent(EventI event) {
@@ -226,6 +248,10 @@ public class DataHandler {
     public void removeCategory(String name) {
         schedule.removeCategory(name);
         categoryList.remove(schedule.getCategoriesMap().get(name));
+    }
+    
+    private boolean hasNecessaryInput(String name, String start, String end) {
+        return (!name.isEmpty() && !start.isEmpty() && !end.isEmpty());
     }
     
     public void printNumberOfEventsSchedule() {

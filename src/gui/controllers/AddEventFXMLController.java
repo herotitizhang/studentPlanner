@@ -54,7 +54,7 @@ public class AddEventFXMLController implements Initializable {
             stage.close();
         } else {
             // handle case where event couldn't be added
-            // use exceptions here instead of if else
+            
         }
     }
     
@@ -84,6 +84,7 @@ public class AddEventFXMLController implements Initializable {
      */
     private void initRepeatOptions() {
         repeatInput.setItems(FXCollections.observableArrayList(Repeat.values()));
+        repeatInput.setValue(Repeat.NONE);
     }
     
     /**

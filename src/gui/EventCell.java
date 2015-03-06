@@ -6,8 +6,13 @@
 package gui;
 
 import java.io.IOException;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
@@ -20,70 +25,67 @@ import model.EventI;
  */
 public class EventCell extends ListCell<EventI> {
     
-    private EventData data;
+    private HBox hBox = new HBox();
+    private ImageView priorityImage = new ImageView();
+    private Label name = new Label();
+    private CheckBox completed = new CheckBox();
+    private EventI event;
+    
+    public EventCell() {
+        super();
+        hBox.getChildren().addAll(priorityImage, name, completed);
+        hBox.setSpacing(10);
+        completed.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                handleCompletedChecked();
+            }
+        });
+    }
+    
+    private void handleCompletedChecked() {
+        DataHandler.getInstance().removeEvent(event);
+    }
     
     @Override
     public void updateItem(EventI event, boolean empty){
         super.updateItem(event, empty);
         if (event != null) {
-            data = new EventData();
-            data.init(event);
-            setGraphic(data.getBox());
+            init(event);
+            setGraphic(getBox());
         } else {
             setGraphic(null);
         }
     }
     
-    public EventData getEventData() {
-        return data;
+    public void init(EventI ev) {
+        event = ev;
+        name.setText(event.getName());
+        if (event.getPriority() != null) {
+            Image priority = new Image(returnImageFilePath());
+            priorityImage.setImage(priority);
+        }
+        completed.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                handleCompletedChecked();
+            }
+        });
     }
     
+    private String returnImageFilePath() {
+        String path = "/gui/resources/";
+        String priority = event.getPriority().toString();
+        return path + priority.toLowerCase() + ".png";
+    }
+
+    public EventI getEvent() {
+        return event;
+    }
+
     /**
-     * Class that stores event data for access by EventCell
+     * @return HBox object with event information
      */
-    public class EventData {
-
-        @FXML private HBox hBox;
-        @FXML private ImageView priorityImage;
-        @FXML private Label name;
-        
-        private EventI event;
-
-        public EventData() {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/EventCellFXML.fxml"));
-            fxmlLoader.setController(this);
-            try {
-                fxmlLoader.load();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        
-        public void init(EventI ev) {
-            event = ev;
-            name.setText(event.getName());
-            if (event.getPriority() != null) {
-                Image priority = new Image(returnImageFilePath());
-                priorityImage.setImage(priority);
-            }
-        }
-        
-        private String returnImageFilePath() {
-            String path = "/gui/resources/";
-            String priority = event.getPriority().toString();
-            return path + priority.toLowerCase() + ".png";
-        }
-        
-        public EventI getEvent() {
-            return event;
-        }
-
-        /**
-         * @return HBox object with event information
-         */
-        public HBox getBox() {
-            return hBox;
-        }
+    public HBox getBox() {
+        return hBox;
     }
-    
 }
