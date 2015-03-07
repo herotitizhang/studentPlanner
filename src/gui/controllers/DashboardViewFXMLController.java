@@ -36,6 +36,7 @@ import model.CategoryI;
 import model.Event;
 import model.EventI;
 import model.EventI.Priority;
+import model.NameInUseException;
 
 /**
  * FXML Controller class for Dashboard View
@@ -113,6 +114,7 @@ public class DashboardViewFXMLController implements Initializable {
     protected void handleDeleteCategoryButtonAction(ActionEvent event) {
         try {
             DataHandler.getInstance().deleteCurrentCategory();
+            resetCategoryListView();
         } catch (ItemNotFoundException e) {
             System.err.println("Error occured, category not selected");
         }
@@ -174,12 +176,14 @@ public class DashboardViewFXMLController implements Initializable {
             public void handle(MouseEvent event) {
                 try {
                     EventI newEvent = (EventI) eventListView.getSelectionModel().getSelectedItem();
-                    DataHandler.getInstance().setCurrentEvent(newEvent);
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/DisplayEventFXML.fxml"));
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    Stage stage = new Stage();
-                    stage.setScene(new Scene(root1));
-                    stage.show();
+                    if (newEvent != null) {
+                        DataHandler.getInstance().setCurrentEvent(newEvent);
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/DisplayEventFXML.fxml"));
+                        Parent root1 = (Parent) fxmlLoader.load();
+                        Stage stage = new Stage();
+                        stage.setScene(new Scene(root1));
+                        stage.show();
+                    }
                 } catch (IOException ex) {
                     Logger.getLogger(DashboardViewFXMLController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -233,6 +237,15 @@ public class DashboardViewFXMLController implements Initializable {
         } catch (ItemNotFoundException ex) {
             Logger.getLogger(DashboardViewFXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    /**
+     * Forces updates of EventCells in eventListView
+     */
+    public void resetCategoryListView() {
+        categoryListView.setItems(null);
+        initCategoryBox();
+        
     }
     
     /**

@@ -115,6 +115,10 @@ public class DataHandler {
         return ctg.getAllEvents();
     }
     
+    public List<EventI> getEventsDuring(GregorianCalendar start, GregorianCalendar end) {
+        return schedule.getEvents(start, end);
+    }
+    
     /**
      * Adds event to schedule using information provided
      */
