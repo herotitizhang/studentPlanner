@@ -23,11 +23,11 @@ public class ServerCommunicator {
 	private static String password = null;
 	
 	// if not authenticated, then the phone number is not used by the server to send alerts
-	private static boolean authenticated = false;
+	private static boolean authenticated = false; //TODO check where it's used. maybe get rid of it?
 	private static String phoneNumber = null;
 	
 	
-	// TODO needs to change the 2 following fields TODO
+	// TODO needs to change the IP TODO
 	private static String serverIP = "10.0.0.3";
 	private static int port = 12345;
 
@@ -49,10 +49,9 @@ public class ServerCommunicator {
 	}
 	
 	/**
-	 * the invoker will call this method like ServerResponse sr =
-	 * ServerCommunicator.sendClientRequest the invoker only proceeds after
-	 * ServerResponse is assigned a value; throw the ConnectionException (which
-	 * extends IOException) and let the invoker handles it
+	 * the invoker will call this method like ServerResponse sr = ServerCommunicator.sendClientRequest 
+	 * the invoker only proceeds after ServerResponse is assigned a value; 
+	 * throw the ConnectionException (which extends IOException) and let the invoker handles it
 	 * 
 	 * Note: the ConnectionException (IOException) indicates that internet is not available,
 	 * in this case the invoker should switch to local save/load.
@@ -83,7 +82,7 @@ public class ServerCommunicator {
 			new Thread(timer).start();
 
 			// get Server Response from the server
-			while ((!socket.isClosed()) && socket.isConnected() && !timer.timeOut) {
+			while ((!socket.isClosed()) && socket.isConnected() && (!timer.timeOut)) {
 				if (socket.getInputStream().available() > 0) {
 					InputStream in = socket.getInputStream();
 					byte[] content = new byte[in.available()]; 
@@ -160,9 +159,12 @@ public class ServerCommunicator {
 		return request;
 	}
 	
-	public static ClientRequest generateAlertRequest(ScheduleI schedule) {
+	public static ClientRequest generateAlertRequest(String categoryName, String eventName) {
 		ClientRequest request = new ClientRequest(RequestType.ALERT);
-		request.setSchedule(schedule);
+		request.setUserName(username);
+		request.setPassword(password); // not necessary but it's good to include
+		request.setCategoryName(categoryName);
+		request.setEventName(eventName);
 		return request;
 	}
 
