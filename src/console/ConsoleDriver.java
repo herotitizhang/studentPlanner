@@ -70,6 +70,8 @@ public class ConsoleDriver {
 			requestAuthenticate(userInput);
 		} else if (userInput.startsWith("auth")){
 			authenticate(userInput);
+		} else if (userInput.startsWith("request_alert")){		
+			requestAlert(userInput);
 		} else if (userInput.equals("exit") || userInput.equals("quit")) { 
 			exit();
 		} else {
@@ -750,7 +752,8 @@ public class ConsoleDriver {
 				System.out.println("You are not logged-in. Please log in first!"); 
 				System.out.println();
 				return;
-			} else if (ServerCommunicator.isAuthenticated()) {
+			} else if (ServerCommunicator.isAuthenticated()) { // TODO serverCommunicator should not keep the authenticated field?? 
+																// should do the authentication check on the server side?
 				if (ServerCommunicator.getPhoneNumber() ==  null) { 
 					System.out.println("You have not requested authentication in this session yet. Please request authentication first.");
 				} else {
@@ -784,6 +787,38 @@ public class ConsoleDriver {
 		}
 	}
 
+	private static void requestAlert(String userInput) {
+		String[] tokens = userInput.split("\\s+");
+		if (tokens.length == 3) {
+			if (!ServerCommunicator.isLoggedIn()) {
+				System.out.println("You are not logged-in. Please log in first!"); 
+				System.out.println();
+				return;
+			} 
+
+			try {
+				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateAlertRequest(tokens[1], tokens[2]));
+				if (serverResponse == null) {
+					System.out.println("No response from the server!");
+					System.out.println();
+					return;
+				}
+				
+				if (serverResponse.isAccepted()) {
+					System.out.println("Server has processed your request. You will get alerts for the "+tokens[2]+" event  in "+tokens[1]+" category.");
+				} else {
+					System.out.println("Server rejected: "+serverResponse.getFailureNotice());
+				}
+				System.out.println();
+			} catch (IOException e) {
+				System.out.println("Error: cannot connect to the Internet!");
+				System.out.println();
+			}
+			
+		} else {
+			printHelp();
+		}	
+	}
 	
 	private static void exit() {
 		System.out.println("Bye");
@@ -807,6 +842,7 @@ public class ConsoleDriver {
 		System.out.println("login <username> <password> - logs in using you account.");
 		System.out.println("request_auth <phone_number> - requests an authentication code, which will be sent to you phone.");
 		System.out.println("auth <authentication_code> - enters the authentication code; this command should be entered only after the user has requested authentication.");
+		System.out.println("request_alert <ctgr_name> <event_name> - get alert text messages.");
 		System.out.println("exit or quit - quit the program");
 		System.out.println("help - see a list of commands");
 		System.out.println();

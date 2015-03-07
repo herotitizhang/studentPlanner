@@ -267,6 +267,21 @@ public class Event implements EventI{
 		return 0;
 	}
 	
+	// only checks name and category name (i.e., in a category, there can be no events having the same name)
+	// it's ok to have events belonging to different categories have the same name
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof Event) ) {
+			return false;
+		} 
+		Event comparedEvent = (Event)o;
+		if (comparedEvent.getName().equals(this.name) &&
+				comparedEvent.getCategory().getName().equals(category.getName())) {
+			return true;
+		}
+		
+		return false;
+	}
 	
 	public class EventComparator implements Comparator<Event> {
 

@@ -16,6 +16,10 @@ public class ClientRequest implements Serializable {
 	String phoneNumber = null;
 	String authenCode = null;
 	
+	// for alert
+	String categoryName = null;
+	String eventName = null;
+	
 	public ClientRequest(RequestType type) {
 		this.type = type;
 	}
@@ -67,7 +71,24 @@ public class ClientRequest implements Serializable {
 	public void setAuthenCode(String authenCode) {
 		this.authenCode = authenCode;
 	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	public String getEventName() {
+		return eventName;
+	}
+
+	public void setEventName(String eventName) {
+		this.eventName = eventName;
+	}
 	
+
 	public enum RequestType {
 		CREATE, LOGIN, SAVE, LOAD, REQUEST_AUTH, AUTH, ALERT;
 		// for the client side:
