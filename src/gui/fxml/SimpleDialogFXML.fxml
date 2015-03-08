@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="150.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.SimpleDialogFXMLController">
+    <VBox spacing="20.0" layoutX="25.0" layoutY="30.0" >
+        <Label fx:id="messageLabel" />
+        <Button onAction="#closeWindow" text="Ok" /> 
+    </VBox>
+</AnchorPane>
