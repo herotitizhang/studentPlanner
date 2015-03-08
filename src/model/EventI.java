@@ -54,6 +54,8 @@ public interface EventI extends Serializable, Comparable  {
 
 	public void setCategory(CategoryI category);
 	
+	boolean simpleSetCategory(CategoryI category);
+	
 	public enum Repeat {
 		NONE, WEEKLY, MONTHLY, YEARLY;
 	}

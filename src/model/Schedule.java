@@ -153,6 +153,21 @@ public class Schedule implements ScheduleI{
 		if (category.equals("default")) return null;
 		return categories.remove(category);
 	}
+	
+	@Override
+	public boolean editCategoryName(String originalName, String newName) {
+		CategoryI newCategory = new Category(newName);
+		CategoryI oldCategory = categories.get(originalName);
+		if (oldCategory == null) return false; // the category named originalName doesn't exist
+		
+		for (EventI event: oldCategory.getAllEvents()) {
+			event.simpleSetCategory(newCategory);
+		}
+		
+		categories.remove(originalName);
+		categories.put(newName, newCategory);
+		return true;
+	}
 
 	@Override
 	public boolean checkConflict(EventI event) {

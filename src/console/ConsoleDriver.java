@@ -47,6 +47,8 @@ public class ConsoleDriver {
 			addCategory(userInput);
 		} else if (userInput.startsWith("rm_ctgr")){
 			removeCategory(userInput);
+		} else if (userInput.startsWith("rename_ctgr")) { 
+			editCategory(userInput);
 		} else if (userInput.equals("list_ctgrs")) {
 			listCategories();
 		} else if (userInput.equals("create_event")){ 
@@ -112,6 +114,21 @@ public class ConsoleDriver {
 			printHelp();
 		}
 	}
+	
+	private static void editCategory(String userInput) {
+		String[] tokens = userInput.split("\\s+");
+		if (tokens.length == 3) {
+			if (schedule.editCategoryName(tokens[1], tokens[2]) ){
+				System.out.println("The "+tokens[1]+" category has been renamed! All events now belong to "+tokens[2]+" category.");
+			} else {
+				System.out.println("The category named "+tokens[1]+" does not exist.");
+			}
+			System.out.println();
+		} else {
+			printHelp();
+		}
+	}
+	
 	
 	private static void listCategories() {
 		for (CategoryI category: schedule.getCategories()) {
@@ -882,6 +899,7 @@ public class ConsoleDriver {
 		System.out.println("Commands:");
 		System.out.println("add_ctgr <category_name> - adds a category to the schedule.");
 		System.out.println("rm_ctgr <category_name> - removes a category from the schedule.");
+		System.out.println("rename_ctgr <original_name> <new_name> - change the name of a category.");
 		System.out.println("list_ctgrs - lists all the categories in the schedule.");
 		System.out.println("create_event - creates an event and add it to the corresponding category.");
 		System.out.println("edit_event <category_name> <event_name> - modifies a field in an event.");

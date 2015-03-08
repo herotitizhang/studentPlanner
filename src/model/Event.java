@@ -211,6 +211,21 @@ public class Event implements EventI{
 		}
 	}
 	
+	/**
+	 * setCategory method doesn't work in a for loop (concurrentmodificationexception)
+	 * this method only changes the pointer to category without modifying the old category. 
+	 * @param category
+	 */
+	@Override
+	public boolean simpleSetCategory(CategoryI category) {
+		if (category != null) {
+			this.category = category;
+			this.category.addEvent(this);
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public String toString() {
         DateFormat formatter = DateFormat.getInstance(); 
