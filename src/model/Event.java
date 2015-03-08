@@ -143,24 +143,20 @@ public class Event implements EventI{
 	@Override
 	public String getAlertText() {
 		if (hasAlert()) return alertText;
-		return null; // TODO throw an exception? necessary because an Alert text being null
-		              // can either mean the alert is not set or the alertText is not set
+		return null; 
 	}
 	
 	@Override
 	public void setAlertText(String alertText) {
 		if (hasAlert()) {
 			this.alertText = alertText;
-		} else {
-			// TODO throw an exception?
-		}
-			
+		} 
 	}
 
 	@Override
 	public GregorianCalendar getAlertTime() {
 		if (hasAlert()) return alertTime;
-		return null; // TODO throw an exception?
+		return null; 
 
 	}
 
@@ -168,8 +164,6 @@ public class Event implements EventI{
 	public void setAlertTime(GregorianCalendar alertTime) {
 		if (hasAlert()) {
 			this.alertTime = alertTime;
-		} else {
-			// TODO throw an exception?
 		}
 	}
 

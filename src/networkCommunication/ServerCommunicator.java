@@ -1,5 +1,10 @@
 package networkCommunication;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,8 +34,21 @@ public class ServerCommunicator {
 	
 	
 	// TODO needs to change the IP TODO
-	private static String serverIP = "10.0.0.3";
+	private static String serverIP;
 	private static int port = 12345;
+	
+	static {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("serverIP.txt"));
+			serverIP = br.readLine();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
 
 	/**
 	 * false IP will make it hang...

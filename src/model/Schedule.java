@@ -18,11 +18,9 @@ import java.util.Map;
 import model.EventI.Priority;
 
 
-// TODO add interfaces for each class
-
 public class Schedule implements ScheduleI{
 
-	HashMap<String, CategoryI> categories = new HashMap<String, CategoryI>(); // TODO add a default category in the beginning
+	HashMap<String, CategoryI> categories = new HashMap<String, CategoryI>(); 
 	
 	public Schedule() {
 		categories.put("default", new Category("default"));
@@ -39,7 +37,7 @@ public class Schedule implements ScheduleI{
 			toBeReturned.addAll(category.getAllEvents());
 		}
 		
-		Collections.sort(toBeReturned); // TODO ttest if it's sorted (if Event's compareTo is invoked)
+		Collections.sort(toBeReturned); 
 		return toBeReturned;
 	}
 	

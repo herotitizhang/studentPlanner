@@ -35,7 +35,14 @@
 				<include name="*.png" />
 			</fileset>
 		</copy>
-
+		
+		<!-- copy the server config file -->
+		<copy todir=".">
+			<fileset dir="${src}/console">
+				<include name="serverIP.txt" />
+			</fileset>
+		</copy>
+		
 		<echo>Finish compiling!</echo>
 	</target>
 
@@ -61,6 +68,12 @@
 				<attribute name="Main-Class" value="console.ConsoleDriver"/>
 			</manifest>
 		</jar>
+		<!-- copy serverIP.txt for running without ant -->
+		<copy todir="${output}">
+			<fileset dir="${src}/networkCommunication">
+				<include name="serverIP.txt" />
+			</fileset>
+		</copy>
 		<echo>The jar file has been generated</echo>
 	</target>
 
@@ -89,6 +102,7 @@
 			<fileset dir="${output}">
 				<include name="*.jar"/>
 				<include name="*.SAV"/>
+				<include name="*.txt"/>
 			</fileset>
 		</delete>
 		<echo>Finishing cleaning...</echo>
