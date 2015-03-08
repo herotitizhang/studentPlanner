@@ -1,24 +1,30 @@
 package networkCommunication;
 
 import java.io.Serializable;
+import java.util.GregorianCalendar;
 
 import model.ScheduleI;
 
 public class ClientRequest implements Serializable {
 	
 	RequestType type = null;
-	ScheduleI schedule = null;
 	
 	// the following 2 fields are only for CREATE/LOGIN
 	String userName = null;
 	String password = null; 
 	
+	// for save/load
+	byte[] schedule = null;
+	
+	// for authentication
 	String phoneNumber = null;
 	String authenCode = null;
 	
 	// for alert
-	String categoryName = null;
-	String eventName = null;
+	String alertTitle = null;
+	String alertText = null;
+	GregorianCalendar alertTime = null;
+	String repeat = null;
 	
 	public ClientRequest(RequestType type) {
 		this.type = type;
@@ -28,64 +34,99 @@ public class ClientRequest implements Serializable {
 		return type;
 	}
 
+
 	public void setType(RequestType type) {
 		this.type = type;
 	}
 
-	public ScheduleI getSchedule() {
-		return schedule;
-	}
 
-	public void setSchedule(ScheduleI schedule) {
-		this.schedule = schedule;
-	}
-	
 	public String getUserName() {
 		return userName;
 	}
+
 
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
 
+
 	public String getPassword() {
 		return password;
 	}
 
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
+
+	public byte[] getSchedule() {
+		return schedule;
+	}
+
+
+	public void setSchedule(byte[] schedule) {
+		this.schedule = schedule;
+	}
+
+
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
+
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 
+
 	public String getAuthenCode() {
 		return authenCode;
 	}
+
 
 	public void setAuthenCode(String authenCode) {
 		this.authenCode = authenCode;
 	}
 
-	public String getCategoryName() {
-		return categoryName;
+
+	public String getAlertTitle() {
+		return alertTitle;
 	}
 
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
+
+	public void setAlertTitle(String alertTitle) {
+		this.alertTitle = alertTitle;
 	}
 
-	public String getEventName() {
-		return eventName;
+
+	public String getAlertText() {
+		return alertText;
 	}
 
-	public void setEventName(String eventName) {
-		this.eventName = eventName;
+
+	public void setAlertText(String alertText) {
+		this.alertText = alertText;
+	}
+
+
+	public GregorianCalendar getAlertTime() {
+		return alertTime;
+	}
+
+
+	public void setAlertTime(GregorianCalendar alertTime) {
+		this.alertTime = alertTime;
+	}
+
+
+	public String getRepeat() {
+		return repeat;
+	}
+
+
+	public void setRepeat(String repeat) {
+		this.repeat = repeat;
 	}
 	
 

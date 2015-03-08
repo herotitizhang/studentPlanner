@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.GregorianCalendar;
 
 import model.ScheduleI;
 import networkCommunication.ClientRequest.RequestType;
@@ -132,7 +133,7 @@ public class ServerCommunicator {
 		ClientRequest request = new ClientRequest(RequestType.SAVE);
 		request.setUserName(username);
 		request.setPassword(password); // not necessary but it's good to include
-		request.setSchedule(schedule);
+//		request.setSchedule(schedule); TODO
 		return request;
 	}
 	
@@ -159,12 +160,22 @@ public class ServerCommunicator {
 		return request;
 	}
 	
-	public static ClientRequest generateAlertRequest(String categoryName, String eventName) {
+	
+	/*
+	 * 
+	 * String eventName = null;
+	String alertText = null;
+	GregorianCalendar alertTime = null;
+	String repeat = null;
+	 */
+	public static ClientRequest generateAlertRequest(String title, String alertText, String repeat, GregorianCalendar alertTime) {
 		ClientRequest request = new ClientRequest(RequestType.ALERT);
 		request.setUserName(username);
 		request.setPassword(password); // not necessary but it's good to include
-		request.setCategoryName(categoryName);
-		request.setEventName(eventName);
+		request.setAlertTitle(title);
+		request.setAlertText(alertText);
+		request.setAlertTime(alertTime);
+		request.setRepeat(repeat);
 		return request;
 	}
 

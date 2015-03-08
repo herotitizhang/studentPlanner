@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
+import networkCommunication.ClientRequest;
 import networkCommunication.ServerCommunicator;
 import networkCommunication.ServerResponse;
 import utilities.ClientIOSystem;
@@ -789,15 +790,42 @@ public class ConsoleDriver {
 
 	private static void requestAlert(String userInput) {
 		String[] tokens = userInput.split("\\s+");
-		if (tokens.length == 3) {
+		if (tokens.length >= 3) {
 			if (!ServerCommunicator.isLoggedIn()) {
 				System.out.println("You are not logged-in. Please log in first!"); 
 				System.out.println();
 				return;
 			} 
 
+			// check if the category exists or not
+			CategoryI ctgr = schedule.getCategoriesMap().get(tokens[1]);
+			if (ctgr == null) {
+				System.out.println("The category does not exist!");
+				return;
+			}
+			
+			// check if the event exists or not			
+			EventI event = null;
+			for (int i = 0; i < ctgr.getAllEvents().size(); i++) {
+				if (ctgr.getAllEvents().get(i).getName().equals(tokens[2])) {
+					event = ctgr.getAllEvents().get(i);
+					break;
+				}
+			}
+			if (event == null) {
+				System.out.println("The event does not exist!");
+				return;
+			}
+			
+			if (!event.hasAlert()) {
+				System.out.println("The event does not have an alert yet! Edit it first");
+				return;
+			}
+			
 			try {
-				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateAlertRequest(tokens[1], tokens[2]));
+				ClientRequest alertRequest = ServerCommunicator.generateAlertRequest
+						(ServerCommunicator.getUsername()+"."+ctgr.getName()+"."+event.getName(), event.getAlertText(), event.getRepeating().toString(), event.getAlertTime());
+				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(alertRequest);
 				if (serverResponse == null) {
 					System.out.println("No response from the server!");
 					System.out.println();
@@ -842,7 +870,7 @@ public class ConsoleDriver {
 		System.out.println("login <username> <password> - logs in using you account.");
 		System.out.println("request_auth <phone_number> - requests an authentication code, which will be sent to you phone.");
 		System.out.println("auth <authentication_code> - enters the authentication code; this command should be entered only after the user has requested authentication.");
-		System.out.println("request_alert <ctgr_name> <event_name> - get alert text messages.");
+		System.out.println("request_alert <ctgr_name> <event_name> - notify the server to send alert for an event.");
 		System.out.println("exit or quit - quit the program");
 		System.out.println("help - see a list of commands");
 		System.out.println();
