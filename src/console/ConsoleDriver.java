@@ -33,6 +33,8 @@ public class ConsoleDriver {
 			System.out.println("However, You are able to load from local drive.");
 			System.out.println("Enter \"check_inet\" to see if the client side is connected to the server now.");
 			System.out.println();
+		} else {
+			System.out.println("Internet is available. We suggest you login first before creating events.");
 		}
 		while (console.hasNextLine()){
 			String userInput = console.nextLine();
@@ -339,11 +341,12 @@ public class ConsoleDriver {
 							String selection = console.nextLine();
 							if (selection.equalsIgnoreCase("yes") || selection.equalsIgnoreCase("y")) 
 								event.setAlert(!event.hasAlert());
-
+							System.out.println("Note: you need to request the alert one more time in order to make the change take effect.");
 						} else if (command.equals("alert text")) {
 							if (event.hasAlert()) {
 								System.out.println("Please enter the new alert text:");
 								event.setAlertText(console.nextLine());
+								System.out.println("Note: you need to request the alert one more time in order to make it the change take effect.");
 							} else {
 								System.out.println("Please turn on the alert before you want to set the alert text.");
 							}
@@ -360,7 +363,8 @@ public class ConsoleDriver {
 								GregorianCalendar alertTime = new GregorianCalendar(Integer.parseInt(timeTokens[0]),
 										Integer.parseInt(timeTokens[1])-1, Integer.parseInt(timeTokens[2]), 
 										Integer.parseInt(timeTokens[3]), Integer.parseInt(timeTokens[4]));
-								event.setAlertTime(alertTime);								
+								event.setAlertTime(alertTime);	
+								System.out.println("Note: you need to request the alert one more time in order to make it the change take effect.");
 							} else {
 								System.out.println("Please turn on the alert before you want to set the alert time.");
 							}
@@ -518,11 +522,26 @@ public class ConsoleDriver {
 	
 	// save to server (and make a local copy on the local drive so that it can be read when the client is offline)
 	private static void save() {
+		
+		if (!ServerCommunicator.checkConnection()) {
+			System.out.println("Internet is not available. You can not save the schedule!");
+			System.out.println("However, you might be able to load the schedule from the local drive.");
+		}
+		
 		if (!ServerCommunicator.isLoggedIn()) {
 			System.out.println("You are not logged-in. Please log in first!");
 			System.out.println();
 			return;
 		} 
+		
+		System.out.println("Note: you are about to save the content. ");
+		System.out.println("Doing so will overwrite the previous copy. Do you want to continue? [Y/N]");
+		String temp = console.nextLine();
+		if (!(temp.equalsIgnoreCase("yes") || temp.equalsIgnoreCase("y"))) {
+			System.out.println("You chose not to save.");
+			return; 
+		}
+		
 		
 		try {
 			ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateSaveRequest(schedule));
@@ -692,7 +711,13 @@ public class ConsoleDriver {
 				}
 				
 				if (serverResponse.isAccepted()) {
-					System.out.println("You are now logged in");
+					System.out.println("You are now logged in. Do you want to load the schedule? [Y/N]");
+					String temp = console.nextLine();
+					if (!(temp.equalsIgnoreCase("yes") || temp.equalsIgnoreCase("y"))) {
+						System.out.println("You chose not to load.");
+					} else {
+						load();
+					}
 				} else {
 					System.out.println("Server rejected: "+serverResponse.getFailureNotice());
 				}
@@ -833,7 +858,7 @@ public class ConsoleDriver {
 				}
 				
 				if (serverResponse.isAccepted()) {
-					System.out.println("Server has processed your request. You will get alerts for the "+tokens[2]+" event  in "+tokens[1]+" category.");
+					System.out.println("Server has processed your request. You will get alerts for the "+tokens[2]+" event in "+tokens[1]+" category.");
 				} else {
 					System.out.println("Server rejected: "+serverResponse.getFailureNotice());
 				}
@@ -859,7 +884,7 @@ public class ConsoleDriver {
 		System.out.println("rm_ctgr <category_name> - removes a category from the schedule.");
 		System.out.println("list_ctgrs - lists all the categories in the schedule.");
 		System.out.println("create_event - creates an event and add it to the corresponding category.");
-		System.out.println("edit_event - modifies a field in an event.");
+		System.out.println("edit_event <category_name> <event_name> - modifies a field in an event.");
 		System.out.println("list_events_using_ctgr <category_name> - lists all the events in an category.");
 		System.out.println("list_events_using_priority <priority> - lists all the events of a specified priority[L/M/H/U].");
 		System.out.println("list_events_using_times <start_time> <end_time> - lists all the events within the specified time frame.");
@@ -870,7 +895,7 @@ public class ConsoleDriver {
 		System.out.println("login <username> <password> - logs in using you account.");
 		System.out.println("request_auth <phone_number> - requests an authentication code, which will be sent to you phone.");
 		System.out.println("auth <authentication_code> - enters the authentication code; this command should be entered only after the user has requested authentication.");
-		System.out.println("request_alert <ctgr_name> <event_name> - notify the server to send alert for an event.");
+		System.out.println("request_alert <category_name> <event_name> - lets the server send an alert for an event. (if you edit the alert of an event, you also need to use this command).");
 		System.out.println("exit or quit - quit the program");
 		System.out.println("help - see a list of commands");
 		System.out.println();
