@@ -590,7 +590,7 @@ public class ConsoleDriver {
 			}
 			
 			if (serverResponse.isAccepted()) {
-				schedule = (Schedule) serverResponse.getSchedule();
+				schedule = (Schedule)ClientIOSystem.getObject(serverResponse.getSchedule());
 				System.out.println("You schedule has been loaded from the server.");
 			} else {
 				loadLocally();
@@ -788,7 +788,7 @@ public class ConsoleDriver {
 		}
 	}
 
-	private static void requestAlert(String userInput) {
+	private static void requestAlert(String userInput) { // TODO handle names that include space
 		String[] tokens = userInput.split("\\s+");
 		if (tokens.length >= 3) {
 			if (!ServerCommunicator.isLoggedIn()) {

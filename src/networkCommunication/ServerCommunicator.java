@@ -133,7 +133,7 @@ public class ServerCommunicator {
 		ClientRequest request = new ClientRequest(RequestType.SAVE);
 		request.setUserName(username);
 		request.setPassword(password); // not necessary but it's good to include
-//		request.setSchedule(schedule); TODO
+		request.setSchedule(ClientIOSystem.getByteArray(schedule));
 		return request;
 	}
 	

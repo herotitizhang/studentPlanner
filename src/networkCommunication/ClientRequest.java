@@ -3,7 +3,6 @@ package networkCommunication;
 import java.io.Serializable;
 import java.util.GregorianCalendar;
 
-import model.ScheduleI;
 
 public class ClientRequest implements Serializable {
 	

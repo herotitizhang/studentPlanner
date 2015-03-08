@@ -2,13 +2,12 @@ package networkCommunication;
 
 import java.io.Serializable;
 
-import model.ScheduleI;
 
 public class ServerResponse implements Serializable {
 	
 	private boolean accepted = false; 
 	private String failureNotice = null;
-	private ScheduleI schedule = null;
+	private byte[] schedule = null;
 	
 	public boolean isAccepted() {
 		return accepted;
@@ -23,10 +22,10 @@ public class ServerResponse implements Serializable {
 		if (!accepted)
 			this.failureNotice = failureNotice;
 	}
-	public ScheduleI getSchedule() {
+	public byte[] getSchedule() {
 		return schedule;
 	}
-	public void setSchedule(ScheduleI schedule) {
+	public void setSchedule(byte[] schedule) {
 		this.schedule = schedule;
 	}
 	
