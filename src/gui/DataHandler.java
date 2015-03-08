@@ -124,10 +124,10 @@ public class DataHandler {
      */
     public boolean addEvent(String name, String text, String start, 
 			String end, boolean hasAlert, String alertText, String alertTimeString, 
-                        Repeat repeat, Priority priority, CategoryI category) {
+                        Repeat repeat, Priority priority, CategoryI category) throws EmptyFieldException {
         
         if (!hasNecessaryInput(name, start, end)) {
-            return false;
+            throw new EmptyFieldException();
         }
         
         String[] startTokens = start.split("-");
@@ -232,12 +232,13 @@ public class DataHandler {
         return categoryList;
     }
     
-    public CategoryI getCategory(String cat) {
+    public CategoryI getCategory(String cat) throws EmptyFieldException {
         if (schedule.getCategoriesMap().get(cat) == null) {
+            if (cat.equals("")) throw new EmptyFieldException();
             try {
                 schedule.addCategory(cat);
-            } catch (NameInUseException ex) {
-                Logger.getLogger(DataHandler.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NameInUseException e) {
+                //this won't ever happen
             }
         }
         return schedule.getCategoriesMap().get(cat);       
