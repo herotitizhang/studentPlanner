@@ -5,6 +5,7 @@
  */
 package gui;
 
+import backendIO.ServerCommunicator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,13 +25,20 @@ public class StudentPlanner extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
-        
-        Parent root = FXMLLoader.load(getClass().getResource("fxml/MainFXML.fxml"));
-        
+        /*
+        if (ServerCommunicator.checkConnection()) {
+            loadLoginWindow(stage);
+        } else {
+            // to do
+            System.out.println("No connection");
+        }
+        */
+        loadLoginWindow(stage);
+    }
+    
+    private void loadLoginWindow(Stage stage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("fxml/LogInFXML.fxml"));
         Scene scene = new Scene(root);
-        scene.getStylesheets().addAll("http://fonts.googleapis.com/css?family=Slabo+27px", 
-                "http://fonts.googleapis.com/css?family=Oswald", 
-                "http://fonts.googleapis.com/css?family=Pontano+Sans");
         stage.setScene(scene);
         stage.show();
     }

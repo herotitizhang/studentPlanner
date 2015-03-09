@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="200.0" prefWidth="350.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.LoginFXMLController">
+    <GridPane xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+    <padding><Insets top="25" right="25" bottom="10" left="25"/></padding>    
+        <Label text="Welcome" 
+            GridPane.columnIndex="0" GridPane.rowIndex="0"
+            GridPane.columnSpan="2"/>
+        <Label text="Username:"
+            GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <TextField fx:id="usernameInput"
+            GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label text="Password:"
+            GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <PasswordField fx:id="passwordInput" 
+            GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Button fx:id="LogInButton" onAction="#handleLogInButtonAction" text="Log In" 
+            GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <Button fx:id="createButton" onAction="#handleCreateButtonAction" text="Create Account"
+            GridPane.columnIndex="1" GridPane.rowIndex="3" />
+    </GridPane>
+</AnchorPane>

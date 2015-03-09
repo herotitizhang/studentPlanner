@@ -229,14 +229,14 @@ public class DashboardViewFXMLController implements Initializable {
      * Forces updates of EventCells in eventListView
      */
     public void resetEventListView() {
-        try {
-            CategoryI c = DataHandler.getInstance().getCurrentEvent().getCategory();
-            EventI e = new Event(null, null, null, null, true, null, null, EventI.Repeat.NONE, EventI.Priority.LOW, c);
-            DataHandler.getInstance().addEvent(e);
-            DataHandler.getInstance().removeEvent(e);
-        } catch (ItemNotFoundException ex) {
-            Logger.getLogger(DashboardViewFXMLController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        /*
+        CategoryI c = DataHandler.getInstance().getCategories().get(0);
+        EventI e = new Event(" ", null, null, null, true, null, null, EventI.Repeat.NONE, EventI.Priority.LOW, c);
+        DataHandler.getInstance().addEvent(e);
+        DataHandler.getInstance().removeEvent(e);
+        */
+        eventListView.setItems(null);
+        initEventBox();
     }
     
     /**
@@ -245,7 +245,6 @@ public class DashboardViewFXMLController implements Initializable {
     public void resetCategoryListView() {
         categoryListView.setItems(null);
         initCategoryBox();
-        
     }
     
     /**

@@ -205,6 +205,8 @@ public class DataHandler {
     }
     
     public void removeEvent(EventI event) {
+        System.out.println("event null " + (event == null));
+        System.out.println("category null " + (event.getCategory() == null));
         event.getCategory().removeEvent(event);
         eventList.remove(event);
     }
@@ -241,8 +243,10 @@ public class DataHandler {
     }
     
     public LocalDate calendarToDate(GregorianCalendar cal) {
-        Date date = new Date(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-        LocalDate ld = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        if (cal == null) {
+            return null;
+        }
+        LocalDate ld = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return ld;
     }
     
@@ -251,7 +255,7 @@ public class DataHandler {
             return null;
         }
         GregorianCalendar toBeReturned = new GregorianCalendar();
-        toBeReturned.set(ld.getYear(), ld.getMonthValue(), ld.getDayOfMonth());
+        toBeReturned.set(ld.getYear(), ld.getMonthValue()-1, ld.getDayOfMonth());
         toBeReturned.set(Calendar.HOUR, Integer.parseInt(hour));
         toBeReturned.set(Calendar.MINUTE, Integer.parseInt(minute));
         return toBeReturned;

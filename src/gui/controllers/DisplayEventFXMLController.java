@@ -117,16 +117,18 @@ public class DisplayEventFXMLController implements Initializable {
         nameInput.setText(event.getName());
         textInput.setText(event.getText());
         startDateInput.setValue(DataHandler.getInstance().calendarToDate(event.getStartTime()));
-        startHourInput.setText(Integer.toString(event.getStartTime().get(Calendar.HOUR)));
-        startMinuteInput.setText(Integer.toString(event.getStartTime().get(Calendar.MINUTE)));
+        startHourInput.setText(addLeadingZero(Integer.toString(event.getStartTime().get(Calendar.HOUR))));
+        startMinuteInput.setText(addLeadingZero(Integer.toString(event.getStartTime().get(Calendar.MINUTE))));
         endDateInput.setValue(DataHandler.getInstance().calendarToDate(event.getEndTime()));
-        endHourInput.setText(Integer.toString(event.getEndTime().get(Calendar.HOUR)));
-        endMinuteInput.setText(Integer.toString(event.getEndTime().get(Calendar.MINUTE)));
+        endHourInput.setText(addLeadingZero(Integer.toString(event.getEndTime().get(Calendar.HOUR))));
+        endMinuteInput.setText(addLeadingZero(Integer.toString(event.getEndTime().get(Calendar.MINUTE))));
         alertBoolInput.setSelected(event.hasAlert());
-        alertDateInput.setValue(DataHandler.getInstance().calendarToDate(event.getAlertTime()));
-        alertHourInput.setText(Integer.toString(event.getAlertTime().get(Calendar.HOUR)));
-        alertMinuteInput.setText(Integer.toString(event.getAlertTime().get(Calendar.MINUTE)));
-        alertTextInput.setText(event.getAlertText());
+        if (event.hasAlert()) {
+            alertDateInput.setValue(DataHandler.getInstance().calendarToDate(event.getAlertTime()));
+            alertHourInput.setText(addLeadingZero(Integer.toString(event.getAlertTime().get(Calendar.HOUR))));
+            alertMinuteInput.setText(addLeadingZero(Integer.toString(event.getAlertTime().get(Calendar.MINUTE))));
+            alertTextInput.setText(event.getAlertText());
+        }
         categoryInput.setText(event.getCategory().toString());
         priorityInput.setValue(event.getPriority());
         repeatInput.setValue(event.getRepeating());
@@ -153,6 +155,13 @@ public class DisplayEventFXMLController implements Initializable {
         categoryInput.setEditable(editable);
         priorityInput.setEditable(editable);
         repeatInput.setEditable(editable);
+    }
+    
+    private String addLeadingZero(String str) {
+        if (str.length() == 1) {
+            str = "0" + str;
+        }
+        return str;
     }
     
     private void closeWindow() {

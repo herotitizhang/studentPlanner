@@ -97,10 +97,15 @@ public class AddEventFXMLController implements Initializable {
             @Override public void handle(ActionEvent e) {
                 if (alertBoolInput.isSelected()) {
                     setAlertDateTimeEditable(true);
+                    alertDateInput.setValue(LocalDate.now());
+                    alertHourInput.setText("12");
+                    alertMinuteInput.setText("00");
                 } else {
                     setAlertDateTimeEditable(false);
                     alertTextInput.clear();
                     alertDateInput.setValue(null);
+                    alertHourInput.clear();
+                    alertMinuteInput.clear();
                 }
             }
         });
@@ -115,9 +120,6 @@ public class AddEventFXMLController implements Initializable {
         alertDateInput.setEditable(editable);
         alertHourInput.setEditable(editable);
         alertMinuteInput.setEditable(editable);
-        alertDateInput.setValue(LocalDate.now());
-        alertHourInput.setText("12");
-        alertMinuteInput.setText("00");
     }
     
     /**
