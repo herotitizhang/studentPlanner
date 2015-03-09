@@ -37,7 +37,7 @@ public class StudentPlanner extends Application {
     }
     
     private void loadLoginWindow(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("fxml/LogInFXML.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/gui/fxml/LoginFXML.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
