@@ -6,6 +6,8 @@
 package gui;
 
 import java.io.IOException;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -27,6 +29,9 @@ public class CategoryCell extends ListCell<CategoryI> {
             data = new CategoryData();
             data.setCategory(category);
             setGraphic(data.getBox());
+        } else {
+            setGraphic(null);
+            setText(null);
         }
     }
     
@@ -41,6 +46,7 @@ public class CategoryCell extends ListCell<CategoryI> {
 
         @FXML private HBox hBox;
         @FXML private Label name;
+        private StringProperty nameProperty = new SimpleStringProperty();
         
         private CategoryI category;
 
@@ -52,10 +58,11 @@ public class CategoryCell extends ListCell<CategoryI> {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            name.textProperty().bind(nameProperty);
         }
 
         public void setCategory(CategoryI cat){
-           name.setText(cat.toString());
+           nameProperty.setValue(cat.toString());
         }
         
         public CategoryI getCategory() {

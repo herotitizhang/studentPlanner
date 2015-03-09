@@ -33,10 +33,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.MouseEvent;
 import model.CategoryI;
-import model.Event;
 import model.EventI;
 import model.EventI.Priority;
-import model.NameInUseException;
 
 /**
  * FXML Controller class for Dashboard View
@@ -113,8 +111,9 @@ public class DashboardViewFXMLController implements Initializable {
     @FXML
     protected void handleDeleteCategoryButtonAction(ActionEvent event) {
         try {
-            DataHandler.getInstance().deleteCurrentCategory();
-            resetCategoryListView();
+            CategoryI cat = DataHandler.getInstance().getCurrentCategory();
+            DataHandler.getInstance().removeCategory(cat.getName());
+            categoryListView.getItems().remove(cat);
         } catch (ItemNotFoundException e) {
             System.err.println("Error occured, category not selected");
         }
