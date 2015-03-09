@@ -5,11 +5,13 @@
  */
 package gui;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.CategoryI;
@@ -122,35 +124,28 @@ public class DataHandler {
     /**
      * Adds event to schedule using information provided
      */
-    public boolean addEvent(String name, String text, String start, 
-			String end, boolean hasAlert, String alertText, String alertTimeString, 
-                        Repeat repeat, Priority priority, CategoryI category) throws EmptyFieldException {
+    public boolean addEvent(String name, String text, LocalDate startDate, String startHour, String startMinute,
+			LocalDate endDate, String endHour, String endMinute, boolean hasAlert, String alertText, 
+                        LocalDate alertDate, String alertHour, String alertMinute, Repeat repeat, 
+                        Priority priority, CategoryI category) throws EmptyFieldException {
         
-        if (!hasNecessaryInput(name, start, end)) {
+        if (!hasNecessaryInput(name)) {
             throw new EmptyFieldException();
         }
         
-        String[] startTokens = start.split("-");
-        GregorianCalendar startTime = new GregorianCalendar(Integer.parseInt(startTokens[0]),
-                        Integer.parseInt(startTokens[1])-1, Integer.parseInt(startTokens[2]), 
-                        Integer.parseInt(startTokens[3]), Integer.parseInt(startTokens[4]));
-        String[] endTokens = end.split("-");
-        GregorianCalendar endTime = new GregorianCalendar(Integer.parseInt(endTokens[0]),
-                        Integer.parseInt(endTokens[1])-1, Integer.parseInt(endTokens[2]), 
-                        Integer.parseInt(endTokens[3]), Integer.parseInt(endTokens[4]));
+        GregorianCalendar start = returnGregorianCalendar(startDate, startHour, startMinute);
+        GregorianCalendar end = returnGregorianCalendar(endDate, endHour, endMinute);
+        GregorianCalendar alertTime = returnGregorianCalendar(alertDate, alertHour, alertMinute);
+        
         Event newEvent;
         
         if (category == null) {
-            newEvent = new Event(name, startTime, endTime, hasAlert, repeat);
+            newEvent = new Event(name, start, end, hasAlert, repeat);
         } else {
-            if ((!alertText.isEmpty()) && (!alertTimeString.isEmpty())) {
-                String[] alertTokens = alertTimeString.split("-");
-                GregorianCalendar alertTime = new GregorianCalendar(Integer.parseInt(alertTokens[0]),
-                        Integer.parseInt(alertTokens[1])-1, Integer.parseInt(alertTokens[2]), 
-                        Integer.parseInt(alertTokens[3]), Integer.parseInt(alertTokens[4]));
-                newEvent = new Event(name, text, startTime, endTime, hasAlert, alertText, alertTime, repeat, priority, category);
+            if ((alertTime == null) || (alertText.isEmpty())) {
+                newEvent = new Event(name, start, end, hasAlert, repeat, category);
             } else {
-                newEvent = new Event(name, startTime, endTime, hasAlert, repeat, category);
+                newEvent = new Event(name, text, start, end, hasAlert, alertText, alertTime, repeat, priority, category);
             }
         }
         
@@ -183,33 +178,25 @@ public class DataHandler {
         eventList.remove(event);
     }
     
-    public boolean updateEvent(String name, String text, String start, 
-			String end, boolean hasAlert, String alertText, String alertTimeString, 
-                        Repeat repeat, Priority priority, CategoryI category) throws ItemNotFoundException {
+    public boolean updateEvent(String name, String text, LocalDate startDate, String startHour, String startMinute,
+			LocalDate endDate, String endHour, String endMinute, boolean hasAlert, String alertText, 
+                        LocalDate alertDate, String alertHour, String alertMinute, Repeat repeat, 
+                        Priority priority, CategoryI category) throws ItemNotFoundException {
         
-        if (!hasNecessaryInput(name, start, end)) {
+        if (!hasNecessaryInput(name)) {
             return false;
         }
         
         EventI event = getCurrentEvent();
         
-        String[] startTokens = start.split("-");
-        GregorianCalendar startTime = new GregorianCalendar(Integer.parseInt(startTokens[0]),
-                        Integer.parseInt(startTokens[1])-1, Integer.parseInt(startTokens[2]), 
-                        Integer.parseInt(startTokens[3]), Integer.parseInt(startTokens[4]));
-        String[] endTokens = end.split("-");
-        GregorianCalendar endTime = new GregorianCalendar(Integer.parseInt(endTokens[0]),
-                        Integer.parseInt(endTokens[1])-1, Integer.parseInt(endTokens[2]), 
-                        Integer.parseInt(endTokens[3]), Integer.parseInt(endTokens[4]));
-        String[] alertTokens = alertTimeString.split("-");
-        GregorianCalendar alertTime = new GregorianCalendar(Integer.parseInt(alertTokens[0]),
-                        Integer.parseInt(alertTokens[1])-1, Integer.parseInt(alertTokens[2]), 
-                        Integer.parseInt(alertTokens[3]), Integer.parseInt(alertTokens[4]));
+        GregorianCalendar start = returnGregorianCalendar(startDate, startHour, startMinute);
+        GregorianCalendar end = returnGregorianCalendar(endDate, endHour, endMinute);
+        GregorianCalendar alertTime = returnGregorianCalendar(alertDate, alertHour, alertMinute);
         
         event.setName(name);
         event.setText(text);
-        event.setStartTime(startTime);
-        event.setEndTime(endTime);
+        event.setStartTime(start);
+        event.setEndTime(end);
         event.setRepeating(repeat);
         event.setPriority(priority);
         event.setAlert(hasAlert);
@@ -255,8 +242,26 @@ public class DataHandler {
         categoryList.remove(schedule.getCategoriesMap().get(name));
     }
     
-    private boolean hasNecessaryInput(String name, String start, String end) {
-        return (!name.isEmpty() && !start.isEmpty() && !end.isEmpty());
+    public LocalDate calendarToDate(GregorianCalendar cal) {
+        Date date = new Date(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        LocalDate ld = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return ld;
+    }
+    
+    public GregorianCalendar returnGregorianCalendar(LocalDate ld, String hour, String minute) {
+        if ((ld == null) || (hour.isEmpty()) || (minute.isEmpty())) {
+            return null;
+        }
+        GregorianCalendar toBeReturned = new GregorianCalendar();
+        toBeReturned.set(ld.getYear(), ld.getMonthValue(), ld.getDayOfMonth());
+        toBeReturned.set(Calendar.HOUR, Integer.parseInt(hour));
+        toBeReturned.set(Calendar.MINUTE, Integer.parseInt(minute));
+        return toBeReturned;
+    }
+    
+    /* Assumes DatePicker autofills start and end date with default values */
+    private boolean hasNecessaryInput(String name) {
+        return (!name.isEmpty());
     }
     
     public void printNumberOfEventsSchedule() {

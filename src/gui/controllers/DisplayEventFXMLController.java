@@ -9,6 +9,7 @@ import gui.DataHandler;
 import gui.EventCell;
 import gui.ItemNotFoundException;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -34,12 +36,18 @@ public class DisplayEventFXMLController implements Initializable {
     
     @FXML TextField nameInput;
     @FXML TextField textInput;
-    @FXML TextField startTimeInput;
-    @FXML TextField endTimeInput;
+    @FXML DatePicker startDateInput;
+    @FXML TextField startHourInput;
+    @FXML TextField startMinuteInput;
+    @FXML DatePicker endDateInput;
+    @FXML TextField endHourInput;
+    @FXML TextField endMinuteInput;
     @FXML ComboBox<Repeat> repeatInput;
     @FXML ComboBox<Priority> priorityInput;
     @FXML CheckBox alertBoolInput;
-    @FXML TextField alertTimeInput;
+    @FXML DatePicker alertDateInput;
+    @FXML TextField alertHourInput;
+    @FXML TextField alertMinuteInput;
     @FXML TextField alertTextInput;
     @FXML TextField categoryInput;
     @FXML Button submitButton;
@@ -85,9 +93,10 @@ public class DisplayEventFXMLController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/DashboardViewFXML.fxml"));
             Parent root = (Parent) loader.load();
             DashboardViewFXMLController controller = loader.getController();
-            if (DataHandler.getInstance().updateEvent(nameInput.getText(), textInput.getText(), startTimeInput.getText(), 
-                endTimeInput.getText(), alertBoolInput.isSelected(), alertTextInput.getText(), 
-                alertTimeInput.getText(), repeatInput.getValue(), priorityInput.getValue(),
+            if (DataHandler.getInstance().updateEvent(nameInput.getText(), textInput.getText(), startDateInput.getValue(),
+                startHourInput.getText(), startMinuteInput.getText(), endDateInput.getValue(), endHourInput.getText(),
+                endMinuteInput.getText(), alertBoolInput.isSelected(), alertTextInput.getText(), alertDateInput.getValue(), 
+                alertHourInput.getText(), alertMinuteInput.getText(), repeatInput.getValue(), priorityInput.getValue(),
                 DataHandler.getInstance().getCategory(categoryInput.getText()))) {
                     EventCell cell = (EventCell) controller.eventListView.getSelectionModel().getSelectedItem();
                     controller.resetEventListView();
@@ -107,10 +116,16 @@ public class DisplayEventFXMLController implements Initializable {
     private void setContent(EventI event) {
         nameInput.setText(event.getName());
         textInput.setText(event.getText());
-        startTimeInput.setText(event.getStartTime().toString());
-        endTimeInput.setText(event.getEndTime().toString());
+        startDateInput.setValue(DataHandler.getInstance().calendarToDate(event.getStartTime()));
+        startHourInput.setText(Integer.toString(event.getStartTime().get(Calendar.HOUR)));
+        startMinuteInput.setText(Integer.toString(event.getStartTime().get(Calendar.MINUTE)));
+        endDateInput.setValue(DataHandler.getInstance().calendarToDate(event.getEndTime()));
+        endHourInput.setText(Integer.toString(event.getEndTime().get(Calendar.HOUR)));
+        endMinuteInput.setText(Integer.toString(event.getEndTime().get(Calendar.MINUTE)));
         alertBoolInput.setSelected(event.hasAlert());
-        alertTimeInput.setText(event.getAlertTime().toString());
+        alertDateInput.setValue(DataHandler.getInstance().calendarToDate(event.getAlertTime()));
+        alertHourInput.setText(Integer.toString(event.getAlertTime().get(Calendar.HOUR)));
+        alertMinuteInput.setText(Integer.toString(event.getAlertTime().get(Calendar.MINUTE)));
         alertTextInput.setText(event.getAlertText());
         categoryInput.setText(event.getCategory().toString());
         priorityInput.setValue(event.getPriority());
@@ -124,10 +139,16 @@ public class DisplayEventFXMLController implements Initializable {
     private void setEditableFields(boolean editable) {
         nameInput.setEditable(editable);
         textInput.setEditable(editable);
-        startTimeInput.setEditable(editable);
-        endTimeInput.setEditable(editable);
+        startDateInput.setEditable(editable);
+        startHourInput.setEditable(editable);
+        startMinuteInput.setEditable(editable);
+        endDateInput.setEditable(editable);
+        endHourInput.setEditable(editable);
+        endMinuteInput.setEditable(editable);
         alertBoolInput.setDisable(!editable);
-        alertTimeInput.setEditable(editable);
+        alertDateInput.setEditable(editable);
+        alertHourInput.setEditable(editable);
+        alertMinuteInput.setEditable(editable);
         alertTextInput.setEditable(editable);
         categoryInput.setEditable(editable);
         priorityInput.setEditable(editable);

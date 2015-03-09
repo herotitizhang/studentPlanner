@@ -9,6 +9,7 @@ import gui.DataHandler;
 import gui.EmptyFieldException;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.EventI.Priority;
@@ -38,12 +40,18 @@ public class AddEventFXMLController implements Initializable {
 
     @FXML TextField nameInput;
     @FXML TextField textInput;
-    @FXML TextField startTimeInput;
-    @FXML TextField endTimeInput;
+    @FXML DatePicker startDateInput;
+    @FXML TextField startHourInput;
+    @FXML TextField startMinuteInput;
+    @FXML DatePicker endDateInput;
+    @FXML TextField endHourInput;
+    @FXML TextField endMinuteInput;
     @FXML ComboBox<Repeat> repeatInput;
     @FXML ComboBox<Priority> priorityInput;
     @FXML CheckBox alertBoolInput;
-    @FXML TextField alertTimeInput;
+    @FXML DatePicker alertDateInput;
+    @FXML TextField alertHourInput;
+    @FXML TextField alertMinuteInput;
     @FXML TextField alertTextInput;
     @FXML TextField categoryInput;
     @FXML Button submitButton;
@@ -54,10 +62,11 @@ public class AddEventFXMLController implements Initializable {
     @FXML
     private void handleSubmitButtonAction() {
         try {
-            DataHandler.getInstance().addEvent(nameInput.getText(), 
-                    textInput.getText(), startTimeInput.getText(), endTimeInput.getText(), alertBoolInput.isSelected(), 
-                    alertTextInput.getText(), alertTimeInput.getText(), repeatInput.getValue(), 
-                    priorityInput.getValue(), DataHandler.getInstance().getCategory(categoryInput.getText()));
+            DataHandler.getInstance().addEvent(nameInput.getText(), textInput.getText(), startDateInput.getValue(),
+                startHourInput.getText(), startMinuteInput.getText(), endDateInput.getValue(), endHourInput.getText(),
+                endMinuteInput.getText(), alertBoolInput.isSelected(), alertTextInput.getText(), alertDateInput.getValue(), 
+                alertHourInput.getText(), alertMinuteInput.getText(), repeatInput.getValue(), priorityInput.getValue(),
+                DataHandler.getInstance().getCategory(categoryInput.getText()));
             Scene scene = submitButton.getScene();
             Stage stage = (Stage) scene.getWindow();
             stage.close();
@@ -83,21 +92,44 @@ public class AddEventFXMLController implements Initializable {
      * Restricts alert information input until alert is checked
      */
     private void initInputRestrictions() {
-        alertTextInput.setEditable(false);
-        alertTimeInput.setEditable(false);
+        setAlertDateTimeEditable(false);
         alertBoolInput.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
                 if (alertBoolInput.isSelected()) {
-                    alertTextInput.setEditable(true);
-                    alertTimeInput.setEditable(true);
+                    setAlertDateTimeEditable(true);
                 } else {
-                    alertTextInput.setEditable(false);
-                    alertTimeInput.setEditable(false);
+                    setAlertDateTimeEditable(false);
                     alertTextInput.clear();
-                    alertTimeInput.clear();
+                    alertDateInput.setValue(null);
                 }
             }
         });
+    }
+    
+    /**
+     * Sets editable property for inputs fields for alert time to boolean argument
+     * @param editable 
+     */
+    private void setAlertDateTimeEditable(boolean editable) {
+        alertTextInput.setEditable(editable);
+        alertDateInput.setEditable(editable);
+        alertHourInput.setEditable(editable);
+        alertMinuteInput.setEditable(editable);
+        alertDateInput.setValue(LocalDate.now());
+        alertHourInput.setText("12");
+        alertMinuteInput.setText("00");
+    }
+    
+    /**
+     * Fills default values for time inputs
+     */
+    private void initDateTimeInputs() {
+        startDateInput.setValue(LocalDate.now());
+        startHourInput.setText("12");
+        startMinuteInput.setText("00");
+        endDateInput.setValue(LocalDate.now());
+        endHourInput.setText("01");
+        endMinuteInput.setText("00");
     }
     
     /**
@@ -123,6 +155,7 @@ public class AddEventFXMLController implements Initializable {
         initRepeatOptions();
         initPriorityOptions();
         initInputRestrictions();
+        initDateTimeInputs();
     }    
     
 }

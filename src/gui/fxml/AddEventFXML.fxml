@@ -21,12 +21,20 @@
             GridPane.columnIndex="1" GridPane.rowIndex="2"/>
         <Label text="Start Time:"
             GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-        <TextField fx:id="startTimeInput"
-            GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <DatePicker fx:id="startDateInput" />
+            <TextField fx:id="startHourInput" prefWidth="35.0" />
+            <Label text=":" />
+            <TextField fx:id="startMinuteInput" prefWidth="35.0" />
+        </HBox>
         <Label text="End Time:"
             GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-        <TextField fx:id="endTimeInput"
-            GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+        <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <DatePicker fx:id="endDateInput" />
+            <TextField fx:id="endHourInput" prefWidth="35.0" />
+            <Label text=":" />
+            <TextField fx:id="endMinuteInput" prefWidth="35.0" />
+        </HBox>
         <Label text="Category:"
             GridPane.columnIndex="0" GridPane.rowIndex="5"/>
         <TextField fx:id="categoryInput"
@@ -49,8 +57,12 @@
             GridPane.columnIndex="1" GridPane.rowIndex="9"/>
         <Label text="Alert Time"
             GridPane.columnIndex="0" GridPane.rowIndex="10"/>
-        <TextField fx:id="alertTimeInput"
-            GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+        <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
+            <DatePicker fx:id="alertDateInput" />
+            <TextField fx:id="alertHourInput" prefWidth="35.0" />
+            <Label text=":" />
+            <TextField fx:id="alertMinuteInput" prefWidth="35.0" />
+        </HBox>
     </GridPane>
     <Button fx:id="submitButton" layoutX="20.0" layoutY="400.0" text="Submit" 
             onAction="#handleSubmitButtonAction" mnemonicParsing="false" />
