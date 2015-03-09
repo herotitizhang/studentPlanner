@@ -44,6 +44,8 @@ public class EditCategoryFXMLController implements Initializable {
             Parent root = (Parent) loader.load();
             DashboardViewFXMLController controller = loader.getController();
             controller.resetCategoryListView();
+            System.out.println("Data categories: "+DataHandler.getInstance().getCategories().toString());
+            System.out.println("Schedule categories: "+DataHandler.getInstance().getSchedule().getCategories());
             Scene scene = nameInput.getScene();
             Stage stage = (Stage) scene.getWindow();
             stage.close();

@@ -90,10 +90,8 @@ public class DataHandler {
     }
     
     public void updateCurrentCategory(String newName) throws ItemNotFoundException {
-        /*
-        if (currentCategory == null) throw new ItemNotFoundException();
-        */
-        //is the backend going to have category editing functionality?
+        schedule.editCategoryName(currentCategory.getName(), newName);
+        categoryList.setAll(schedule.getCategories());
     }
     
     public void deleteCurrentCategory() throws ItemNotFoundException {
