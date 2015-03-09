@@ -42,18 +42,6 @@ public class ClientIOSystem {
 			} else {
 				return null;
 			}
-			
-			// an alternative method. use this if the current way of getting byte array doesn't work
-//			int nRead;
-//			ByteArrayOutputStream buffer = null;
-//			byte[] data = new byte[8388608]; // allocate 8MB in memory
-//			buffer = new ByteArrayOutputStream();
-//			while ((nRead = bufferedIn.read(data, 0, data.length)) != -1) {
-//				buffer.write(data, 0, nRead); // not sure if it overwrites the previous data
-//			}
-//
-//			buffer.flush();
-		
 		
 		} catch (FileNotFoundException e) {
 			System.out.println("The save file is not found!");
