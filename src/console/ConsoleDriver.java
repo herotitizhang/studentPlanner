@@ -7,10 +7,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
-import networkCommunication.ClientRequest;
-import networkCommunication.ServerCommunicator;
-import networkCommunication.ServerResponse;
-import utilities.ClientIOSystem;
+import backendIO.ClientIOSystem;
+import backendIO.ClientRequest;
+import backendIO.ServerCommunicator;
+import backendIO.ServerResponse;
 import model.CategoryI;
 import model.Event;
 import model.EventI;

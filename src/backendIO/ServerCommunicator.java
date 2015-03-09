@@ -1,4 +1,4 @@
-package networkCommunication;
+package backendIO;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -12,9 +12,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.GregorianCalendar;
 
+import backendIO.ClientRequest.RequestType;
 import model.ScheduleI;
-import networkCommunication.ClientRequest.RequestType;
-import utilities.ClientIOSystem;
 
 
 // Note: processing serverResponse should be separate from the functionality provided in this class
