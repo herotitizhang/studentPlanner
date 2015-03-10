@@ -50,7 +50,7 @@ public class ApplicationControl {
             openSimpleDialog("No connection");
         }
     }
-    
+        
     public void loadApplication() {
         if (!ServerCommunicator.checkConnection()) {
             openSimpleDialog("Couldn't connect to server! Please open a file instead.");
@@ -67,7 +67,12 @@ public class ApplicationControl {
             }
             if (serverResponse.isAccepted()) {
                 System.out.println("Loading schedule...");
-                ScheduleI schedule = (Schedule)ClientIOSystem.getObject(serverResponse.getSchedule());
+                ScheduleI schedule;
+                if (serverResponse.getSchedule() != null) {
+                    schedule = (Schedule)ClientIOSystem.getObject(serverResponse.getSchedule());
+                } else {
+                    schedule = new Schedule();
+                }
                 DataHandler.getInstance().setSchedule(schedule);
                 openMainWindow();
             } else {
@@ -221,6 +226,49 @@ public class ApplicationControl {
             DataHandler.getInstance().setSchedule(tempSchedule);
             refreshDisplayContent();
 	}
+    }
+
+    public boolean LogInUser(String username, String password) {
+        try {
+            ServerResponse serverResponse = ServerCommunicator.sendClientRequest(
+                    ServerCommunicator.generateLoginRequest(username, password));
+            if (serverResponse.isAccepted()) { 
+                //to do: load schedule
+                ApplicationControl.getInstance().loadApplication();
+                return true;
+            } else if (serverResponse == null) {
+                ApplicationControl.getInstance().openSimpleDialog("No response from server.");
+            } else {
+                ApplicationControl.getInstance().openSimpleDialog("Server rejected input.");
+            }
+        } catch (IOException ex) {
+            ApplicationControl.getInstance().openSimpleDialog("Problem connecting to internet.");
+            Logger.getLogger(LoginFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public boolean CreateAndLogInUser(String username, String password) {
+        if (ServerCommunicator.isLoggedIn()) {
+            ApplicationControl.getInstance().openSimpleDialog("You are already logged in, can't create new account");
+        } else {
+            try {
+                ServerResponse serverResponse = ServerCommunicator.sendClientRequest(
+                        ServerCommunicator.generateCreateRequest(username, password));
+                if (serverResponse == null) {
+                    ApplicationControl.getInstance().openSimpleDialog("No response from server.");
+                } else if (serverResponse.isAccepted()) {
+                    // to do: log in, load schedule
+                    ApplicationControl.getInstance().loadApplication();
+                    return true;
+                } else {
+                    ApplicationControl.getInstance().openSimpleDialog("Server rejected: "+serverResponse.getFailureNotice());
+                }
+            } catch (IOException e) {
+                ApplicationControl.getInstance().openSimpleDialog("Problem connecting to internet.");
+            }
+        }
+        return false;
     }
     
 }
