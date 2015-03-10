@@ -5,6 +5,7 @@
  */
 package gui.controllers;
 
+import gui.ApplicationControl;
 import gui.CategoryCell;
 import gui.DataHandler;
 import java.net.URL;
@@ -14,19 +15,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 import gui.EventCell;
 import gui.ItemNotFoundException;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -61,11 +55,7 @@ public class DashboardViewFXMLController implements Initializable {
     @FXML
     protected void handleAddEventButtonAction(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/AddEventFXML.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root1));  
-            stage.show();
+            ApplicationControl.getInstance().openFXMLWindow("/gui/fxml/AddEventFXML.fxml");
         } catch(Exception e) {
            e.printStackTrace();
         }
@@ -78,11 +68,7 @@ public class DashboardViewFXMLController implements Initializable {
     @FXML
     protected void handleAddCategoryButtonAction(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/AddCategoryFXML.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root1));  
-            stage.show();
+            ApplicationControl.getInstance().openFXMLWindow("/gui/fxml/AddCategoryFXML.fxml");
         } catch(Exception e) {
            e.printStackTrace();
         }
@@ -95,11 +81,7 @@ public class DashboardViewFXMLController implements Initializable {
     @FXML
     protected void handleEditCategoryButtonAction(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/EditCategoryFXML.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root1));  
-            stage.show();
+            ApplicationControl.getInstance().openFXMLWindow("/gui/fxml/EditCategoryFXML.fxml");
         } catch(Exception e) {
            e.printStackTrace();
         }
@@ -177,18 +159,10 @@ public class DashboardViewFXMLController implements Initializable {
         eventListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                try {
-                    EventI newEvent = (EventI) eventListView.getSelectionModel().getSelectedItem();
-                    if (newEvent != null) {
-                        DataHandler.getInstance().setCurrentEvent(newEvent);
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/DisplayEventFXML.fxml"));
-                        Parent root1 = (Parent) fxmlLoader.load();
-                        Stage stage = new Stage();
-                        stage.setScene(new Scene(root1));
-                        stage.show();
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(DashboardViewFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                EventI newEvent = (EventI) eventListView.getSelectionModel().getSelectedItem();
+                if (newEvent != null) {
+                    DataHandler.getInstance().setCurrentEvent(newEvent);
+                    ApplicationControl.getInstance().openFXMLWindow("/gui/fxml/DisplayEventFXML.fxml");
                 }
             }
         });

@@ -21,6 +21,7 @@ import model.EventI;
 import model.EventI.Priority;
 import model.NameInUseException;
 import model.Schedule;
+import model.ScheduleI;
 
 /**
  * Class that handles the addition, removal, alteration and communication 
@@ -30,7 +31,7 @@ import model.Schedule;
 public class DataHandler {
     
     private final static DataHandler instance = new DataHandler();
-    private Schedule schedule;
+    private ScheduleI schedule;
     private ObservableList<EventI> eventList;
     private ObservableList<EventCell> eventCellList;
     private ObservableList<CategoryI> categoryList;
@@ -39,7 +40,7 @@ public class DataHandler {
     private CategoryI currentCategory;
     
     public DataHandler() {
-        Schedule sch = new Schedule(); /* to be changed? */
+        ScheduleI sch = new Schedule(); /* to be changed? */
         if (sch != null) {
             setSchedule(sch);
         } else {
@@ -56,11 +57,13 @@ public class DataHandler {
         return instance;
     }
     
-    public void setSchedule(Schedule sch) {
+    public void setSchedule(ScheduleI sch) {
         schedule = sch;
+        setEventList();
+        setCategories();        
     }
     
-    public Schedule getSchedule() {
+    public ScheduleI getSchedule() {
         return schedule;
     }
     

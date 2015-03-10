@@ -14,13 +14,9 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -37,26 +33,23 @@ public class LoginFXMLController implements Initializable {
      */
     @FXML
     protected void handleLogInButtonAction() {
-        /*
+        
         try {
             ServerResponse serverResponse = ServerCommunicator.sendClientRequest(
                     ServerCommunicator.generateLoginRequest(usernameInput.getText(), passwordInput.getText()));
             if (serverResponse.isAccepted()) { 
                 //to do: load schedule
-                loadMainWindow();
-                closeWindow();
+                ApplicationControl.getInstance().openMainWindow();
+                ApplicationControl.getInstance().closeWindow(usernameInput);
             } else if (serverResponse == null) {
-                openSimpleDialog("No response from server.");
+                ApplicationControl.getInstance().openSimpleDialog("No response from server.");
             } else {
-                openSimpleDialog("Server rejected input.");
+                ApplicationControl.getInstance().openSimpleDialog("Server rejected input.");
             }
         } catch (IOException ex) {
-            openSimpleDialog("Problem connecting to internet.");
+            ApplicationControl.getInstance().openSimpleDialog("Problem connecting to internet.");
             Logger.getLogger(LoginFXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        */
-        ApplicationControl.getInstance().startApplication();
-        ApplicationControl.getInstance().closeWindow(usernameInput);
     }
     
     /**
@@ -64,29 +57,26 @@ public class LoginFXMLController implements Initializable {
      */
     @FXML
     protected void handleCreateButtonAction() {
-        /*
+        
         if (ServerCommunicator.isLoggedIn()) {
-            openSimpleDialog("You are already logged in, can't create new account");
+            ApplicationControl.getInstance().openSimpleDialog("You are already logged in, can't create new account");
         } else {
             try {
                 ServerResponse serverResponse = ServerCommunicator.sendClientRequest(
                         ServerCommunicator.generateCreateRequest(usernameInput.getText(), passwordInput.getText()));
                 if (serverResponse == null) {
-                    openSimpleDialog("No response from server.");
+                    ApplicationControl.getInstance().openSimpleDialog("No response from server.");
                 } else if (serverResponse.isAccepted()) {
                     // to do: log in, load schedule
-                    loadMainWindow();
-                    closeWindow();
+                    ApplicationControl.getInstance().openMainWindow();
+                    ApplicationControl.getInstance().closeWindow(usernameInput);
                 } else {
                     ApplicationControl.getInstance().openSimpleDialog("Server rejected: "+serverResponse.getFailureNotice());
                 }
             } catch (IOException e) {
-                openSimpleDialog("Problem connecting to internet.");
+                ApplicationControl.getInstance().openSimpleDialog("Problem connecting to internet.");
             }
         }
-        */
-        ApplicationControl.getInstance().startApplication();
-        ApplicationControl.getInstance().closeWindow(usernameInput);
     }
 
     /**

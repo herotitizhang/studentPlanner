@@ -9,7 +9,17 @@
 
 <AnchorPane id="AnchorPane" styleClass="backgroud" prefHeight="743.0" prefWidth="1000.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="gui.controllers.MainFXMLController">
    <children>
-      <TabPane prefHeight="743.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
+       <MenuBar layoutX="0.0" layoutY="0.0"  prefWidth="1000.0" >
+           <menus>
+            <Menu fx:id="fileMenu" text="File" >
+              <items>
+                <MenuItem fx:id="openItem" text="Open File..." onAction="#handleOpenAction" />
+                <MenuItem fx:id="saveItem" text="Save" onAction="#handleSaveAction" />
+              </items>
+            </Menu>
+           </menus>
+       </MenuBar>
+      <TabPane layoutY="29.0" prefHeight="743.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab id="taskTab">
             <content>

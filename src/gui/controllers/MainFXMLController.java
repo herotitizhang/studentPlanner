@@ -4,15 +4,14 @@
  * and open the template in the editor.
  */
 package gui.controllers;
-import java.io.IOException;
+import gui.ApplicationControl;
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 /**
  *
@@ -21,15 +20,28 @@ import javafx.scene.Parent;
 public class MainFXMLController implements Initializable {
    
     @FXML
-    protected void updateSchedule() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/ScheduleViewFXML.fxml"));
-            Parent p = fxmlLoader.load();
-            ScheduleViewFXMLController controller = fxmlLoader.<ScheduleViewFXMLController>getController();
-            controller.initializeSchedule();
-        } catch (IOException ex) {
-            Logger.getLogger(MainFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+    protected void handleSaveAction() {
+        ApplicationControl.getInstance().save();
+    }
+    
+    @FXML
+    protected void handleOpenAction() {
+        String currentDir = System.getProperty("user.dir") + File.separator;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose File");
+        fileChooser.setInitialDirectory(new File(currentDir));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("SAV Files", "*.sav"));
+        File selectedFile = fileChooser.showOpenDialog(new Stage());
+        if (selectedFile != null) {
+            ApplicationControl.getInstance().loadSchedule(selectedFile.getName());
         }
+    }
+    
+    @FXML
+    protected void updateSchedule() {
+        ScheduleViewFXMLController controller = (ScheduleViewFXMLController) ApplicationControl.getInstance().
+                getController("/gui/fxml/ScheduleViewFXML.fxml");
+        controller.initializeSchedule();
     }
     
     @Override

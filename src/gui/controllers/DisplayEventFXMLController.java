@@ -64,15 +64,12 @@ public class DisplayEventFXMLController implements Initializable {
         try {
             ApplicationControl.getInstance().closeWindow(submitButton);
             /* refresh eventListView */
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/DashboardViewFXML.fxml"));
-            Parent root = (Parent) loader.load();
-            DashboardViewFXMLController controller = loader.getController();
+            DashboardViewFXMLController controller = (DashboardViewFXMLController) ApplicationControl.getInstance().
+                    getController("/gui/fxml/DashboardViewFXML.fxml");
             controller.resetEventListView();
             DataHandler.getInstance().deleteCurrentEvent();
         } catch (ItemNotFoundException e) {
             System.err.println("Oops, there's no event selected.");
-        } catch (IOException ex) {
-            Logger.getLogger(DisplayEventFXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -93,9 +90,8 @@ public class DisplayEventFXMLController implements Initializable {
         try {
             ApplicationControl.getInstance().closeWindow(submitButton);
             /* refresh eventListView */
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/DashboardViewFXML.fxml"));
-            Parent root = (Parent) loader.load();
-            DashboardViewFXMLController controller = loader.getController();
+            DashboardViewFXMLController controller = (DashboardViewFXMLController) ApplicationControl.getInstance().
+                    getController("/gui/fxml/DashboardViewFXML.fxml");
             if (DataHandler.getInstance().updateEvent(nameInput.getText(), textInput.getText(), startDateInput.getValue(),
                 startHourInput.getText(), startMinuteInput.getText(), endDateInput.getValue(), endHourInput.getText(),
                 endMinuteInput.getText(), alertBoolInput.isSelected(), alertTextInput.getText(), alertDateInput.getValue(), 

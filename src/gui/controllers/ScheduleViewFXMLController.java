@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -64,8 +63,6 @@ public class ScheduleViewFXMLController implements Initializable {
                 index++;
             }
         }
-        
-        System.out.println(blocks[5].length);
         
         sundayBox.getChildren().addAll(blocks[0]);
         mondayBox.getChildren().addAll(blocks[1]);
