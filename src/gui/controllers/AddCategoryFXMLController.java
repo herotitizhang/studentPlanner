@@ -5,15 +5,14 @@
  */
 package gui.controllers;
 
+import gui.ApplicationControl;
 import gui.DataHandler;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import model.CategoryI;
 import model.NameInUseException;
 
@@ -34,9 +33,7 @@ public class AddCategoryFXMLController implements Initializable {
     public void handleSubmitButtonAction() {
         try {
             CategoryI newCat = DataHandler.getInstance().addCategory(nameInput.getText());
-            Scene scene = nameInput.getScene();
-            Stage stage = (Stage) scene.getWindow();
-            stage.close();
+            ApplicationControl.getInstance().closeWindow(nameInput);
         } catch (NameInUseException ex) {
             errorLabel.setText("Name in use, please use another name");
         }

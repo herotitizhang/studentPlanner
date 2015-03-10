@@ -5,13 +5,12 @@
  */
 package gui.controllers;
 
+import gui.ApplicationControl;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -24,9 +23,7 @@ public class SimpleDialogFXMLController implements Initializable {
     
     @FXML
     protected void closeWindow() {
-        Scene scene = messageLabel.getScene();
-        Stage stage = (Stage) scene.getWindow();
-        stage.close();
+        ApplicationControl.getInstance().closeWindow(messageLabel);
     }
     
     public void setMessage(String msg) {

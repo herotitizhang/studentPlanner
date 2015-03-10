@@ -5,25 +5,27 @@
  */
 package gui.controllers;
 
+import gui.ApplicationControl;
 import gui.DataHandler;
 import gui.EventCell;
 import gui.ItemNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import model.EventI;
 import model.EventI.Priority;
 import model.EventI.Repeat;
@@ -60,7 +62,7 @@ public class DisplayEventFXMLController implements Initializable {
     @FXML
     private void handleDeleteButtonAction() {
         try {
-            closeWindow();
+            ApplicationControl.getInstance().closeWindow(submitButton);
             /* refresh eventListView */
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/DashboardViewFXML.fxml"));
             Parent root = (Parent) loader.load();
@@ -69,8 +71,8 @@ public class DisplayEventFXMLController implements Initializable {
             DataHandler.getInstance().deleteCurrentEvent();
         } catch (ItemNotFoundException e) {
             System.err.println("Oops, there's no event selected.");
-        } catch (Exception e) {
-            System.err.println("Probably an issue loading fxml doc");
+        } catch (IOException ex) {
+            Logger.getLogger(DisplayEventFXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -89,7 +91,7 @@ public class DisplayEventFXMLController implements Initializable {
     @FXML
     private void handleSubmitButtonAction() {
         try {
-            closeWindow();
+            ApplicationControl.getInstance().closeWindow(submitButton);
             /* refresh eventListView */
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/DashboardViewFXML.fxml"));
             Parent root = (Parent) loader.load();
@@ -165,12 +167,6 @@ public class DisplayEventFXMLController implements Initializable {
         return str;
     }
     
-    private void closeWindow() {
-        Scene scene = nameInput.getScene();
-        Stage stage = (Stage) scene.getWindow();
-        stage.close();
-    }
-    
     /**
      * Fills repeatInput ComboBox
      */
@@ -200,7 +196,7 @@ public class DisplayEventFXMLController implements Initializable {
             submitButton.setVisible(false);
         } catch (ItemNotFoundException e) {
             System.err.println("Sorry, an error occured");
-            closeWindow();
+            ApplicationControl.getInstance().closeWindow(submitButton);
         }
     }    
     

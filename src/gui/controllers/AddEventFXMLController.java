@@ -5,31 +5,24 @@
  */
 package gui.controllers;
 
+import gui.ApplicationControl;
 import gui.DataHandler;
 import gui.EmptyFieldException;
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import model.EventI.Priority;
 import model.EventI.Repeat;
-import model.NameInUseException;
 
 /**
  * FXML Controller class
@@ -67,25 +60,10 @@ public class AddEventFXMLController implements Initializable {
                 endMinuteInput.getText(), alertBoolInput.isSelected(), alertTextInput.getText(), alertDateInput.getValue(), 
                 alertHourInput.getText(), alertMinuteInput.getText(), repeatInput.getValue(), priorityInput.getValue(),
                 DataHandler.getInstance().getCategory(categoryInput.getText()));
-            Scene scene = submitButton.getScene();
-            Stage stage = (Stage) scene.getWindow();
-            stage.close();
+            ApplicationControl.getInstance().closeWindow(submitButton);
         } catch (EmptyFieldException ex) {
-            openSimpleDialog("Event needs a name, start time and end \n time.");
+            ApplicationControl.getInstance().openSimpleDialog("Event needs a name, start time and end \n time.");
         }    
-    }
-    
-    private void openSimpleDialog(String msg) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/SimpleDialogFXML.fxml"));
-            Stage stage = new Stage();
-            stage.setScene(new Scene((Parent) loader.load()));
-            SimpleDialogFXMLController controller = loader.<SimpleDialogFXMLController>getController();
-            controller.setMessage(msg);
-            stage.show();
-        } catch (IOException ex) {
-            Logger.getLogger(AddEventFXMLController.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     /**

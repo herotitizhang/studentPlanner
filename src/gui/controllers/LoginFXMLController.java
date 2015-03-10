@@ -7,6 +7,7 @@ package gui.controllers;
 
 import backendIO.ServerCommunicator;
 import backendIO.ServerResponse;
+import gui.ApplicationControl;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -54,8 +55,8 @@ public class LoginFXMLController implements Initializable {
             Logger.getLogger(LoginFXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
         */
-        loadMainWindow();
-        closeWindow();
+        ApplicationControl.getInstance().startApplication();
+        ApplicationControl.getInstance().closeWindow(usernameInput);
     }
     
     /**
@@ -77,52 +78,17 @@ public class LoginFXMLController implements Initializable {
                     loadMainWindow();
                     closeWindow();
                 } else {
-                    openSimpleDialog("Server rejected: "+serverResponse.getFailureNotice());
+                    ApplicationControl.getInstance().openSimpleDialog("Server rejected: "+serverResponse.getFailureNotice());
                 }
             } catch (IOException e) {
                 openSimpleDialog("Problem connecting to internet.");
             }
         }
         */
-        loadMainWindow();
-        closeWindow();
+        ApplicationControl.getInstance().startApplication();
+        ApplicationControl.getInstance().closeWindow(usernameInput);
     }
-    
-    private void closeWindow() {
-        Scene scene = usernameInput.getScene();
-        Stage stage = (Stage) scene.getWindow();
-        stage.close();
-    }
-    
-    private void openSimpleDialog(String msg) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/SimpleDialogFXML.fxml"));
-            Stage stage = new Stage();
-            stage.setScene(new Scene((Parent) loader.load()));
-            SimpleDialogFXMLController controller = loader.<SimpleDialogFXMLController>getController();
-            controller.setMessage(msg);
-            stage.show();
-        } catch (IOException ex) {
-            Logger.getLogger(AddEventFXMLController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    private void loadMainWindow() {
-        try {
-            Stage stage = new Stage();
-            Parent root = FXMLLoader.load(getClass().getResource("/gui/fxml/MainFXML.fxml"));
-            /* These will be moved to local stylesheets */
-            Scene scene = new Scene(root);
-            scene.getStylesheets().addAll("http://fonts.googleapis.com/css?family=Slabo+27px",
-                    "http://fonts.googleapis.com/css?family=Oswald",
-                    "http://fonts.googleapis.com/css?family=Pontano+Sans");
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException ex) {
-            Logger.getLogger(LoginFXMLController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
+
     /**
      * Initializes the controller class.
      */
