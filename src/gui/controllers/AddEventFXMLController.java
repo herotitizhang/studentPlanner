@@ -147,6 +147,7 @@ public class AddEventFXMLController implements Initializable {
      */
     private void initPriorityOptions() {
         priorityInput.setItems(FXCollections.observableArrayList(Priority.values()));
+        priorityInput.setValue(Priority.MEDIUM);
     }
     
     /**

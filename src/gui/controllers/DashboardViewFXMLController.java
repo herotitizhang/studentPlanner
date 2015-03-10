@@ -111,6 +111,10 @@ public class DashboardViewFXMLController implements Initializable {
     @FXML
     protected void handleDeleteCategoryButtonAction(ActionEvent event) {
         try {
+            if (DataHandler.getInstance().getCurrentCategory().getName() == "default") {
+                // tell user they can't delete default
+                return;
+            }
             CategoryI cat = DataHandler.getInstance().getCurrentCategory();
             DataHandler.getInstance().removeCategory(cat.getName());
             categoryListView.getItems().remove(cat);

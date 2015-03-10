@@ -11,6 +11,7 @@ import gui.ItemNotFoundException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -169,6 +170,21 @@ public class DisplayEventFXMLController implements Initializable {
         Stage stage = (Stage) scene.getWindow();
         stage.close();
     }
+    
+    /**
+     * Fills repeatInput ComboBox
+     */
+    private void initRepeatOptions() {
+        repeatInput.setItems(FXCollections.observableArrayList(Repeat.values()));
+        repeatInput.setValue(Repeat.NONE);
+    }
+    
+    /**
+     * Fills priorityInput ComboBox
+     */
+    private void initPriorityOptions() {
+        priorityInput.setItems(FXCollections.observableArrayList(Priority.values()));
+    }
 
     /**
      * Initializes the controller class by setting content and disabling editing
@@ -178,6 +194,8 @@ public class DisplayEventFXMLController implements Initializable {
         try {
             EventI event = DataHandler.getInstance().getCurrentEvent();
             setContent(event);
+            initPriorityOptions();
+            initRepeatOptions();
             setEditableFields(false);
             submitButton.setVisible(false);
         } catch (ItemNotFoundException e) {

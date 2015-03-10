@@ -138,13 +138,13 @@ public class DataHandler {
         Event newEvent;
         
         if (category == null) {
-            newEvent = new Event(name, start, end, hasAlert, repeat);
+            category = getCategory("default");
+        }
+        
+        if ((alertTime == null) || (alertText.isEmpty())) {
+            newEvent = new Event(name, start, end, hasAlert, repeat, category);
         } else {
-            if ((alertTime == null) || (alertText.isEmpty())) {
-                newEvent = new Event(name, start, end, hasAlert, repeat, category);
-            } else {
-                newEvent = new Event(name, text, start, end, hasAlert, alertText, alertTime, repeat, priority, category);
-            }
+            newEvent = new Event(name, text, start, end, hasAlert, alertText, alertTime, repeat, priority, category);
         }
         
         eventList.add(newEvent);
@@ -219,9 +219,9 @@ public class DataHandler {
         return categoryList;
     }
     
-    public CategoryI getCategory(String cat) throws EmptyFieldException {
+    public CategoryI getCategory(String cat) {
         if (schedule.getCategoriesMap().get(cat) == null) {
-            if (cat.equals("")) throw new EmptyFieldException();
+            if (cat.equals("")) return null;
             try {
                 schedule.addCategory(cat);
             } catch (NameInUseException e) {
