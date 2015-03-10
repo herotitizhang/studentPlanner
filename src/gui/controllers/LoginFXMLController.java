@@ -39,7 +39,7 @@ public class LoginFXMLController implements Initializable {
                     ServerCommunicator.generateLoginRequest(usernameInput.getText(), passwordInput.getText()));
             if (serverResponse.isAccepted()) { 
                 //to do: load schedule
-                ApplicationControl.getInstance().openMainWindow();
+                ApplicationControl.getInstance().loadApplication();
                 ApplicationControl.getInstance().closeWindow(usernameInput);
             } else if (serverResponse == null) {
                 ApplicationControl.getInstance().openSimpleDialog("No response from server.");
@@ -68,7 +68,7 @@ public class LoginFXMLController implements Initializable {
                     ApplicationControl.getInstance().openSimpleDialog("No response from server.");
                 } else if (serverResponse.isAccepted()) {
                     // to do: log in, load schedule
-                    ApplicationControl.getInstance().openMainWindow();
+                    ApplicationControl.getInstance().loadApplication();
                     ApplicationControl.getInstance().closeWindow(usernameInput);
                 } else {
                     ApplicationControl.getInstance().openSimpleDialog("Server rejected: "+serverResponse.getFailureNotice());
