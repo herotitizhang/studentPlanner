@@ -37,13 +37,6 @@ public class MainFXMLController implements Initializable {
         }
     }
     
-    @FXML
-    protected void updateSchedule() {
-        ScheduleViewFXMLController controller = (ScheduleViewFXMLController) ApplicationControl.getInstance().
-                getController("/gui/fxml/ScheduleViewFXML.fxml");
-        controller.initializeSchedule();
-    }
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO

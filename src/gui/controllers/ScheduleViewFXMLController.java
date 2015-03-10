@@ -33,53 +33,50 @@ public class ScheduleViewFXMLController implements Initializable {
     @FXML VBox fridayBox;
     @FXML VBox saturdayBox;
     
+    GregorianCalendar[] week = new GregorianCalendar[8];
+    VBox[] dayBoxes = {sundayBox, mondayBox, tuesdayBox, wednesdayBox, thursdayBox, fridayBox, saturdayBox};
+    
     public void initializeSchedule() {
-        
-        Calendar cal = new GregorianCalendar();
-        cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
-        cal.clear(Calendar.MINUTE);
-        cal.clear(Calendar.SECOND);
-        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
                 
-        GregorianCalendar start = new GregorianCalendar();
-        GregorianCalendar end = new GregorianCalendar();
-        
-        HBox[][] blocks = new HBox[7][];
-        
         for (int day=0; day<7; day++) {
             
-            /* logic for displaying events for each day */
-            start.setTime(cal.getTime());
-            cal.add(Calendar.DAY_OF_WEEK, 1);
-            end.setTime(cal.getTime());
-            List<EventI> events = DataHandler.getInstance().getEventsDuring(start, end);
-            
-            blocks[day] = new HBox[events.size()];
-            
+            List<EventI> events = DataHandler.getInstance().getEventsDuring(week[day], week[day+1]);
+                        
             int index = 0;
             for (EventI event : events) {
-                blocks[day][index] = new HBox();
-                blocks[day][index].getChildren().add(new Label(event.getName()));
+                HBox box = new HBox();
+                box.getChildren().add(new Label(event.getName()));
+                dayBoxes[index].getChildren().add(box);
                 index++;
             }
         }
         
-        sundayBox.getChildren().addAll(blocks[0]);
-        mondayBox.getChildren().addAll(blocks[1]);
-        tuesdayBox.getChildren().addAll(blocks[2]);
-        wednesdayBox.getChildren().addAll(blocks[3]);
-        thursdayBox.getChildren().addAll(blocks[4]);
-        fridayBox.getChildren().addAll(blocks[5]);
-        saturdayBox.getChildren().addAll(blocks[6]);
     }
     
-   
+    public void addEventToSchedule(EventI event) {
+        // Adds event to correct dayBox if it occurs during the week
+    }
+    
+    private void initializeWeek() {
+        GregorianCalendar dayStart = new GregorianCalendar();
+        dayStart.set(Calendar.HOUR_OF_DAY, 0);
+        dayStart.clear(Calendar.MINUTE);
+        dayStart.clear(Calendar.SECOND);
+        dayStart.set(Calendar.DAY_OF_WEEK, dayStart.getFirstDayOfWeek());
+        
+        for (int day=0; day<8; day++) {
+            week[day] = dayStart;
+            dayStart.add(Calendar.DAY_OF_WEEK, 1);
+        }
+    }
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        initializeWeek();
         initializeSchedule();
     }
     

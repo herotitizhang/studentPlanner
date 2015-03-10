@@ -26,7 +26,7 @@
                 <fx:include fx:id="taskView" source="DashboardViewFXML.fxml"/>
             </content>
           </Tab>
-          <Tab id="scheduleTab" onSelectionChanged="#updateSchedule" >
+          <Tab id="scheduleTab" >
             <content>
               <fx:include fx:id="scheduleView" source="ScheduleViewFXML.fxml"/>
             </content>

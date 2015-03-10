@@ -5,11 +5,7 @@
  */
 package gui;
 
-import backendIO.ServerCommunicator;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
@@ -25,9 +21,7 @@ public class StudentPlanner extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
-        //will call below when server is implemented
-        //ApplicationControl.getInstance().initiateLogin();
-        ApplicationControl.getInstance().openMainWindow();
+        ApplicationControl.getInstance().initiateLogin();
     }
     
     /**
