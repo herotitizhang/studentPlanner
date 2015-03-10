@@ -53,7 +53,7 @@ public class ConsoleDriver {
 			listCategories();
 		} else if (userInput.equals("create_event")){ 
 			createEvent();
-		} else if (userInput.startsWith("edit_event")) { 
+		} else if (userInput.equals("edit_event")) { 
 			editEvent(userInput);
 		} else if (userInput.startsWith("list_events_using_ctgr")) {
 			listEventsBasedOnCategory(userInput);
@@ -272,184 +272,195 @@ public class ConsoleDriver {
 	}
 	
 	private static void editEvent(String userInput) {
-		if (userInput.length() < 11 // edit_event plus a space after it
-				|| userInput.charAt(10) != ' ') {
-			printHelp();
-		} else {
-			String eventName = userInput.substring(11);
+		System.out.println("Please enter the category name.");
+		String ctgr = console.nextLine();
 
-			boolean foundEvent = false;
-			for (EventI event: schedule.getAllSortedEvents()) {
-				if (event.getName().equals(eventName)) {
-					foundEvent = true;
-
-					boolean setAnotherAttr = false;
-					do {
-
-						System.out.println("The current event has the following settings.");
-						System.out.println(event);
-						System.out.println();
-						System.out.println("Which field do you want to edit? Select from the following:");
-						System.out.println("name, text, start time, end time, alert, alert text, alert time, repeat, priority and category");
-
-						String command = console.nextLine().trim();
-						while (!command.equals("name") && !command.equals("text") &&
-								!command.equals("start time") && !command.equals("end time") && 
-								!command.equals("alert") && !command.equals("alert text") &&
-								!command.equals("alert time") && !command.equals("repeat") && 
-								!command.equals("category") ) {
-							System.out.println("Invalid input; enter the field again");
-							command = console.nextLine().trim();
-						}
-
-						if (command.equals("name")) {
-							System.out.println("Please enter the new name:");
-							event.setName(console.nextLine());
-						} else if (command.equals("text")) {
-							System.out.println("Please enter the new text:");
-							event.setText(console.nextLine());
-						} else if (command.equals("start time")) {
-							GregorianCalendar startTime = null;
-							while (true) {
-								System.out.println("Please enter the new start time in such a format yyyy-mm-dd-hh-mm.");
-								String temp = console.nextLine();
-								String[] timeTokens = temp.trim().split("-");
-								while (timeTokens.length != 5) { // TODO replace it with validation
-									System.out.println("Invalid format. Enter it again.");
-									temp = console.nextLine();
-									timeTokens = temp.trim().split("-");
-								}
-								startTime = new GregorianCalendar(Integer.parseInt(timeTokens[0]),
-										Integer.parseInt(timeTokens[1])-1, Integer.parseInt(timeTokens[2]), 
-										Integer.parseInt(timeTokens[3]), Integer.parseInt(timeTokens[4]));
-								if (startTime.compareTo(event.getEndTime()) <= 0) {
-									break;
-								} else {
-									System.out.println("Invalid times: end time is before starting time!");
-								}
-							}
-							
-							event.setStartTime(startTime);
-						} else if (command.equals("end time")) {
-							GregorianCalendar endTime = null;
-							while (true) {
-								System.out.println("Please enter the end time in such a format yyyy-mm-dd-hh-mm.");
-								String temp = console.nextLine();
-								String[] timeTokens = temp.trim().split("-");
-								while (timeTokens.length != 5) { //TODO
-									System.out.println("Invalid format. Enter it again.");
-									temp = console.nextLine();
-									timeTokens = temp.trim().split("-");
-								}
-								endTime = new GregorianCalendar(Integer.parseInt(timeTokens[0]),
-										Integer.parseInt(timeTokens[1])-1, Integer.parseInt(timeTokens[2]), 
-										Integer.parseInt(timeTokens[3]), Integer.parseInt(timeTokens[4]));
-
-								if (event.getStartTime().compareTo(endTime) <= 0) {
-									break;
-								} else {
-									System.out.println("Invalid times: end time is before starting time!");
-								}
-							}
-							event.setEndTime(endTime);
-
-						} else if (command.equals("alert")) {
-							System.out.println("Do you want to turn the alert "+ (event.hasAlert() ? "off" : "on") + " [Y/N]");
-							String selection = console.nextLine();
-							if (selection.equalsIgnoreCase("yes") || selection.equalsIgnoreCase("y")) 
-								event.setAlert(!event.hasAlert());
-							System.out.println("Note: you need to request the alert one more time in order to make the change take effect.");
-						} else if (command.equals("alert text")) {
-							if (event.hasAlert()) {
-								System.out.println("Please enter the new alert text:");
-								event.setAlertText(console.nextLine());
-								System.out.println("Note: you need to request the alert one more time in order to make it the change take effect.");
-							} else {
-								System.out.println("Please turn on the alert before you want to set the alert text.");
-							}
-						} else if (command.equals("alert time")) {
-							if (event.hasAlert()) {
-								System.out.println("Please enter the alert time in such a format yyyy-mm-dd-hh-mm.");
-								String temp = console.nextLine();
-								String[] timeTokens = temp.trim().split("-");
-								while (timeTokens.length != 5) { //TODO
-									System.out.println("Invalid format. Enter it again.");
-									temp = console.nextLine();
-									timeTokens = temp.trim().split("-");
-								}
-								GregorianCalendar alertTime = new GregorianCalendar(Integer.parseInt(timeTokens[0]),
-										Integer.parseInt(timeTokens[1])-1, Integer.parseInt(timeTokens[2]), 
-										Integer.parseInt(timeTokens[3]), Integer.parseInt(timeTokens[4]));
-								event.setAlertTime(alertTime);	
-								System.out.println("Note: you need to request the alert one more time in order to make it the change take effect.");
-							} else {
-								System.out.println("Please turn on the alert before you want to set the alert time.");
-							}
-						} else if (command.equals("repeat")) {
-							System.out.println("Do you want it to repeat weekly, monthly, yearly or does not repeat? [W/M/Y/N]");
-							String temp = console.nextLine();
-							if (temp.equalsIgnoreCase("weekly") || temp.equalsIgnoreCase("w"))
-								event.setRepeating(Repeat.WEEKLY);
-							else if (temp.equalsIgnoreCase("monthly") || temp.equalsIgnoreCase("m"))
-								event.setRepeating(Repeat.MONTHLY);
-							else if (temp.equalsIgnoreCase("yearly") || temp.equalsIgnoreCase("y"))
-								event.setRepeating(Repeat.YEARLY);
-							else 
-								event.setRepeating(Repeat.NONE);
-
-						} else if (command.equals("priority")) {
-							// get priority LOW, MEDIUM, HIGH, URGENT;
-							System.out.println("What is the priority of the event (low, medium, high or urgent) ? [L/M/H/U]");
-							String temp = console.nextLine();
-							if (temp.equalsIgnoreCase("low") || temp.equalsIgnoreCase("l"))
-								event.setPriority(Priority.LOW);
-							else if (temp.equalsIgnoreCase("high") || temp.equalsIgnoreCase("h"))
-								event.setPriority(Priority.HIGH);
-							else if (temp.equalsIgnoreCase("urgent") || temp.equalsIgnoreCase("u"))
-								event.setPriority(Priority.URGENT);
-							else 
-								event.setPriority(Priority.MEDIUM);
-						
-						} else if (command.equals("category")) {
-							System.out.println("Please enter the category. Below are existing categories:");
-							for (CategoryI category: schedule.getCategories()) 
-								System.out.print(category+" ");
-							String temp = console.nextLine().trim();
-							CategoryI category = null;
-							if (temp.trim().length() == 0) { // default category
-								System.out.println("You didn't enter the category, so the event belongs to the default category.");
-								category = schedule.getCategoriesMap().get("default");
-							} else if (schedule.getCategoriesMap().containsKey(temp)){ // existing category
-								category = schedule.getCategoriesMap().get(temp);
-							} else { // new category
-								try {
-									category = schedule.addCategory(temp);
-								} catch (NameInUseException e) {
-									System.out.println("The name "+ e.getName()+" has been used!");
-								}
-							}
-							event.setCategory(category);
-						}
-
-						System.out.println("Would you like to set another field? [Y/N]");
-						String selection = console.nextLine();
-						if (selection.equalsIgnoreCase("yes") || selection.equalsIgnoreCase("y")) {
-							setAnotherAttr = true;
-						} else {
-							setAnotherAttr = false;
-						}
-
-					} while (setAnotherAttr);
-
-					break;
-				}
-			}
-			if (!foundEvent) {
-				System.out.println("The event does not exist!");
-			}
-			System.out.println();
+		CategoryI tempCategory = schedule.getCategoriesMap().get(ctgr);
+		if (tempCategory == null) {
+			System.out.println("The category does not exit!");
+			System.out.println(); 
+			return;
 		}
+
+		System.out.println("Please enter the event name.");
+		String evnt = console.nextLine();
+		EventI event = null;
+		boolean foundEvent = false;
+
+		for (EventI tempEvent: tempCategory.getAllEvents()) {
+			if (evnt.equals(tempEvent.getName())) {
+				event = tempEvent;
+				foundEvent = true;
+				break;
+			}
+		}
+
+		if (!foundEvent) {
+			System.out.println("The event does not exist!");
+			System.out.println(); 
+			return;
+		}
+
+		boolean setAnotherAttr = false;
+		do {
+			System.out.println("The current event has the following settings.");
+			System.out.println(event);
+			System.out.println();
+			System.out.println("Which field do you want to edit? Select from the following:");
+			System.out.println("name, text, start time, end time, alert, alert text, alert time, repeat, priority and category");
+
+			String command = console.nextLine().trim();
+			while (!command.equals("name") && !command.equals("text") &&
+					!command.equals("start time") && !command.equals("end time") && 
+					!command.equals("alert") && !command.equals("alert text") &&
+					!command.equals("alert time") && !command.equals("repeat") && 
+					!command.equals("category") ) {
+				System.out.println("Invalid input; enter the field again");
+				command = console.nextLine().trim();
+			}
+
+			if (command.equals("name")) {
+				System.out.println("Please enter the new name:");
+				event.setName(console.nextLine());
+			} else if (command.equals("text")) {
+				System.out.println("Please enter the new text:");
+				event.setText(console.nextLine());
+			} else if (command.equals("start time")) {
+				GregorianCalendar startTime = null;
+				while (true) {
+					System.out.println("Please enter the new start time in such a format yyyy-mm-dd-hh-mm.");
+					String temp = console.nextLine();
+					String[] timeTokens = temp.trim().split("-");
+					while (timeTokens.length != 5) { // TODO replace it with validation
+						System.out.println("Invalid format. Enter it again.");
+						temp = console.nextLine();
+						timeTokens = temp.trim().split("-");
+					}
+					startTime = new GregorianCalendar(Integer.parseInt(timeTokens[0]),
+							Integer.parseInt(timeTokens[1])-1, Integer.parseInt(timeTokens[2]), 
+							Integer.parseInt(timeTokens[3]), Integer.parseInt(timeTokens[4]));
+					if (startTime.compareTo(event.getEndTime()) <= 0) {
+						break;
+					} else {
+						System.out.println("Invalid times: end time is before starting time!");
+					}
+				}
+
+				event.setStartTime(startTime);
+			} else if (command.equals("end time")) {
+				GregorianCalendar endTime = null;
+				while (true) {
+					System.out.println("Please enter the end time in such a format yyyy-mm-dd-hh-mm.");
+					String temp = console.nextLine();
+					String[] timeTokens = temp.trim().split("-");
+					while (timeTokens.length != 5) { //TODO
+						System.out.println("Invalid format. Enter it again.");
+						temp = console.nextLine();
+						timeTokens = temp.trim().split("-");
+					}
+					endTime = new GregorianCalendar(Integer.parseInt(timeTokens[0]),
+							Integer.parseInt(timeTokens[1])-1, Integer.parseInt(timeTokens[2]), 
+							Integer.parseInt(timeTokens[3]), Integer.parseInt(timeTokens[4]));
+
+					if (event.getStartTime().compareTo(endTime) <= 0) {
+						break;
+					} else {
+						System.out.println("Invalid times: end time is before starting time!");
+					}
+				}
+				event.setEndTime(endTime);
+
+			} else if (command.equals("alert")) {
+				System.out.println("Do you want to turn the alert "+ (event.hasAlert() ? "off" : "on") + " [Y/N]");
+				String selection = console.nextLine();
+				if (selection.equalsIgnoreCase("yes") || selection.equalsIgnoreCase("y")) 
+					event.setAlert(!event.hasAlert());
+				System.out.println("Note: you need to request the alert one more time in order to make the change take effect.");
+			} else if (command.equals("alert text")) {
+				if (event.hasAlert()) {
+					System.out.println("Please enter the new alert text:");
+					event.setAlertText(console.nextLine());
+					System.out.println("Note: you need to request the alert one more time in order to make it the change take effect.");
+				} else {
+					System.out.println("Please turn on the alert before you want to set the alert text.");
+				}
+			} else if (command.equals("alert time")) {
+				if (event.hasAlert()) {
+					System.out.println("Please enter the alert time in such a format yyyy-mm-dd-hh-mm.");
+					String temp = console.nextLine();
+					String[] timeTokens = temp.trim().split("-");
+					while (timeTokens.length != 5) { //TODO
+						System.out.println("Invalid format. Enter it again.");
+						temp = console.nextLine();
+						timeTokens = temp.trim().split("-");
+					}
+					GregorianCalendar alertTime = new GregorianCalendar(Integer.parseInt(timeTokens[0]),
+							Integer.parseInt(timeTokens[1])-1, Integer.parseInt(timeTokens[2]), 
+							Integer.parseInt(timeTokens[3]), Integer.parseInt(timeTokens[4]));
+					event.setAlertTime(alertTime);	
+					System.out.println("Note: you need to request the alert one more time in order to make it the change take effect.");
+				} else {
+					System.out.println("Please turn on the alert before you want to set the alert time.");
+				}
+			} else if (command.equals("repeat")) {
+				System.out.println("Do you want it to repeat weekly, monthly, yearly or does not repeat? [W/M/Y/N]");
+				String temp = console.nextLine();
+				if (temp.equalsIgnoreCase("weekly") || temp.equalsIgnoreCase("w"))
+					event.setRepeating(Repeat.WEEKLY);
+				else if (temp.equalsIgnoreCase("monthly") || temp.equalsIgnoreCase("m"))
+					event.setRepeating(Repeat.MONTHLY);
+				else if (temp.equalsIgnoreCase("yearly") || temp.equalsIgnoreCase("y"))
+					event.setRepeating(Repeat.YEARLY);
+				else 
+					event.setRepeating(Repeat.NONE);
+
+			} else if (command.equals("priority")) {
+				// get priority LOW, MEDIUM, HIGH, URGENT;
+				System.out.println("What is the priority of the event (low, medium, high or urgent) ? [L/M/H/U]");
+				String temp = console.nextLine();
+				if (temp.equalsIgnoreCase("low") || temp.equalsIgnoreCase("l"))
+					event.setPriority(Priority.LOW);
+				else if (temp.equalsIgnoreCase("high") || temp.equalsIgnoreCase("h"))
+					event.setPriority(Priority.HIGH);
+				else if (temp.equalsIgnoreCase("urgent") || temp.equalsIgnoreCase("u"))
+					event.setPriority(Priority.URGENT);
+				else 
+					event.setPriority(Priority.MEDIUM);
+
+			} else if (command.equals("category")) {
+				System.out.println("Please enter the category. Below are existing categories:");
+				for (CategoryI category: schedule.getCategories()) 
+					System.out.print(category+" ");
+				String temp = console.nextLine().trim();
+				CategoryI category = null;
+				if (temp.trim().length() == 0) { // default category
+					System.out.println("You didn't enter the category, so the event belongs to the default category.");
+					category = schedule.getCategoriesMap().get("default");
+				} else if (schedule.getCategoriesMap().containsKey(temp)){ // existing category
+					category = schedule.getCategoriesMap().get(temp);
+				} else { // new category
+					try {
+						category = schedule.addCategory(temp);
+					} catch (NameInUseException e) {
+						System.out.println("The name "+ e.getName()+" has been used!");
+					}
+				}
+				event.setCategory(category);
+			}
+
+			System.out.println("Would you like to set another field? [Y/N]");
+			String selection = console.nextLine();
+			if (selection.equalsIgnoreCase("yes") || selection.equalsIgnoreCase("y")) {
+				setAnotherAttr = true;
+			} else {
+				setAnotherAttr = false;
+			}
+
+		} while (setAnotherAttr);
+		System.out.println();
+
 	}
+	
 	
 	private static void listEventsBasedOnCategory(String userInput) {
 		String[] tokens = userInput.split("\\s+");
@@ -902,7 +913,7 @@ public class ConsoleDriver {
 		System.out.println("rename_ctgr <original_name> <new_name> - change the name of a category.");
 		System.out.println("list_ctgrs - lists all the categories in the schedule.");
 		System.out.println("create_event - creates an event and add it to the corresponding category.");
-		System.out.println("edit_event <category_name> <event_name> - modifies a field in an event.");
+		System.out.println("edit_event - modifies a field in an event.");
 		System.out.println("list_events_using_ctgr <category_name> - lists all the events in an category.");
 		System.out.println("list_events_using_priority <priority> - lists all the events of a specified priority[L/M/H/U].");
 		System.out.println("list_events_using_times <start_time> <end_time> - lists all the events within the specified time frame.");
