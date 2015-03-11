@@ -119,7 +119,7 @@ public class ServerCommunicator {
 				 && (serverResponse!= null) && (serverResponse.isAccepted())) {
 			loggedIn = true;
 			username = clientRequest.getUserName();
-			password = clientRequest.getPassword();
+			password = decryptPassword(clientRequest.getPassword());
 		}
 		 
 		return serverResponse;
@@ -131,9 +131,7 @@ public class ServerCommunicator {
 		if (!loggedIn) {
 			request = new ClientRequest(RequestType.CREATE);
 			request.setUserName(username);
-			
-			
-			request.setPassword(password);
+			request.setPassword(encryptPassword(password));
 		}
 		return request;
 	}
@@ -143,7 +141,7 @@ public class ServerCommunicator {
 		if (!loggedIn) {
 			request = new ClientRequest(RequestType.LOGIN);
 			request.setUserName(username);
-			request.setPassword(password);
+			request.setPassword(encryptPassword(password));
 		}
 		return request;
 	}
@@ -151,7 +149,7 @@ public class ServerCommunicator {
 	public static ClientRequest generateSaveRequest(ScheduleI schedule) {
 		ClientRequest request = new ClientRequest(RequestType.SAVE);
 		request.setUserName(username);
-		request.setPassword(password); // not necessary but it's good to include
+		request.setPassword(encryptPassword(password)); // not necessary but it's good to include
 		request.setSchedule(ClientIOSystem.getByteArray(schedule));
 		return request;
 	}
@@ -159,14 +157,14 @@ public class ServerCommunicator {
 	public static ClientRequest generateLoadRequest() {
 		ClientRequest request = new ClientRequest(RequestType.LOAD);
 		request.setUserName(username);
-		request.setPassword(password); // not necessary but it's good to include
+		request.setPassword(encryptPassword(password)); // not necessary but it's good to include
 		return request;
 	}
 	
 	public static ClientRequest generateRequestAuthRequest(String phoneNumber) { // TODO support email 
 		ClientRequest request = new ClientRequest(RequestType.REQUEST_AUTH);
 		request.setUserName(username);
-		request.setPassword(password); // not necessary but it's good to include
+		request.setPassword(encryptPassword(password)); // not necessary but it's good to include
 		request.setPhoneNumber(phoneNumber);
 		return request;
 	}
@@ -174,7 +172,7 @@ public class ServerCommunicator {
 	public static ClientRequest generateAuthenticateRequest(String authenCode) {
 		ClientRequest request = new ClientRequest(RequestType.AUTH);
 		request.setUserName(username);
-		request.setPassword(password); // not necessary but it's good to include
+		request.setPassword(encryptPassword(password)); // not necessary but it's good to include
 		request.setAuthenCode(authenCode);
 		return request;
 	}
@@ -190,12 +188,28 @@ public class ServerCommunicator {
 	public static ClientRequest generateAlertRequest(String title, String alertText, String repeat, GregorianCalendar alertTime) {
 		ClientRequest request = new ClientRequest(RequestType.ALERT);
 		request.setUserName(username);
-		request.setPassword(password); // not necessary but it's good to include
+		request.setPassword(encryptPassword(password)); // not necessary but it's good to include
 		request.setAlertTitle(title);
 		request.setAlertText(alertText);
 		request.setAlertTime(alertTime);
 		request.setRepeat(repeat);
 		return request;
+	}
+	
+	public static String encryptPassword(String password) {
+		String encryptedPassword = "";
+		for (int i = 0; i < password.length(); i++) {
+			encryptedPassword += (char)(password.charAt(i)+1);
+		}
+		return encryptedPassword;
+	}
+	
+	public static String decryptPassword(String password) {
+		String decryptedPassword = "";
+		for (int i = 0; i < password.length(); i++) {
+			decryptedPassword += (char)(password.charAt(i)-1);
+		}
+		return decryptedPassword;
 	}
 
 	public static boolean isLoggedIn() {
