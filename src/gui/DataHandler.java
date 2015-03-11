@@ -40,7 +40,8 @@ public class DataHandler {
     private CategoryI currentCategory;
     
     public DataHandler() {
-        ScheduleI sch = new Schedule(); /* to be changed? */
+        /*
+        ScheduleI sch = new Schedule();
         if (sch != null) {
             setSchedule(sch);
         } else {
@@ -48,6 +49,7 @@ public class DataHandler {
         }
         setEventList();
         setCategories();
+        */
     }
     
     /**
@@ -57,10 +59,13 @@ public class DataHandler {
         return instance;
     }
     
+    /**
+     * Sets schedule for data, sets event and category content
+     */
     public void setSchedule(ScheduleI sch) {
         schedule = sch;
         setEventList();
-        setCategories();        
+        setCategories(); 
     }
     
     public ScheduleI getSchedule() {
@@ -92,6 +97,11 @@ public class DataHandler {
         return currentCategory;
     }
     
+    /**
+     * Change the name of current category
+     * @param newName
+     * @throws ItemNotFoundException 
+     */
     public void updateCurrentCategory(String newName) throws ItemNotFoundException {
         schedule.editCategoryName(currentCategory.getName(), newName);
         categoryList.setAll(schedule.getCategories());
@@ -101,13 +111,6 @@ public class DataHandler {
         CategoryI category = getCurrentCategory();
         schedule.removeCategory(category.toString());
         categoryList.remove(category);
-    }
-    
-    public void deleteCurrentEvent() throws ItemNotFoundException {
-        EventI event = getCurrentEvent();
-        setCurrentEvent(null);
-        event.getCategory().removeEvent(event);
-        eventList.remove(event);
     }
     
     public ObservableList<EventI> getEventList() {
@@ -169,8 +172,7 @@ public class DataHandler {
     public void deleteEvent(EventI event) {
         try {
             if (event == getCurrentEvent()) {
-                deleteCurrentEvent();
-                return;
+                setCurrentEvent(null);
             }
         } catch (ItemNotFoundException ex) {
             // this is fine
@@ -208,10 +210,14 @@ public class DataHandler {
     }
     
     public void removeEvent(EventI event) {
-        System.out.println("event null " + (event == null));
-        System.out.println("category null " + (event.getCategory() == null));
-        event.getCategory().removeEvent(event);
         eventList.remove(event);
+        System.out.println("event: " + event.getName());
+        for (int i=0; i<eventList.size(); i++) {
+            System.out.println("event " + i + " is null: " + eventList.get(i) == null);
+            System.out.println("category " + i + " is null: " + eventList.get(i).getCategory() == null);
+        }
+        event.getCategory().removeEvent(event);
+        
     }
     
     public void setCategories() {
@@ -253,6 +259,13 @@ public class DataHandler {
         return ld;
     }
     
+    /**
+     * Creates and returns a GregorianCalendar object with provided date and time
+     * @param ld
+     * @param hour
+     * @param minute
+     * @return 
+     */
     public GregorianCalendar returnGregorianCalendar(LocalDate ld, String hour, String minute) {
         if ((ld == null) || (hour.isEmpty()) || (minute.isEmpty())) {
             return null;
@@ -264,9 +277,13 @@ public class DataHandler {
         return toBeReturned;
     }
     
-    /* Assumes DatePicker autofills start and end date with default values */
-    private boolean hasNecessaryInput(String name) {
-        return (!name.isEmpty());
+    /**
+     * Determines if information is sufficient for creating an event
+     * @param name
+     * @return 
+     */
+    private boolean hasNecessaryInput(String name) { // arguments and conditions
+        return (!name.isEmpty());                    // may be added to this method
     }
     
     public void printNumberOfEventsSchedule() {

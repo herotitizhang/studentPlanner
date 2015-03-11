@@ -9,6 +9,7 @@ import backendIO.ClientIOSystem;
 import backendIO.ServerCommunicator;
 import backendIO.ServerResponse;
 import gui.controllers.AddEventFXMLController;
+import gui.controllers.DashboardViewFXMLController;
 import gui.controllers.LoginFXMLController;
 import gui.controllers.SimpleDialogFXMLController;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.Schedule;
 import model.ScheduleI;
 
 /**
@@ -28,9 +30,7 @@ import model.ScheduleI;
 public class ApplicationControl {
     
     private final static ApplicationControl instance = new ApplicationControl();
-    
-    public boolean onlineMode = true;
-    
+        
     public ApplicationControl() {
         
     }
@@ -39,14 +39,10 @@ public class ApplicationControl {
         return instance;
     }
     
-    public void setOnlineMode(boolean mode) {
-        onlineMode = mode;
-    }
-    
-    public boolean isOnline() {
-        return onlineMode;
-    }
-    
+    /**
+     * Opens login window if connection is available
+     * @throws IOException 
+     */
     public void initiateLogin() throws IOException {
         if (ServerCommunicator.checkConnection()) {
             openFXMLWindow("/gui/fxml/LoginFXML.fxml");
@@ -54,7 +50,45 @@ public class ApplicationControl {
             openSimpleDialog("No connection");
         }
     }
+        
+    public void loadApplication() {
+        if (!ServerCommunicator.checkConnection()) {
+            openSimpleDialog("Couldn't connect to server! Please open a file instead.");
+        } 
+        if (!ServerCommunicator.isLoggedIn()) {
+            // Not sure this will happen
+        } 
+
+        try {
+            ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateLoadRequest());
+            if (serverResponse == null) {
+                openMainWindow();
+                openSimpleDialog("No response from server! Please open a file instead.");
+            }
+            if (serverResponse.isAccepted()) {
+                System.out.println("Loading schedule...");
+                ScheduleI schedule;
+                if (serverResponse.getSchedule() != null) {
+                    schedule = (Schedule)ClientIOSystem.getObject(serverResponse.getSchedule());
+                } else {
+                    schedule = new Schedule();
+                }
+                DataHandler.getInstance().setSchedule(schedule);
+                openMainWindow();
+            } else {
+                openMainWindow();
+                openSimpleDialog("Server rejected request! Please open a file instead.");
+            }
+            System.out.println();
+        } catch (IOException e) {
+            openMainWindow();
+            openSimpleDialog("No internet connection, please open a file instead.");
+        }
+    }
     
+    /**
+     * Opens the main window of the program
+     */
     public void openMainWindow() {
         try {
             Stage stage = new Stage();
@@ -71,6 +105,11 @@ public class ApplicationControl {
         }
     }
     
+    /**
+     * Opens FXML file at provided file path, returns the corresponding controller
+     * @param filePath
+     * @return 
+     */
     public Object openFXMLWindow(String filePath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(filePath));
@@ -88,9 +127,14 @@ public class ApplicationControl {
         }
     }
     
-    public Object getController(String fxmlFile) {
+    /**
+     * Returns controller for FXML file at provided file path
+     * @param filePath
+     * @return 
+     */
+    public Object getController(String filePath) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(filePath));
             Parent root = (Parent) loader.load();
             return loader.getController();
         } catch (IOException ex) {
@@ -99,10 +143,21 @@ public class ApplicationControl {
         }
     }
     
-    public void refreshData() {
-        
+    /**
+     * Reloads event and category content displayed in application
+     */
+    public void refreshDisplayContent() {
+        DashboardViewFXMLController dashControl = (DashboardViewFXMLController) getController(
+                "/gui/fxml/DashboardViewFXML.fxml");
+        dashControl.resetCategoryListView();
+        dashControl.resetEventListView();
+        // TO DO: Also refresh schedule view
     }
     
+    /**
+     * Opens a dialog window with "Ok" button that displays message
+     * @param msg 
+     */
     public void openSimpleDialog(String msg) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/SimpleDialogFXML.fxml"));
@@ -116,15 +171,21 @@ public class ApplicationControl {
         }
     }
     
+    /**
+     * Can be called by any controller to close its window when passed any node in that window
+     * @param node 
+     */
     public void closeWindow(Node node) {
         Scene scene = node.getScene();
         Stage stage = (Stage) scene.getWindow();
         stage.close();
     }
 
+    /**
+     * Attempts to save to either both server and disk, if saving to server fails
+     * then nothing is done and informs the user that schedule cannot be saved
+     */
     public void save() {
-        
-        Boolean connection = false;
         
         if (!ServerCommunicator.checkConnection()) {
             openSimpleDialog("Sorry no connection is available, cannot save.");
@@ -135,31 +196,79 @@ public class ApplicationControl {
         } 
 
         try {
+            
             ServerResponse serverResponse = ServerCommunicator.sendClientRequest(
                     ServerCommunicator.generateSaveRequest(DataHandler.getInstance().getSchedule()));
+            
             if (serverResponse == null) {
                 openSimpleDialog("No response from the server! You schedule is not saved.");
             }
-
-            // if saved sucessfully
             if (serverResponse.isAccepted()) {
-                // also save locally here
+                ClientIOSystem.writeToDisk(DataHandler.getInstance().getSchedule(), ServerCommunicator.getUsername());
             } else {
                 openSimpleDialog("Sorry, server was not able to save your schedule");
             }
             System.out.println();
+            
         } catch (IOException e) {
             openSimpleDialog("Sorry, can't connect to the internet!");
         }
         
     }
 
+    /**
+     * Loads and sets schedule, loads schedule content in display
+     * @param fileName 
+     */
     public void loadSchedule(String fileName) {
         ScheduleI tempSchedule = ClientIOSystem.loadFromDisk(fileName);
         if (tempSchedule != null) {
             DataHandler.getInstance().setSchedule(tempSchedule);
-            // refresh content
+            refreshDisplayContent();
 	}
+    }
+
+    public boolean LogInUser(String username, String password) {
+        try {
+            ServerResponse serverResponse = ServerCommunicator.sendClientRequest(
+                    ServerCommunicator.generateLoginRequest(username, password));
+            if (serverResponse.isAccepted()) { 
+                //to do: load schedule
+                ApplicationControl.getInstance().loadApplication();
+                return true;
+            } else if (serverResponse == null) {
+                ApplicationControl.getInstance().openSimpleDialog("No response from server.");
+            } else {
+                ApplicationControl.getInstance().openSimpleDialog("Server rejected input.");
+            }
+        } catch (IOException ex) {
+            ApplicationControl.getInstance().openSimpleDialog("Problem connecting to internet.");
+            Logger.getLogger(LoginFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public boolean CreateAndLogInUser(String username, String password) {
+        if (ServerCommunicator.isLoggedIn()) {
+            ApplicationControl.getInstance().openSimpleDialog("You are already logged in, can't create new account");
+        } else {
+            try {
+                ServerResponse serverResponse = ServerCommunicator.sendClientRequest(
+                        ServerCommunicator.generateCreateRequest(username, password));
+                if (serverResponse == null) {
+                    ApplicationControl.getInstance().openSimpleDialog("No response from server.");
+                } else if (serverResponse.isAccepted()) {
+                    // to do: log in, load schedule
+                    ApplicationControl.getInstance().loadApplication();
+                    return true;
+                } else {
+                    ApplicationControl.getInstance().openSimpleDialog("Server rejected: "+serverResponse.getFailureNotice());
+                }
+            } catch (IOException e) {
+                ApplicationControl.getInstance().openSimpleDialog("Problem connecting to internet.");
+            }
+        }
+        return false;
     }
     
 }

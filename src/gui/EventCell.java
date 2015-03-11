@@ -26,6 +26,8 @@ public class EventCell extends ListCell<EventI> {
     private CheckBox completed = new CheckBox();
     private EventI event;
     
+    
+    
     public EventCell() {
         super();
         hBox.getChildren().addAll(priorityImage, name, completed);
@@ -50,6 +52,7 @@ public class EventCell extends ListCell<EventI> {
             setGraphic(getBox());
         } else {
             setGraphic(null);
+            setText(null);
         }
     }
     

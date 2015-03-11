@@ -63,11 +63,10 @@ public class DisplayEventFXMLController implements Initializable {
     private void handleDeleteButtonAction() {
         try {
             ApplicationControl.getInstance().closeWindow(submitButton);
-            /* refresh eventListView */
             DashboardViewFXMLController controller = (DashboardViewFXMLController) ApplicationControl.getInstance().
                     getController("/gui/fxml/DashboardViewFXML.fxml");
             controller.resetEventListView();
-            DataHandler.getInstance().deleteCurrentEvent();
+            DataHandler.getInstance().removeEvent(DataHandler.getInstance().getCurrentEvent());
         } catch (ItemNotFoundException e) {
             System.err.println("Oops, there's no event selected.");
         }
