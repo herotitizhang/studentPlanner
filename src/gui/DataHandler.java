@@ -65,7 +65,7 @@ public class DataHandler {
     public void setSchedule(ScheduleI sch) {
         schedule = sch;
         setEventList();
-        setCategories();        
+        setCategories(); 
     }
     
     public ScheduleI getSchedule() {
@@ -111,13 +111,6 @@ public class DataHandler {
         CategoryI category = getCurrentCategory();
         schedule.removeCategory(category.toString());
         categoryList.remove(category);
-    }
-    
-    public void deleteCurrentEvent() throws ItemNotFoundException {
-        EventI event = getCurrentEvent();
-        setCurrentEvent(null);
-        event.getCategory().removeEvent(event);
-        eventList.remove(event);
     }
     
     public ObservableList<EventI> getEventList() {
@@ -179,8 +172,7 @@ public class DataHandler {
     public void deleteEvent(EventI event) {
         try {
             if (event == getCurrentEvent()) {
-                deleteCurrentEvent();
-                return;
+                setCurrentEvent(null);
             }
         } catch (ItemNotFoundException ex) {
             // this is fine
@@ -218,10 +210,14 @@ public class DataHandler {
     }
     
     public void removeEvent(EventI event) {
-        System.out.println("event null " + (event == null));
-        System.out.println("category null " + (event.getCategory() == null));
-        event.getCategory().removeEvent(event);
         eventList.remove(event);
+        System.out.println("event: " + event.getName());
+        for (int i=0; i<eventList.size(); i++) {
+            System.out.println("event " + i + " is null: " + eventList.get(i) == null);
+            System.out.println("category " + i + " is null: " + eventList.get(i).getCategory() == null);
+        }
+        event.getCategory().removeEvent(event);
+        
     }
     
     public void setCategories() {
