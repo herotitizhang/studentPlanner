@@ -39,7 +39,7 @@ public class ServerCommunicator {
 	static {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("serverIP.txt"));
-			serverIP = br.readLine();
+			serverIP = br.readLine().trim();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -131,6 +131,8 @@ public class ServerCommunicator {
 		if (!loggedIn) {
 			request = new ClientRequest(RequestType.CREATE);
 			request.setUserName(username);
+			
+			
 			request.setPassword(password);
 		}
 		return request;
