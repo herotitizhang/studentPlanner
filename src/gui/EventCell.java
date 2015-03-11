@@ -5,6 +5,8 @@
  */
 package gui;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.CheckBox;
@@ -26,7 +28,7 @@ public class EventCell extends ListCell<EventI> {
     private CheckBox completed = new CheckBox();
     private EventI event;
     
-    
+    StringProperty nameProperty = new SimpleStringProperty();
     
     public EventCell() {
         super();
@@ -58,7 +60,8 @@ public class EventCell extends ListCell<EventI> {
     
     public void init(EventI ev) {
         event = ev;
-        name.setText(event.getName());
+        name.textProperty().bind(nameProperty);
+        nameProperty.setValue(event.getName());
         if (event.getPriority() != null) {
             Image priority = new Image(returnImageFilePath());
             priorityImage.setImage(priority);
@@ -68,6 +71,7 @@ public class EventCell extends ListCell<EventI> {
                 handleCompletedChecked();
             }
         });
+        completed.setSelected(false);
     }
     
     private String returnImageFilePath() {

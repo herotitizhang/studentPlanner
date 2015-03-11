@@ -77,8 +77,13 @@ public class DisplayEventFXMLController implements Initializable {
      */
     @FXML
     private void handleEditButtonAction() {
-        setEditableFields(true);
-        submitButton.setVisible(true);
+        try {
+            setEditableFields(true);
+            setContent(DataHandler.getInstance().getCurrentEvent());
+            submitButton.setVisible(true);
+        } catch (ItemNotFoundException ex) {
+            Logger.getLogger(DisplayEventFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**
