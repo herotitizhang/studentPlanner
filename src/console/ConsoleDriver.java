@@ -637,12 +637,14 @@ public class ConsoleDriver {
 			}
 			
 			if (serverResponse.isAccepted()) {
-				schedule = (Schedule)ClientIOSystem.getObject(serverResponse.getSchedule());
+				byte[] tempSchedule = serverResponse.getSchedule();
+				if (tempSchedule != null)
+					schedule = (Schedule)ClientIOSystem.getObject(tempSchedule);
 				System.out.println("You schedule has been loaded from the server.");
 			} else {
-				loadLocally();
 				System.out.println("Server rejected: "+serverResponse.getFailureNotice());
-				System.out.println("You schedule is loaded from local drive.");
+				System.out.println("You schedule is going to be loaded from local drive.");
+				loadLocally();
 			}
 			System.out.println();
 		} catch (IOException e) {
