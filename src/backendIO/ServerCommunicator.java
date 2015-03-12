@@ -69,11 +69,12 @@ public class ServerCommunicator {
 					Socket socket = new Socket(serverIP, port); 
 					internentConnection.connected = true;
 				} catch (IOException e) {
-					System.out.println("No internet connection."); // connected variable is unchanged; it is false
+//					System.out.println("No internet connection."); // connected variable is unchanged; it is false
 				} 
 			}
 			
 		});
+		connectionThread.start();
 		
 		// wait for 3 seconds. if there is no response from server, the variable will be false. 
 		try {
