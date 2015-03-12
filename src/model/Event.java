@@ -45,7 +45,7 @@ public class Event implements EventI{
 			boolean alert, Repeat repeating){
 		this.name = name;
 		this.startTime = startTime;
-		this.endTime = endTime; // TODO check that endTime is after startTime
+		this.endTime = endTime; 
 		this.alert = alert;
 		this.repeating = repeating;
 	}
@@ -301,6 +301,6 @@ public class Event implements EventI{
 		
 	}
 
-	// TODO checkers !!!
+
 
 }

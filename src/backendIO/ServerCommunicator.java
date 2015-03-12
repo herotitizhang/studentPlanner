@@ -1,13 +1,15 @@
+/**
+ * ServerCommmunicator is used to send different kinds of request to the server
+ * Author: Tony Zhangs
+ */
+
 package backendIO;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.GregorianCalendar;
@@ -21,7 +23,7 @@ public class ServerCommunicator {
 
 	
 	// if loggedIn is true, the user can not send LOGIN or CREATE request
-	// if loggedIn is false, the user can not send
+	// if loggedIn is false, the user can not send other requests
 	private static boolean loggedIn = false;
 	
 	private static String username = null;
@@ -31,8 +33,6 @@ public class ServerCommunicator {
 	private static boolean authenticated = false; //TODO check where it's used. maybe get rid of it?
 	private static String phoneNumber = null;
 	
-	
-	// TODO needs to change the IP TODO
 	private static String serverIP;
 	private static int port = 12345;
 	
@@ -55,14 +55,37 @@ public class ServerCommunicator {
 	 */
 	public static boolean checkConnection() {
 		
-		boolean connection = true;
-		try {
-			Socket socket = new Socket(serverIP, port);
-		} catch (IOException e) {
-			connection = false;
-		} 
+		// a wrapper class so that connection variable can be modified in an anonymous class
+		class ImmutableBoolean {
+			boolean connected = false;
+		}
+		ImmutableBoolean internentConnection = new ImmutableBoolean();
 		
-		return connection;
+		// a runnable object that checks 
+		Thread connectionThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					// if no server is running on this ip, the following line will hang
+					// and the connected variable will always be false;
+					Socket socket = new Socket(serverIP, port); 
+					internentConnection.connected = true;
+				} catch (IOException e) {
+//					System.out.println("No internet connection."); // connected variable is unchanged; it is false
+				} 
+			}
+			
+		});
+		connectionThread.start();
+		
+		// wait for 3 seconds. if there is no response from server, the variable will be false. 
+		try {
+			Thread.sleep(2*1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		return internentConnection.connected;
 		
 	}
 	

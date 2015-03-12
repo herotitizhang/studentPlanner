@@ -1,3 +1,8 @@
+/**
+ * The command interface for student Planner.
+ * Author: Tony Zhang
+ */
+
 package console;
 
 import java.io.IOException;
@@ -75,7 +80,7 @@ public class ConsoleDriver {
 			requestAuthenticate(userInput);
 		} else if (userInput.startsWith("auth")){
 			authenticate(userInput);
-		} else if (userInput.startsWith("request_alert")){		
+		} else if (userInput.equals("request_alert")){		
 			requestAlert(userInput);
 		} else if (userInput.equals("exit") || userInput.equals("quit")) { 
 			exit();
@@ -698,7 +703,6 @@ public class ConsoleDriver {
 			}
 			
 			try {
-				// TODO encryption
 				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateCreateRequest(tokens[1], tokens[2]));
 				if (serverResponse == null) {
 					System.out.println("No response from the server!");
@@ -732,7 +736,6 @@ public class ConsoleDriver {
 			}
 			
 			try {
-				// TODO encryption
 				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateLoginRequest(tokens[1], tokens[2]));
 				if (serverResponse == null) {
 					System.out.println("No response from the server!");
@@ -844,31 +847,40 @@ public class ConsoleDriver {
 	}
 
 	private static void requestAlert(String userInput) { // TODO handle names that include space
-		String[] tokens = userInput.split("\\s+");
-		if (tokens.length >= 3) {
 			if (!ServerCommunicator.isLoggedIn()) {
 				System.out.println("You are not logged-in. Please log in first!"); 
 				System.out.println();
 				return;
 			} 
-
+						
 			// check if the category exists or not
-			CategoryI ctgr = schedule.getCategoriesMap().get(tokens[1]);
-			if (ctgr == null) {
-				System.out.println("The category does not exist!");
+			System.out.println("Please enter the category name.");
+			String ctgr = console.nextLine();
+
+			CategoryI tempCategory = schedule.getCategoriesMap().get(ctgr);
+			if (tempCategory == null) {
+				System.out.println("The category does not exit!");
+				System.out.println(); 
 				return;
 			}
-			
-			// check if the event exists or not			
+
+			// check if the event exists or not
+			System.out.println("Please enter the event name.");
+			String evnt = console.nextLine();
 			EventI event = null;
-			for (int i = 0; i < ctgr.getAllEvents().size(); i++) {
-				if (ctgr.getAllEvents().get(i).getName().equals(tokens[2])) {
-					event = ctgr.getAllEvents().get(i);
+			boolean foundEvent = false;
+
+			for (EventI tempEvent: tempCategory.getAllEvents()) {
+				if (evnt.equals(tempEvent.getName())) {
+					event = tempEvent;
+					foundEvent = true;
 					break;
 				}
 			}
-			if (event == null) {
+
+			if (!foundEvent) {
 				System.out.println("The event does not exist!");
+				System.out.println(); 
 				return;
 			}
 			
@@ -879,7 +891,7 @@ public class ConsoleDriver {
 			
 			try {
 				ClientRequest alertRequest = ServerCommunicator.generateAlertRequest
-						(ServerCommunicator.getUsername()+"."+ctgr.getName()+"."+event.getName(), event.getAlertText(), event.getRepeating().toString(), event.getAlertTime());
+						(ServerCommunicator.getUsername()+"."+ctgr+"."+event.getName(), event.getAlertText(), event.getRepeating().toString(), event.getAlertTime());
 				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(alertRequest);
 				if (serverResponse == null) {
 					System.out.println("No response from the server!");
@@ -888,7 +900,7 @@ public class ConsoleDriver {
 				}
 				
 				if (serverResponse.isAccepted()) {
-					System.out.println("Server has processed your request. You will get alerts for the "+tokens[2]+" event in "+tokens[1]+" category.");
+					System.out.println("Server has processed your request. You will get alerts for the "+event.getName()+" event in "+ctgr+" category.");
 				} else {
 					System.out.println("Server rejected: "+serverResponse.getFailureNotice());
 				}
@@ -898,9 +910,6 @@ public class ConsoleDriver {
 				System.out.println();
 			}
 			
-		} else {
-			printHelp();
-		}	
 	}
 	
 	private static void exit() {

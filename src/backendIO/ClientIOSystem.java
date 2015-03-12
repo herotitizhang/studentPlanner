@@ -1,3 +1,8 @@
+/**
+ * ClientIOSystem class provides some utility methods.
+ * Author: Tony Zhang
+ */
+
 package backendIO;
 
 import java.io.BufferedInputStream;
@@ -79,36 +84,6 @@ public class ClientIOSystem {
 		}
 	}
 	
-	public static ScheduleI loadFromServer() {
-		
-		// the implementaton is in the console.
-		// did that because loadLocally and loadFromServer's functions are mixed together. 
-		// and it's hard to make it a standalone method
-		// will see if I can do this once I get alert implemented
-		return null;
-	}
-
-	public static void writeToServer(ScheduleI schedule) {
-		// the implementaton is in the console.
-		// did that because saveToServer and saveLocall are mixed together. 
-		// and it's hard to make it a standalone method
-		// will see if I can do this once I get alert implemented
-	}
-	
-	// TODO not sure if it's the correct method header
-	public static void RequestAuthenticateCell() {
-		// the implementaton is in the console.
-		// it's hard to make it a standalone method
-		// will see if I can do this once I get alert implemented
-	}
-
-	// TODO not sure if it's the correct method header
-	public static String AuthentiateCell() {
-		// the implementaton is in the console.
-		// it's hard to make it a standalone method
-		// will see if I can do this once I get alert implemented
-		return null;
-	}
 	
 	/**
 	 * mostly close an inputstream or an outputstream

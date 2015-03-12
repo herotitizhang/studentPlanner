@@ -1,3 +1,7 @@
+/**
+ * ClientRequest is a container that includes what's sent from the client to the server.
+ * Author: Tony Zhang
+ */
 package backendIO;
 
 import java.io.Serializable;

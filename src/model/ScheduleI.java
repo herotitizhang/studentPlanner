@@ -1,3 +1,8 @@
+/**
+ * Schedule Interface. Different kinds of schedules might be created.
+ * Author: Tony Zhang
+ */
+
 package model;
 
 import java.io.Reader;
@@ -33,9 +38,10 @@ public interface ScheduleI extends Serializable{
 
 	boolean editCategoryName(String originalName, String newName);
 	
-	public boolean checkConflict(EventI event);
+	boolean checkConflict(EventI event1, EventI event2);
 
 	public boolean checkConflict(CategoryI category);
+
 
 
 	

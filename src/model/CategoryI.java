@@ -1,3 +1,7 @@
+/**
+ * The category interface. Different kinds of categories might be created.
+ * Author: Tony Zhang
+ */
 package model;
 
 import java.io.Serializable;
