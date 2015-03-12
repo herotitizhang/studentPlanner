@@ -31,8 +31,6 @@ public class ServerCommunicator {
 	private static boolean authenticated = false; //TODO check where it's used. maybe get rid of it?
 	private static String phoneNumber = null;
 	
-	
-	// TODO needs to change the IP TODO
 	private static String serverIP;
 	private static int port = 12345;
 	

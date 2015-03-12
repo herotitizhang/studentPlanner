@@ -698,7 +698,6 @@ public class ConsoleDriver {
 			}
 			
 			try {
-				// TODO encryption
 				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateCreateRequest(tokens[1], tokens[2]));
 				if (serverResponse == null) {
 					System.out.println("No response from the server!");
@@ -732,7 +731,6 @@ public class ConsoleDriver {
 			}
 			
 			try {
-				// TODO encryption
 				ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateLoginRequest(tokens[1], tokens[2]));
 				if (serverResponse == null) {
 					System.out.println("No response from the server!");

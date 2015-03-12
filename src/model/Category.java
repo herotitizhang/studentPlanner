@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Category implements CategoryI{
 	
-	private String name = ""; //TODO different from architecture. added the name attribute.
+	private String name = "";
 	private List<EventI> events = new ArrayList<EventI>(); 
 	
 	public Category (String name) {

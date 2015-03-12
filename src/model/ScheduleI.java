@@ -33,9 +33,10 @@ public interface ScheduleI extends Serializable{
 
 	boolean editCategoryName(String originalName, String newName);
 	
-	public boolean checkConflict(EventI event);
+	boolean checkConflict(EventI event1, EventI event2);
 
 	public boolean checkConflict(CategoryI category);
+
 
 
 	

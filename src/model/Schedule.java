@@ -170,8 +170,11 @@ public class Schedule implements ScheduleI{
 	}
 
 	@Override
-	public boolean checkConflict(EventI event) {
-		// TODO Auto-generated method stub
+	public boolean checkConflict(EventI event1, EventI event2) {
+		if (  (event1.getStartTime().compareTo(event2.getEndTime() ) <= 0) 
+				&& (event1.getEndTime().compareTo(event2.getStartTime() ) >= 0) )  {
+			return true;
+		}
 		return false;
 	}
 
