@@ -55,14 +55,36 @@ public class ServerCommunicator {
 	 */
 	public static boolean checkConnection() {
 		
-		boolean connection = true;
-		try {
-			Socket socket = new Socket(serverIP, port);
-		} catch (IOException e) {
-			connection = false;
-		} 
+		// a wrapper class so that connection variable can be modified in an anonymous class
+		class ImmutableBoolean {
+			boolean connected = false;
+		}
+		ImmutableBoolean internentConnection = new ImmutableBoolean();
 		
-		return connection;
+		// a runnable object that checks 
+		Thread connectionThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					// if no server is running on this ip, the following line will hang
+					// and the connected variable will always be false;
+					Socket socket = new Socket(serverIP, port); 
+					internentConnection.connected = true;
+				} catch (IOException e) {
+					System.out.println("No internet connection."); // connected variable is unchanged; it is false
+				} 
+			}
+			
+		});
+		
+		// wait for 3 seconds. if there is no response from server, the variable will be false. 
+		try {
+			Thread.sleep(2*1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		return internentConnection.connected;
 		
 	}
 	
