@@ -15,6 +15,7 @@
               <items>
                 <MenuItem fx:id="openItem" text="Open File..." onAction="#handleOpenAction" />
                 <MenuItem fx:id="saveItem" text="Save" onAction="#handleSaveAction" />
+                <MenuItem fx:id="settingsItem" text="Settings" onAction="#handleSettingsAction" />
               </items>
             </Menu>
            </menus>

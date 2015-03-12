@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="200.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.RequestAuthFXMLController">
+    <GridPane xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+    <padding><Insets top="25" right="25" bottom="10" left="25"/></padding>    
+        <Label text="Phone Number:" 
+            GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <TextField fx:id="phoneInput" 
+            GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Button fx:id="requestButton" onAction="#handleRequestButtonAction" text="Send Code"
+            GridPane.columnIndex="0" GridPane.rowIndex="2" />
+    </GridPane>
+</AnchorPane>
