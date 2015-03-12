@@ -1,3 +1,8 @@
+/**
+ * ServerResponse is the container that includes what's sent from the server to the client
+ * Author: Tony Zhang
+ */
+
 package backendIO;
 
 import java.io.Serializable;

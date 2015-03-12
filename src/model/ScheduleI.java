@@ -1,3 +1,8 @@
+/**
+ * Schedule Interface. Different kinds of schedules might be created.
+ * Author: Tony Zhang
+ */
+
 package model;
 
 import java.io.Reader;

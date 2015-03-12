@@ -1,13 +1,15 @@
+/**
+ * ServerCommmunicator is used to send different kinds of request to the server
+ * Author: Tony Zhangs
+ */
+
 package backendIO;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.GregorianCalendar;
@@ -21,7 +23,7 @@ public class ServerCommunicator {
 
 	
 	// if loggedIn is true, the user can not send LOGIN or CREATE request
-	// if loggedIn is false, the user can not send
+	// if loggedIn is false, the user can not send other requests
 	private static boolean loggedIn = false;
 	
 	private static String username = null;

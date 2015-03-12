@@ -1,3 +1,8 @@
+/**
+ * The command interface for student Planner.
+ * Author: Tony Zhang
+ */
+
 package console;
 
 import java.io.IOException;

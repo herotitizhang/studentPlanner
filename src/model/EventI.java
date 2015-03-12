@@ -1,3 +1,7 @@
+/**
+ * Event interface. Different kinds of event might be created.
+ * Author: Tony Zhang
+ */
 package model;
 
 import java.io.Serializable;
