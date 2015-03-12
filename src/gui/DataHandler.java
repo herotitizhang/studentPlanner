@@ -37,6 +37,7 @@ public class DataHandler {
     private ObservableList<CategoryI> categoryList;
     private Map<CategoryI, ObservableList> catEventMap;
     private EventI currentEvent;
+    private EventI lastAddedEvent;
     private CategoryI currentCategory;
     
     public DataHandler() {
@@ -86,6 +87,15 @@ public class DataHandler {
     public EventI getCurrentEvent() throws ItemNotFoundException {
         if (currentEvent == null) throw new ItemNotFoundException();
         return currentEvent;
+    }
+    
+    public void setLastAddedEvent(EventI event) {
+        lastAddedEvent = event;
+    }
+    
+    public EventI getLastAddedEvent() {
+        if (lastAddedEvent == null) return null;
+        return lastAddedEvent;
     }
     
     public void setCurrentCategory(CategoryI category) {
@@ -158,6 +168,7 @@ public class DataHandler {
             categoryList.add(category);
         }
         
+        setLastAddedEvent(newEvent);
         return true;
     }
     

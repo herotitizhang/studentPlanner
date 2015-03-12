@@ -66,7 +66,6 @@ public class ApplicationControl {
                 openSimpleDialog("No response from server! Please open a file instead.");
             }
             if (serverResponse.isAccepted()) {
-                System.out.println("Loading schedule...");
                 ScheduleI schedule;
                 if (serverResponse.getSchedule() != null) {
                     schedule = (Schedule)ClientIOSystem.getObject(serverResponse.getSchedule());

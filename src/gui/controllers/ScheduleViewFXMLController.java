@@ -34,27 +34,30 @@ public class ScheduleViewFXMLController implements Initializable {
     @FXML VBox saturdayBox;
     
     GregorianCalendar[] week = new GregorianCalendar[8];
-    VBox[] dayBoxes = {sundayBox, mondayBox, tuesdayBox, wednesdayBox, thursdayBox, fridayBox, saturdayBox};
+    VBox[] dayBoxes;
     
     public void initializeSchedule() {
-                
+        dayBoxes = new VBox[]{sundayBox, mondayBox, tuesdayBox, wednesdayBox, thursdayBox, fridayBox, saturdayBox};
         for (int day=0; day<7; day++) {
-            
             List<EventI> events = DataHandler.getInstance().getEventsDuring(week[day], week[day+1]);
-                        
-            int index = 0;
             for (EventI event : events) {
-                HBox box = new HBox();
-                box.getChildren().add(new Label(event.getName()));
-                dayBoxes[index].getChildren().add(box);
-                index++;
+                addEventToDay(event, day);
             }
         }
-        
+    }
+    
+    public void addEventToDay(EventI event, int day) {
+        HBox box = new HBox();
+        box.getChildren().add(new Label(event.getName()));
+        dayBoxes[day].getChildren().add(box);
     }
     
     public void addEventToSchedule(EventI event) {
-        // Adds event to correct dayBox if it occurs during the week
+        for (int day=0; day<7; day++) {
+            if (DataHandler.getInstance().getEventsDuring(week[day], week[day+1]).contains(event)) {
+                addEventToDay(event, day);
+            }
+        }
     }
     
     private void initializeWeek() {
@@ -65,8 +68,11 @@ public class ScheduleViewFXMLController implements Initializable {
         dayStart.set(Calendar.DAY_OF_WEEK, dayStart.getFirstDayOfWeek());
         
         for (int day=0; day<8; day++) {
-            week[day] = dayStart;
+            GregorianCalendar cur = new GregorianCalendar();
+            cur.setTime(dayStart.getTime());
+            week[day] = cur;
             dayStart.add(Calendar.DAY_OF_WEEK, 1);
+            System.out.println(week[day].getTime().toString());
         }
     }
     
