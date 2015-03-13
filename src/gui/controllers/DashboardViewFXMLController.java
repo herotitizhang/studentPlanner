@@ -24,9 +24,11 @@ import gui.ItemNotFoundException;
 import java.util.GregorianCalendar;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;
 import model.CategoryI;
 import model.Event;
 import model.EventI;
@@ -256,6 +258,9 @@ public class DashboardViewFXMLController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        System.out.println("1");
+        Font.loadFont(getClass().getResource("coolvetica.ttf").toExternalForm(), 10);
+        System.out.println("2");
         deleteCategoryButton.setVisible(false);
         editCategoryButton.setVisible(false);
         initEventBox();
