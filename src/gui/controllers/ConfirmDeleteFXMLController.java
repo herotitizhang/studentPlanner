@@ -27,6 +27,7 @@ public class ConfirmDeleteFXMLController implements Initializable {
     @FXML
     protected void handleConfirmButtonAction() {
         DataHandler.getInstance().removeEvent(event);
+        ApplicationControl.getInstance().closeWindow(cancelButton);
     }
     
     @FXML

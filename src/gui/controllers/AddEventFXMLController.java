@@ -58,15 +58,11 @@ public class AddEventFXMLController implements Initializable {
     @FXML
     private void handleSubmitButtonAction() {
         try {
-            if (DataHandler.getInstance().addEvent(nameInput.getText(), textInput.getText(), startDateInput.getValue(),
+            if (!DataHandler.getInstance().addEvent(nameInput.getText(), textInput.getText(), startDateInput.getValue(),
                 startHourInput.getText(), startMinuteInput.getText(), endDateInput.getValue(), endHourInput.getText(),
                 endMinuteInput.getText(), alertBoolInput.isSelected(), alertTextInput.getText(), alertDateInput.getValue(), 
                 alertHourInput.getText(), alertMinuteInput.getText(), repeatInput.getValue(), priorityInput.getValue(),
                 DataHandler.getInstance().getCategory(categoryInput.getText()))) {
-                    ScheduleViewFXMLController controller = (ScheduleViewFXMLController) ApplicationControl.getInstance().getController(
-                    "/gui/fxml/ScheduleViewFXML.fxml");
-                    controller.addEventToSchedule(DataHandler.getInstance().getLastAddedEvent());
-            } else {
                 ApplicationControl.getInstance().openSimpleDialog("Sorry, an error occurred.");
             }
             
