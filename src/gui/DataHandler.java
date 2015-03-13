@@ -283,7 +283,7 @@ public class DataHandler {
         }
         GregorianCalendar toBeReturned = new GregorianCalendar();
         toBeReturned.set(ld.getYear(), ld.getMonthValue()-1, ld.getDayOfMonth());
-        toBeReturned.set(Calendar.HOUR, Integer.parseInt(hour));
+        toBeReturned.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour));
         toBeReturned.set(Calendar.MINUTE, Integer.parseInt(minute));
         return toBeReturned;
     }

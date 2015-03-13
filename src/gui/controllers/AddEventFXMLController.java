@@ -10,7 +10,10 @@ import gui.DataHandler;
 import gui.EmptyFieldException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -117,6 +120,23 @@ public class AddEventFXMLController implements Initializable {
         endDateInput.setValue(LocalDate.now());
         endHourInput.setText("01");
         endMinuteInput.setText("00");
+        TextField[] timeFields = {startHourInput, startMinuteInput, endHourInput,
+            endMinuteInput, alertHourInput, alertMinuteInput};
+        setTimeInputConstraints(timeFields);
+    }
+    
+    public static void setTimeInputConstraints(TextField[] fields) {
+        for (TextField field : fields) {
+            field.textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(final ObservableValue<? extends String> ov, final String oldValue, final String newValue) {
+                    if (field.getText().length() > 2) {
+                        String s = field.getText().substring(0, 2);
+                        field.setText(s);
+                    }
+                }
+            });
+        }
     }
     
     /**

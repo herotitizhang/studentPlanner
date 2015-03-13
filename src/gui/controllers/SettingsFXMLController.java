@@ -5,6 +5,7 @@
  */
 package gui.controllers;
 
+import backendIO.ServerCommunicator;
 import gui.ApplicationControl;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -43,16 +44,11 @@ public class SettingsFXMLController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        /*
-        if (ServerCommunicator.getPhoneNumber() == null) {
-            authLabel.setVisible(false);
-            authInput.setVisible(false);
-        } else if (ServerCommunicator.isAuthenticated()) {
-            authLabel.setVisible(false);
-            authInput.setVisible(false);
+        if (ServerCommunicator.isAuthenticated()) {
+            verificationLabel.setVisible(false);
+            verificationInput.setVisible(false);
             submitButton.setVisible(false);
         }
-                */
     }    
     
 }
