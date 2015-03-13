@@ -54,11 +54,17 @@ public class ApplicationControl {
         openFXMLWindow("/gui/fxml/LoginFXML.fxml");
     }
     
+    /**
+     * Opens application without checking for server connection or responses
+     */
     public void loadApplicationOffline() {
         DataHandler.getInstance().setSchedule(new Schedule());
         openMainWindow();
     }
         
+    /**
+     * Opens application, informs user of server connection issues
+     */
     public void loadApplication() {
         if (!ServerCommunicator.checkConnection()) {
             openSimpleDialog("Couldn't connect to server! Please open a file instead.");
@@ -187,6 +193,11 @@ public class ApplicationControl {
         stage.close();
     }
 
+    /**
+     * Sets the IP of ServerCommunicator if provided IP is valid
+     * @param ip
+     * @return 
+     */
     public static boolean setIP(String ip) { // TODO handle names that include space
         if (!IPValidator.validate(ip)) {
             return false;
@@ -246,6 +257,12 @@ public class ApplicationControl {
 	}
     }
 
+    /**
+     * Attempts to log in user with username and password
+     * @param username
+     * @param password
+     * @return true if log in is successful 
+     */
     public boolean LogInUser(String username, String password) {
 
         try {
@@ -265,6 +282,14 @@ public class ApplicationControl {
         return false;
     }
     
+    /**
+     * Creates new account and logs in user if creation is successful. Warns user if 
+     * no phone is provided
+     * @param username
+     * @param password
+     * @param phone
+     * @return account creation and log in successful
+     */
     public boolean CreateAndLogInUser(String username, String password, String phone) {
         if (!ServerCommunicator.checkConnection()) {
             return false;
@@ -301,6 +326,11 @@ public class ApplicationControl {
         return false;
     }
     
+    /**
+     * Requests authentication for phone number
+     * @param number
+     * @return 
+     */
     public boolean requestPhoneAuthentication(String number) {
         ServerCommunicator.setAuthenticated(false);
 	boolean processed = false;
@@ -317,6 +347,11 @@ public class ApplicationControl {
         return processed;
     }
     
+    /**
+     * Requests verification for code
+     * @param code
+     * @return 
+     */
     public boolean authenticatePhone(String code) {
         try {
             ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateAuthenticateRequest(code));
@@ -342,6 +377,10 @@ public class ApplicationControl {
         alertEvents.add(event);
     }
     
+    /**
+     * Requests an alert for provided event
+     * @param event 
+     */
     public void requestAlert(EventI event) {
         String alertText = event.getAlertText();
         GregorianCalendar alertTime = event.getAlertTime();

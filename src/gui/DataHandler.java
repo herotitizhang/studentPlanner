@@ -41,16 +41,6 @@ public class DataHandler {
     private CategoryI currentCategory;
     
     public DataHandler() {
-        /*
-        ScheduleI sch = new Schedule();
-        if (sch != null) {
-            setSchedule(sch);
-        } else {
-            setSchedule(new Schedule());
-        }
-        setEventList();
-        setCategories();
-        */
     }
     
     /**
@@ -136,7 +126,26 @@ public class DataHandler {
     }
     
     /**
-     * Adds event to schedule using information provided
+     * Adds event with parameter information to schedule, requests alert from 
+     * server if the event has alert
+     * @param name
+     * @param text
+     * @param startDate
+     * @param startHour
+     * @param startMinute
+     * @param endDate
+     * @param endHour
+     * @param endMinute
+     * @param hasAlert
+     * @param alertText
+     * @param alertDate
+     * @param alertHour
+     * @param alertMinute
+     * @param repeat
+     * @param priority
+     * @param category
+     * @return
+     * @throws EmptyFieldException 
      */
     public boolean addEvent(String name, String text, LocalDate startDate, String startHour, String startMinute,
 			LocalDate endDate, String endHour, String endMinute, boolean hasAlert, String alertText, 
@@ -199,6 +208,27 @@ public class DataHandler {
         eventList.remove(event);
     }
     
+    /**
+     * Updates all fields of an event, requests alert if event has alert
+     * @param name
+     * @param text
+     * @param startDate
+     * @param startHour
+     * @param startMinute
+     * @param endDate
+     * @param endHour
+     * @param endMinute
+     * @param hasAlert
+     * @param alertText
+     * @param alertDate
+     * @param alertHour
+     * @param alertMinute
+     * @param repeat
+     * @param priority
+     * @param category
+     * @return
+     * @throws ItemNotFoundException 
+     */
     public boolean updateEvent(String name, String text, LocalDate startDate, String startHour, String startMinute,
 			LocalDate endDate, String endHour, String endMinute, boolean hasAlert, String alertText, 
                         LocalDate alertDate, String alertHour, String alertMinute, Repeat repeat, 
