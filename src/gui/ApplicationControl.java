@@ -6,6 +6,7 @@
 package gui;
 
 import backendIO.ClientIOSystem;
+import backendIO.ClientRequest;
 import backendIO.ServerCommunicator;
 import backendIO.ServerResponse;
 import gui.controllers.AddEventFXMLController;
@@ -13,6 +14,7 @@ import gui.controllers.DashboardViewFXMLController;
 import gui.controllers.LoginFXMLController;
 import gui.controllers.SimpleDialogFXMLController;
 import java.io.IOException;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +22,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.EventI;
 import model.Schedule;
 import model.ScheduleI;
 
@@ -311,6 +314,22 @@ public class ApplicationControl {
             }
         } catch (IOException e) {
             openSimpleDialog("Error: cannot connect to the Internet!");
+        }
+    }
+    
+    public void requestAlert(EventI event) {
+        String alertText = event.getAlertText();
+        GregorianCalendar alertTime = event.getAlertTime();
+        
+        try {
+            ClientRequest alertRequest = ServerCommunicator.generateAlertRequest
+                    (ServerCommunicator.getUsername()+"."+event.getCategory()+"."+event.getName(), event.getAlertText(), event.getRepeating().toString(), event.getAlertTime());
+            ServerResponse serverResponse = ServerCommunicator.sendClientRequest(alertRequest);
+            if ((serverResponse == null) || (!serverResponse.isAccepted())) {
+                openSimpleDialog("Sorry, couldn't request an alert.");
+            }
+        } catch (IOException e) {
+            openSimpleDialog("Couldn't connect to the internet, alert not processed");
         }
     }
     
