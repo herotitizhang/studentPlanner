@@ -33,20 +33,19 @@ public class ServerCommunicator {
 	private static boolean authenticated = false; //TODO check where it's used. maybe get rid of it?
 	private static String phoneNumber = null;
 	
-	private static String serverIP;
+	private static String serverIP = "0.0.0.0";
 	private static int port = 12345;
 	
-	static {
-		try {
-			BufferedReader br = new BufferedReader(new FileReader("serverIP.txt"));
-			serverIP = br.readLine().trim();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
+//	static {
+//		try {
+//			BufferedReader br = new BufferedReader(new FileReader("serverIP.txt"));
+//			serverIP = br.readLine().trim();
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 
 	/**
@@ -269,6 +268,10 @@ public class ServerCommunicator {
 
 	public static void setPhoneNumber(String phoneNumber) {
 		ServerCommunicator.phoneNumber = phoneNumber;
+	}
+
+	public static void setServerIP(String serverIP) {
+		ServerCommunicator.serverIP = serverIP;
 	}
 	
 }

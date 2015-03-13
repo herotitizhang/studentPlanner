@@ -14,6 +14,7 @@ import java.util.Scanner;
 
 import backendIO.ClientIOSystem;
 import backendIO.ClientRequest;
+import backendIO.IPValidator;
 import backendIO.ServerCommunicator;
 import backendIO.ServerResponse;
 import model.CategoryI;
@@ -31,16 +32,23 @@ public class ConsoleDriver {
 	private static Scanner console = new Scanner(System.in);
 	
 	public static void main(String[] args) {
-		System.out.println("Enter \"help\" to see a list of available commands");
+		System.out.print("Please enter the ip address of the server: ");
+		String ip = console.nextLine();
+		while (!IPValidator.validate(ip)) {
+			System.out.println("That's not a valid IP address. Please enter it again: ");
+			ip = console.nextLine();
+		}
+		ServerCommunicator.setServerIP(ip);
 		if (!ServerCommunicator.checkConnection()) {
 			System.out.println("Note: You are currently not connected to the internet.");
 			System.out.println("All the changes you make cannot be saved.");
 			System.out.println("However, You are able to load from local drive.");
 			System.out.println("Enter \"check_inet\" to see if the client side is connected to the server now.");
-			System.out.println();
 		} else {
 			System.out.println("Internet is available. We suggest you login first before creating events.");
 		}
+		System.out.println("Enter \"help\" to see a list of available commands");
+		System.out.println();
 		while (console.hasNextLine()){
 			String userInput = console.nextLine();
 			processUserInput(userInput);
@@ -82,6 +90,8 @@ public class ConsoleDriver {
 			authenticate(userInput);
 		} else if (userInput.equals("request_alert")){		
 			requestAlert(userInput);
+		} else if (userInput.equals("enter_ip")) { 
+			setIP();
 		} else if (userInput.equals("exit") || userInput.equals("quit")) { 
 			exit();
 		} else {
@@ -910,6 +920,21 @@ public class ConsoleDriver {
 				System.out.println();
 			}
 			
+	}
+	
+	private static void setIP() { // TODO handle names that include space
+		System.out.print("Please enter the ip address of the server: ");
+		String ip = console.nextLine();
+		while (!IPValidator.validate(ip)) {
+			System.out.println("That's not a valid IP address. Please enter it again: ");
+			ip = console.nextLine();
+		}
+		ServerCommunicator.setServerIP(ip);
+		if (!ServerCommunicator.checkConnection()) {
+			System.out.println("You can't be connected to the server at this point.");
+		} else {
+			System.out.println("Server is available.");
+		}
 	}
 	
 	private static void exit() {
