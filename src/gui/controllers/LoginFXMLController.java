@@ -47,12 +47,14 @@ public class LoginFXMLController implements Initializable {
             ApplicationControl.getInstance().openSimpleDialog("Please enter a valid IP.");
             return;
         }
-        if (ApplicationControl.getInstance().LogInUser(usernameInput.getText(), passwordInput.getText())) {
-            ApplicationControl.getInstance().closeWindow(usernameInput);
-            ApplicationControl.getInstance().loadApplication();
-        } else {
+        if (!ServerCommunicator.checkConnection()) {
             ApplicationControl.getInstance().openFXMLWindow("/gui/fxml/OfflineWarningFXML.fxml");
         }
+        else if (ApplicationControl.getInstance().LogInUser(usernameInput.getText(), passwordInput.getText())) {
+            
+            ApplicationControl.getInstance().closeWindow(usernameInput);
+            ApplicationControl.getInstance().loadApplication();
+            }
     }
     
     @FXML

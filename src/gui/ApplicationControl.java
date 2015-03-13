@@ -247,11 +247,7 @@ public class ApplicationControl {
     }
 
     public boolean LogInUser(String username, String password) {
-        System.out.println(ServerCommunicator.checkConnection());
-        System.out.println(ServerCommunicator.getServerIP());
-        if (!ServerCommunicator.checkConnection()) {
-            return false;
-        }
+
         try {
             ServerResponse serverResponse = ServerCommunicator.sendClientRequest(
                     ServerCommunicator.generateLoginRequest(username, password));
