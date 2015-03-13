@@ -21,14 +21,17 @@ import javafx.scene.control.ListView;
 import javafx.util.Callback;
 import gui.EventCell;
 import gui.ItemNotFoundException;
+import java.util.GregorianCalendar;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.MouseEvent;
 import model.CategoryI;
+import model.Event;
 import model.EventI;
 import model.EventI.Priority;
+import model.EventI.Repeat;
 
 /**
  * FXML Controller class for Dashboard View
@@ -206,14 +209,11 @@ public class DashboardViewFXMLController implements Initializable {
      * Forces updates of EventCells in eventListView
      */
     public void resetEventListView() {
-        /*
+        
         CategoryI c = DataHandler.getInstance().getCategories().get(0);
-        EventI e = new Event(" ", null, null, null, true, null, null, EventI.Repeat.NONE, EventI.Priority.LOW, c);
+        EventI e = new Event(" ", null, null, false, Repeat.NONE, c);
         DataHandler.getInstance().addEvent(e);
         DataHandler.getInstance().removeEvent(e);
-        */
-        eventListView.setItems(null);
-        initEventBox();
     }
     
     /**
