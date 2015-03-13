@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="150.0" prefWidth="250.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.OfflineWarningFXMLController">
+    <VBox spacing="25.0" layoutX="25.0" layoutY="40.0" >
+        <Label text="Couldn't connect to server. Open application in offline mode or try again?"
+                prefWidth="200.0" wrapText="true" />
+        <HBox spacing="20.0">
+            <Button fx:id="closeButton" onAction="#handleCloseButtonAction" text="Try Again" /> 
+            <Button fx:id="offlineButton" onAction="#handleOfflineButtonAction" text="Offline" />
+        </HBox>
+    </VBox>
+</AnchorPane>

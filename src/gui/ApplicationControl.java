@@ -7,6 +7,7 @@ package gui;
 
 import backendIO.ClientIOSystem;
 import backendIO.ClientRequest;
+import backendIO.IPValidator;
 import backendIO.ServerCommunicator;
 import backendIO.ServerResponse;
 import gui.controllers.AddEventFXMLController;
@@ -50,11 +51,12 @@ public class ApplicationControl {
      * @throws IOException 
      */
     public void initiateLogin() throws IOException {
-        if (ServerCommunicator.checkConnection()) {
-            openFXMLWindow("/gui/fxml/LoginFXML.fxml");
-        } else {
-            openSimpleDialog("No connection!");
-        }
+        openFXMLWindow("/gui/fxml/LoginFXML.fxml");
+    }
+    
+    public void loadApplicationOffline() {
+        DataHandler.getInstance().setSchedule(new Schedule());
+        openMainWindow();
     }
         
     public void loadApplication() {
@@ -84,7 +86,6 @@ public class ApplicationControl {
                 openMainWindow();
                 openSimpleDialog("Server rejected request! Please open a file instead.");
             }
-            System.out.println();
         } catch (IOException e) {
             openMainWindow();
             openSimpleDialog("No internet connection, please open a file instead.");
@@ -186,6 +187,14 @@ public class ApplicationControl {
         stage.close();
     }
 
+    public static boolean setIP(String ip) { // TODO handle names that include space
+        if (!IPValidator.validate(ip)) {
+            return false;
+        }
+        ServerCommunicator.setServerIP(ip);
+        return true;
+    }
+    
     /**
      * Attempts to save to either both server and disk, if saving to server fails
      * then nothing is done and informs the user that schedule cannot be saved
@@ -238,12 +247,15 @@ public class ApplicationControl {
     }
 
     public boolean LogInUser(String username, String password) {
+        System.out.println(ServerCommunicator.checkConnection());
+        System.out.println(ServerCommunicator.getServerIP());
+        if (!ServerCommunicator.checkConnection()) {
+            return false;
+        }
         try {
             ServerResponse serverResponse = ServerCommunicator.sendClientRequest(
                     ServerCommunicator.generateLoginRequest(username, password));
             if (serverResponse.isAccepted()) { 
-                //to do: load schedule
-                ApplicationControl.getInstance().loadApplication();
                 return true;
             } else if (serverResponse == null) {
                 ApplicationControl.getInstance().openSimpleDialog("No response from server.");
@@ -258,6 +270,9 @@ public class ApplicationControl {
     }
     
     public boolean CreateAndLogInUser(String username, String password, String phone) {
+        if (!ServerCommunicator.checkConnection()) {
+            return false;
+        }
         if (ServerCommunicator.isLoggedIn()) {
             ApplicationControl.getInstance().openSimpleDialog("You are already logged in, can't create new account");
         } else {
@@ -268,7 +283,6 @@ public class ApplicationControl {
                 if (serverResponse == null) {
                     ApplicationControl.getInstance().openSimpleDialog("No response from server.");
                 } else if (serverResponse.isAccepted()) {
-                    ApplicationControl.getInstance().loadApplication();
                     if (!phone.isEmpty()) {
                         if (requestPhoneAuthentication(phone)) {
                             openSimpleDialog("You will receive an authentication text soon.");

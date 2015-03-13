@@ -30,6 +30,7 @@ import javafx.scene.control.TextField;
  */
 public class LoginFXMLController implements Initializable {
     
+    @FXML TextField ipInput;
     @FXML TextField usernameInput;
     @FXML PasswordField passwordInput;
     @FXML Label phoneLabel;
@@ -42,8 +43,15 @@ public class LoginFXMLController implements Initializable {
      */
     @FXML
     protected void handleLogInButtonAction() {
+        if (!ApplicationControl.getInstance().setIP(ipInput.getText())) { /* check for no connection with ip here */
+            ApplicationControl.getInstance().openSimpleDialog("Please enter a valid IP.");
+            return;
+        }
         if (ApplicationControl.getInstance().LogInUser(usernameInput.getText(), passwordInput.getText())) {
             ApplicationControl.getInstance().closeWindow(usernameInput);
+            ApplicationControl.getInstance().loadApplication();
+        } else {
+            ApplicationControl.getInstance().openFXMLWindow("/gui/fxml/OfflineWarningFXML.fxml");
         }
     }
     
@@ -60,14 +68,25 @@ public class LoginFXMLController implements Initializable {
         });
     }
     
+    public void closeWindow() {
+        ApplicationControl.getInstance().closeWindow(ipInput);
+    }
+    
     /**
      * Creates a new account
      */
     @FXML
     protected void handleCreateButtonAction() {
+        if (!ApplicationControl.getInstance().setIP(ipInput.getText())) { /* check for no connection with ip here */
+            ApplicationControl.getInstance().openSimpleDialog("Please enter a valid IP.");
+            return;
+        }
         if (ApplicationControl.getInstance().CreateAndLogInUser(usernameInput.getText(), passwordInput.getText(),
             phoneInput.getText())) {
-                ApplicationControl.getInstance().closeWindow(usernameInput);
+            ApplicationControl.getInstance().closeWindow(usernameInput);
+            ApplicationControl.getInstance().loadApplication();
+        } else {
+            ApplicationControl.getInstance().openFXMLWindow("/gui/fxml/OfflineWarningFXML.fxml");
         }
     }
 

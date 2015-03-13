@@ -13,21 +13,25 @@
         <Label text="Welcome" 
             GridPane.columnIndex="0" GridPane.rowIndex="0"
             GridPane.columnSpan="2"/>
-        <Label text="Username:"
+        <Label text="Server IP:"
             GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <TextField fx:id="usernameInput"
+        <TextField fx:id="ipInput"
             GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <Label text="Password:"
+        <Label text="Username:"
             GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <PasswordField fx:id="passwordInput" 
+        <TextField fx:id="usernameInput"
             GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Label text="Password:"
+            GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <PasswordField fx:id="passwordInput" 
+            GridPane.columnIndex="1" GridPane.rowIndex="3" />
         <Label text="Phone Number: (No dashes or spaces)" fx:id="phoneLabel"
-            GridPane.columnIndex="0" GridPane.rowIndex="3" visible="false" />
+            GridPane.columnIndex="0" GridPane.rowIndex="4" visible="false" />
         <TextField fx:id="phoneInput"
-            GridPane.columnIndex="1" GridPane.rowIndex="3" visible="false" />
+            GridPane.columnIndex="1" GridPane.rowIndex="4" visible="false" />
         <Button fx:id="loginButton" onAction="#handleLogInButtonAction" text="Log In" 
-            GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            GridPane.columnIndex="0" GridPane.rowIndex="5" />
         <Button fx:id="createButton" onAction="#handleNewButtonAction" text="New Account"
-            GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            GridPane.columnIndex="1" GridPane.rowIndex="5" />
     </GridPane>
 </AnchorPane>
