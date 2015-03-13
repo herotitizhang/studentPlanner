@@ -47,7 +47,7 @@ public class ApplicationControl {
         if (ServerCommunicator.checkConnection()) {
             openFXMLWindow("/gui/fxml/LoginFXML.fxml");
         } else {
-            openSimpleDialog("No connection");
+            openSimpleDialog("No connection!");
         }
     }
         
@@ -252,21 +252,22 @@ public class ApplicationControl {
             ApplicationControl.getInstance().openSimpleDialog("You are already logged in, can't create new account");
         } else {
             try {
-                if (phone.isEmpty()) {
-                    openSimpleDialog("Phone number is required.");
-                    return false;
-                }
+                
                 ServerResponse serverResponse = ServerCommunicator.sendClientRequest(
                         ServerCommunicator.generateCreateRequest(username, password));
                 if (serverResponse == null) {
                     ApplicationControl.getInstance().openSimpleDialog("No response from server.");
                 } else if (serverResponse.isAccepted()) {
                     ApplicationControl.getInstance().loadApplication();
-                    if (requestPhoneAuthentication(phone)) {
-                        openSimpleDialog("You will receive an authentication text soon.");
+                    if (!phone.isEmpty()) {
+                        if (requestPhoneAuthentication(phone)) {
+                            openSimpleDialog("You will receive an authentication text soon.");
+                        } else {
+                            openSimpleDialog("There was an issue setting your phone number. \n"
+                                    + "Please resolve this in your account settings.");
+                        }
                     } else {
-                        openSimpleDialog("There was an issue setting your phone number. \n"
-                                + "Please resolve this in your account settings.");
+                        openSimpleDialog("Warning: without a phone number, you will not recieve alerts");
                     }
                     return true;
                 } else {
@@ -286,20 +287,9 @@ public class ApplicationControl {
         
         try {
             ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateRequestAuthRequest(number));
-            if (serverResponse == null) {
-                //openSimpleDialog("No response from the server!");
-            }
-
             if (serverResponse.isAccepted()) {
                 ServerCommunicator.setPhoneNumber(number);
                 processed = true;
-                /*
-                    System.out.println("Server has received your authentication request. Please wait for a while.");
-                    System.out.println("An authentication text message will arrive in approximately 3 minutes.");
-                    System.out.println("If you don't get it, please request the authentication code one more time.");
-                */
-            } else {
-                //System.out.println("Server rejected: "+serverResponse.getFailureNotice());
             }
         } catch (IOException e) {
             //

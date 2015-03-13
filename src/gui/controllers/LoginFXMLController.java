@@ -67,7 +67,6 @@ public class LoginFXMLController implements Initializable {
     protected void handleCreateButtonAction() {
         if (ApplicationControl.getInstance().CreateAndLogInUser(usernameInput.getText(), passwordInput.getText(),
             phoneInput.getText())) {
-                ApplicationControl.getInstance().openSimpleDialog("You will recieve an text soon.");
                 ApplicationControl.getInstance().closeWindow(usernameInput);
         }
     }
