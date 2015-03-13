@@ -20,16 +20,11 @@
             </Menu>
            </menus>
        </MenuBar>
-      <TabPane layoutY="29.0" prefHeight="743.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane layoutY="28.0" prefHeight="743.0" prefWidth="1000.0" tabMaxHeight="0.0" tabMaxWidth="0.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab id="taskTab">
+          <Tab id="taskTab" >
             <content>
                 <fx:include fx:id="taskView" source="DashboardViewFXML.fxml"/>
-            </content>
-          </Tab>
-          <Tab id="scheduleTab" >
-            <content>
-              <fx:include fx:id="scheduleView" source="ScheduleViewFXML.fxml"/>
             </content>
           </Tab>
         </tabs>

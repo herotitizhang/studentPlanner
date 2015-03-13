@@ -2,6 +2,10 @@
  * Empty Stylesheet file.
  */
 
+.root {
+    -fx-background-color:#6BB9F0;
+}
+
 .hbox-header {
     -fx-font-size: 22;
     -fx-background-color: #2C3E50;
