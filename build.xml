@@ -28,14 +28,22 @@
 				<include name="*.css" />
 			</fileset>
 		</copy>
-		
+
 		<!-- copy all the png files -->
 		<copy todir="${dest}/gui/resources">
 			<fileset dir="${src}/gui/resources">
 				<include name="*.png" />
 			</fileset>
 		</copy>
-		
+
+		<!-- copy all the ttf files -->
+		<copy todir="${dest}/controllers">
+			<fileset dir="${src}/controllers">
+				<include name="*.ttf" />
+			</fileset>
+		</copy>
+
+
 		<echo>Finish compiling!</echo>
 	</target>
 
