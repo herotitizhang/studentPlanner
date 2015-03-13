@@ -33,3 +33,7 @@
 #taskList, #classList, #taskTable {
     -fx-background-color: #ECECEC;
 }
+
+.largeHeader {
+    -fx-font-size: 40;
+}

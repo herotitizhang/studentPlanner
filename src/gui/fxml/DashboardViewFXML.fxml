@@ -10,25 +10,26 @@
 
 <Pane minHeight="0.0" minWidth="0.0" prefHeight="743.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.DashboardViewFXMLController">
  <children>
-    <VBox id="categoryBox" layoutX="42.0" layoutY="70.0" prefWidth="242.0" >
+    <Label fx:id="headerLabel" styleClass="largeHeader" layoutY="45.0" layoutX="42.0" text="FANNTasticPlanner" />
+    <VBox id="categoryBox" layoutX="42.0" layoutY="145.0" prefWidth="242.0" >
         <HBox spacing="68.0" prefWidth="242.0" styleClass="hbox-header">
             <Label styleClass="header" text="Categories" />
             <Button id="addCategoryButton" onAction="#handleAddCategoryButtonAction" mnemonicParsing="false" />
         </HBox>
         <ListView fx:id="categoryListView" prefHeight="240.0" prefWidth="242.0" />
     </VBox>
-    <Button fx:id="deleteCategoryButton" text="Delete Category" layoutX="42.0" layoutY="370.0" 
+    <Button fx:id="deleteCategoryButton" text="Delete Category" layoutX="42.0" layoutY="445.0" 
             onAction="#handleDeleteCategoryButtonAction" mnemonicParsing="false" />
-    <Button fx:id="editCategoryButton" text="Edit Category" layoutX="42.0" layoutY="403.0" 
+    <Button fx:id="editCategoryButton" text="Edit Category" layoutX="42.0" layoutY="478.0" 
             onAction="#handleEditCategoryButtonAction" mnemonicParsing="false" />
-    <VBox id="eventBox" layoutX="318.0" layoutY="70.0" prefWidth="419.0">
+    <VBox id="eventBox" layoutX="318.0" layoutY="145.0" prefWidth="419.0">
         <HBox spacing="292.0" prefWidth="419.0" styleClass="hbox-header">
             <Label styleClass="header" text="Events" />
             <Button id="addEventButton" onAction="#handleAddEventButtonAction" mnemonicParsing="false" />
         </HBox>
         <ListView fx:id="eventListView" prefHeight="490.0" prefWidth="419.0" />
     </VBox>
-    <VBox id="optionsBox" layoutX="780.0" layoutY="70.0" spacing="10.0">
+    <VBox id="optionsBox" layoutX="780.0" layoutY="145.0" spacing="10.0">
         <ComboBox fx:id="priorityFilterOptions" />
         <Button fx:id="priorityFilterButton" text="Filter" onAction="#handlePriorityFilterButtonAction" />
     </VBox>

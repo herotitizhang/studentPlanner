@@ -30,7 +30,11 @@ public class SettingsFXMLController implements Initializable {
     @FXML
     protected void handleSubmitButtonAction() {
         if (!verificationInput.getText().isEmpty()) {
-            ApplicationControl.getInstance().authenticatePhone(verificationInput.getText());
+            if (ApplicationControl.getInstance().authenticatePhone(verificationInput.getText())) {
+                ApplicationControl.getInstance().closeWindow(submitButton);
+            }
+        } else {
+            ApplicationControl.getInstance().openSimpleDialog("Please enter a verification code");
         }
     }
     

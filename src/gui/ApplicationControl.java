@@ -317,20 +317,24 @@ public class ApplicationControl {
         return processed;
     }
     
-    public void authenticatePhone(String number) {
+    public boolean authenticatePhone(String code) {
         try {
-            ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateAuthenticateRequest(number));
+            ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateAuthenticateRequest(code));
             if (serverResponse == null) {
                 openSimpleDialog("No response from the server!");
+                return false;
             }
             if (serverResponse.isAccepted()) {
                 ServerCommunicator.setAuthenticated(true);
                 openSimpleDialog("Your phone number has been authenticated. You can get alerts from now on.");
+                return true;
             } else {
                 openSimpleDialog("Code was rejected by the server.");
+                return false;
             }
         } catch (IOException e) {
             openSimpleDialog("Error: cannot connect to the Internet!");
+            return false;
         }
     }
     

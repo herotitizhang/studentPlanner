@@ -28,6 +28,7 @@ public class RequestAuthFXMLController implements Initializable {
         } else {
             ApplicationControl.getInstance().openSimpleDialog("There was an error, please try again later.");
         }
+        ApplicationControl.getInstance().closeWindow(phoneInput);
     }
     
     /**
