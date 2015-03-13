@@ -44,6 +44,7 @@ public class ConsoleDriver {
 			System.out.println("All the changes you make cannot be saved.");
 			System.out.println("However, You are able to load from local drive.");
 			System.out.println("Enter \"check_inet\" to see if the client side is connected to the server now.");
+			System.out.println("Enter \"enter_ip\" to enter another ip.");
 		} else {
 			System.out.println("Internet is available. We suggest you login first before creating events.");
 		}
@@ -961,6 +962,7 @@ public class ConsoleDriver {
 		System.out.println("request_auth <phone_number> - requests an authentication code, which will be sent to you phone.");
 		System.out.println("auth <authentication_code> - enters the authentication code; this command should be entered only after the user has requested authentication.");
 		System.out.println("request_alert - lets the server send an alert for an event. (if you edit the alert of an event, you also need to use this command).");
+		System.out.println("enter_ip - lets the user enter an ip.");
 		System.out.println("exit or quit - quit the program");
 		System.out.println("help - see a list of commands");
 		System.out.println();

@@ -36,13 +36,6 @@
 			</fileset>
 		</copy>
 		
-		<!-- #1 copy the server config file (for ant and eclipse to run)-->
-		<copy todir=".">
-			<fileset dir="${src}/console">
-				<include name="serverIP.txt" />
-			</fileset>
-		</copy>
-		
 		<echo>Finish compiling!</echo>
 	</target>
 
@@ -68,12 +61,6 @@
 				<attribute name="Main-Class" value="console.ConsoleDriver"/>
 			</manifest>
 		</jar>
-		<!-- #2 copy serverIP.txt for running without ant -->
-		<copy todir="${output}">
-			<fileset dir="${src}/console">
-				<include name="serverIP.txt" />
-			</fileset>
-		</copy>
 		<echo>The jar file has been generated</echo>
 	</target>
 
