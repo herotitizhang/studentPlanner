@@ -37,8 +37,8 @@
 		</copy>
 
 		<!-- copy all the ttf files -->
-		<copy todir="${dest}/controllers">
-			<fileset dir="${src}/controllers">
+		<copy todir="${dest}/gui/controllers">
+			<fileset dir="${src}/gui/controllers">
 				<include name="*.ttf" />
 			</fileset>
 		</copy>
