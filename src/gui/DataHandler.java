@@ -164,7 +164,7 @@ public class DataHandler {
         }
         
         if (hasAlert) {
-            ApplicationControl.getInstance().requestAlert(newEvent);
+            ApplicationControl.getInstance().addAlertEvent(newEvent);
         }
         
         eventList.add(newEvent);
@@ -182,7 +182,7 @@ public class DataHandler {
             categoryList.add(event.getCategory());
         }
         if (event.hasAlert()) {
-            ApplicationControl.getInstance().requestAlert(event);
+            ApplicationControl.getInstance().addAlertEvent(event);
         }
         return true;
     }
@@ -225,7 +225,7 @@ public class DataHandler {
         event.setAlertTime(alertTime);
         
         if (hasAlert) {
-            ApplicationControl.getInstance().requestAlert(event);
+            ApplicationControl.getInstance().addAlertEvent(event);
         }
         
         return true;

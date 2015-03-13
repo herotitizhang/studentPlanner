@@ -14,7 +14,9 @@ import gui.controllers.DashboardViewFXMLController;
 import gui.controllers.LoginFXMLController;
 import gui.controllers.SimpleDialogFXMLController;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
@@ -33,6 +35,7 @@ import model.ScheduleI;
 public class ApplicationControl {
     
     private final static ApplicationControl instance = new ApplicationControl();
+    List<EventI> alertEvents = new ArrayList<EventI>();
         
     public ApplicationControl() {
         
@@ -207,6 +210,10 @@ public class ApplicationControl {
             }
             if (serverResponse.isAccepted()) {
                 ClientIOSystem.writeToDisk(DataHandler.getInstance().getSchedule(), ServerCommunicator.getUsername());
+                for (EventI event: alertEvents) {
+                    requestAlert(event);
+                }
+                alertEvents.clear();
             } else {
                 openSimpleDialog("Sorry, server was not able to save your schedule");
             }
@@ -315,6 +322,10 @@ public class ApplicationControl {
         } catch (IOException e) {
             openSimpleDialog("Error: cannot connect to the Internet!");
         }
+    }
+    
+    public void addAlertEvent(EventI event) {
+        alertEvents.add(event);
     }
     
     public void requestAlert(EventI event) {
