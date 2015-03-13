@@ -5,6 +5,7 @@
  */
 package gui;
 
+import gui.controllers.ConfirmDeleteFXMLController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -40,17 +41,21 @@ public class EventCell extends ListCell<EventI> {
                 handleCompletedChecked();
             }
         });
+        name.textProperty().bind(nameProperty);
     }
     
     private void handleCompletedChecked() {
-        DataHandler.getInstance().removeEvent(event);
+        ConfirmDeleteFXMLController c = (ConfirmDeleteFXMLController) ApplicationControl.
+                getInstance().openFXMLWindow("/gui/fxml/ConfirmDeleteFXML.fxml");
+        c.setEvent(event);
     }
     
     @Override
-    public void updateItem(EventI event, boolean empty){
-        super.updateItem(event, empty);
-        if (event != null) {
-            init(event);
+    public void updateItem(EventI ev, boolean empty){
+        super.updateItem(ev, empty);
+        if (ev != null) {
+            event = ev;
+            updateGraphic();
             setGraphic(getBox());
         } else {
             setGraphic(null);
@@ -58,9 +63,7 @@ public class EventCell extends ListCell<EventI> {
         }
     }
     
-    public void init(EventI ev) {
-        event = ev;
-        name.textProperty().bind(nameProperty);
+    public void updateGraphic() {
         nameProperty.setValue(event.getName());
         if (event.getPriority() != null) {
             Image priority = new Image(returnImageFilePath());

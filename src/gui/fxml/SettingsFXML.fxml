@@ -12,9 +12,9 @@
     <padding><Insets top="25" right="25" bottom="10" left="25"/></padding>    
         <Button fx:id="requestAuthButton" text="Request Authentication" onAction="#handleRequestAuthButtonAction"
             GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2"  />
-        <Label text="Authentication Code:" fx:id="authLabel" 
+        <Label text="Verification Code:" fx:id="verificationLabel" 
             GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <TextField fx:id="authInput" 
+        <TextField fx:id="verificationInput" 
             GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Button fx:id="submitButton" text="Submit" onAction="#handleSubmitButtonAction"
             GridPane.columnIndex="0" GridPane.rowIndex="3" />
