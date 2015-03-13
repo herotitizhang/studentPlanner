@@ -47,7 +47,7 @@ public class ApplicationControl {
         if (ServerCommunicator.checkConnection()) {
             openFXMLWindow("/gui/fxml/LoginFXML.fxml");
         } else {
-            openSimpleDialog("No connection");
+            openSimpleDialog("No connection!");
         }
     }
         
@@ -66,7 +66,6 @@ public class ApplicationControl {
                 openSimpleDialog("No response from server! Please open a file instead.");
             }
             if (serverResponse.isAccepted()) {
-                System.out.println("Loading schedule...");
                 ScheduleI schedule;
                 if (serverResponse.getSchedule() != null) {
                     schedule = (Schedule)ClientIOSystem.getObject(serverResponse.getSchedule());
@@ -248,27 +247,71 @@ public class ApplicationControl {
         return false;
     }
     
-    public boolean CreateAndLogInUser(String username, String password) {
+    public boolean CreateAndLogInUser(String username, String password, String phone) {
         if (ServerCommunicator.isLoggedIn()) {
             ApplicationControl.getInstance().openSimpleDialog("You are already logged in, can't create new account");
         } else {
             try {
+                
                 ServerResponse serverResponse = ServerCommunicator.sendClientRequest(
                         ServerCommunicator.generateCreateRequest(username, password));
                 if (serverResponse == null) {
                     ApplicationControl.getInstance().openSimpleDialog("No response from server.");
                 } else if (serverResponse.isAccepted()) {
-                    // to do: log in, load schedule
                     ApplicationControl.getInstance().loadApplication();
+                    if (!phone.isEmpty()) {
+                        if (requestPhoneAuthentication(phone)) {
+                            openSimpleDialog("You will receive an authentication text soon.");
+                        } else {
+                            openSimpleDialog("There was an issue setting your phone number. \n"
+                                    + "Please resolve this in your account settings.");
+                        }
+                    } else {
+                        openSimpleDialog("Warning: without a phone number, you will not recieve alerts");
+                    }
                     return true;
                 } else {
                     ApplicationControl.getInstance().openSimpleDialog("Server rejected: "+serverResponse.getFailureNotice());
                 }
+                
             } catch (IOException e) {
                 ApplicationControl.getInstance().openSimpleDialog("Problem connecting to internet.");
             }
         }
         return false;
+    }
+    
+    public boolean requestPhoneAuthentication(String number) {
+        ServerCommunicator.setAuthenticated(false);
+	boolean processed = false;
+        
+        try {
+            ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateRequestAuthRequest(number));
+            if (serverResponse.isAccepted()) {
+                ServerCommunicator.setPhoneNumber(number);
+                processed = true;
+            }
+        } catch (IOException e) {
+            //
+        }
+        return processed;
+    }
+    
+    public void authenticatePhone(String number) {
+        try {
+            ServerResponse serverResponse = ServerCommunicator.sendClientRequest(ServerCommunicator.generateAuthenticateRequest(number));
+            if (serverResponse == null) {
+                openSimpleDialog("No response from the server!");
+            }
+            if (serverResponse.isAccepted()) {
+                ServerCommunicator.setAuthenticated(true);
+                openSimpleDialog("Your phone number has been authenticated. You can get alerts from now on.");
+            } else {
+                openSimpleDialog("Code was rejected by the server.");
+            }
+        } catch (IOException e) {
+            openSimpleDialog("Error: cannot connect to the Internet!");
+        }
     }
     
 }

@@ -8,7 +8,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="150.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.SimpleDialogFXMLController">
     <VBox spacing="20.0" layoutX="25.0" layoutY="30.0" >
-        <Label fx:id="messageLabel" />
+        <Label fx:id="messageLabel" wrapText="true" prefWidth="250.0"  />
         <Button onAction="#closeWindow" text="Ok" /> 
     </VBox>
 </AnchorPane>

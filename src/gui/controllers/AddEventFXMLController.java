@@ -10,7 +10,10 @@ import gui.DataHandler;
 import gui.EmptyFieldException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -55,11 +58,18 @@ public class AddEventFXMLController implements Initializable {
     @FXML
     private void handleSubmitButtonAction() {
         try {
-            DataHandler.getInstance().addEvent(nameInput.getText(), textInput.getText(), startDateInput.getValue(),
+            if (DataHandler.getInstance().addEvent(nameInput.getText(), textInput.getText(), startDateInput.getValue(),
                 startHourInput.getText(), startMinuteInput.getText(), endDateInput.getValue(), endHourInput.getText(),
                 endMinuteInput.getText(), alertBoolInput.isSelected(), alertTextInput.getText(), alertDateInput.getValue(), 
                 alertHourInput.getText(), alertMinuteInput.getText(), repeatInput.getValue(), priorityInput.getValue(),
-                DataHandler.getInstance().getCategory(categoryInput.getText()));
+                DataHandler.getInstance().getCategory(categoryInput.getText()))) {
+                    ScheduleViewFXMLController controller = (ScheduleViewFXMLController) ApplicationControl.getInstance().getController(
+                    "/gui/fxml/ScheduleViewFXML.fxml");
+                    controller.addEventToSchedule(DataHandler.getInstance().getLastAddedEvent());
+            } else {
+                ApplicationControl.getInstance().openSimpleDialog("Sorry, an error occurred.");
+            }
+            
             ApplicationControl.getInstance().closeWindow(submitButton);
         } catch (EmptyFieldException ex) {
             ApplicationControl.getInstance().openSimpleDialog("Event needs a name, start time and end \n time.");
@@ -110,6 +120,23 @@ public class AddEventFXMLController implements Initializable {
         endDateInput.setValue(LocalDate.now());
         endHourInput.setText("01");
         endMinuteInput.setText("00");
+        TextField[] timeFields = {startHourInput, startMinuteInput, endHourInput,
+            endMinuteInput, alertHourInput, alertMinuteInput};
+        setTimeInputConstraints(timeFields);
+    }
+    
+    public static void setTimeInputConstraints(TextField[] fields) {
+        for (TextField field : fields) {
+            field.textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(final ObservableValue<? extends String> ov, final String oldValue, final String newValue) {
+                    if (field.getText().length() > 2) {
+                        String s = field.getText().substring(0, 2);
+                        field.setText(s);
+                    }
+                }
+            });
+        }
     }
     
     /**

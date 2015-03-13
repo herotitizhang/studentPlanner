@@ -37,6 +37,12 @@ public class MainFXMLController implements Initializable {
         }
     }
     
+    @FXML
+    protected void handleSettingsAction() {
+        // to do
+        ApplicationControl.getInstance().openFXMLWindow("/gui/fxml/SettingsFXML.fxml");
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO

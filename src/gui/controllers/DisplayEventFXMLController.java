@@ -15,6 +15,8 @@ import java.util.Calendar;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -77,8 +79,13 @@ public class DisplayEventFXMLController implements Initializable {
      */
     @FXML
     private void handleEditButtonAction() {
-        setEditableFields(true);
-        submitButton.setVisible(true);
+        try {
+            setEditableFields(true);
+            setContent(DataHandler.getInstance().getCurrentEvent());
+            submitButton.setVisible(true);
+        } catch (ItemNotFoundException ex) {
+            Logger.getLogger(DisplayEventFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**
@@ -115,15 +122,15 @@ public class DisplayEventFXMLController implements Initializable {
         nameInput.setText(event.getName());
         textInput.setText(event.getText());
         startDateInput.setValue(DataHandler.getInstance().calendarToDate(event.getStartTime()));
-        startHourInput.setText(addLeadingZero(Integer.toString(event.getStartTime().get(Calendar.HOUR))));
+        startHourInput.setText(addLeadingZero(Integer.toString(event.getStartTime().get(Calendar.HOUR_OF_DAY))));
         startMinuteInput.setText(addLeadingZero(Integer.toString(event.getStartTime().get(Calendar.MINUTE))));
         endDateInput.setValue(DataHandler.getInstance().calendarToDate(event.getEndTime()));
-        endHourInput.setText(addLeadingZero(Integer.toString(event.getEndTime().get(Calendar.HOUR))));
+        endHourInput.setText(addLeadingZero(Integer.toString(event.getEndTime().get(Calendar.HOUR_OF_DAY))));
         endMinuteInput.setText(addLeadingZero(Integer.toString(event.getEndTime().get(Calendar.MINUTE))));
         alertBoolInput.setSelected(event.hasAlert());
         if (event.hasAlert()) {
             alertDateInput.setValue(DataHandler.getInstance().calendarToDate(event.getAlertTime()));
-            alertHourInput.setText(addLeadingZero(Integer.toString(event.getAlertTime().get(Calendar.HOUR))));
+            alertHourInput.setText(addLeadingZero(Integer.toString(event.getAlertTime().get(Calendar.HOUR_OF_DAY))));
             alertMinuteInput.setText(addLeadingZero(Integer.toString(event.getAlertTime().get(Calendar.MINUTE))));
             alertTextInput.setText(event.getAlertText());
         }
@@ -162,6 +169,20 @@ public class DisplayEventFXMLController implements Initializable {
         return str;
     }
     
+    public static void setTimeInputConstraints(TextField[] fields) {
+        for (TextField field : fields) {
+            field.textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(final ObservableValue<? extends String> ov, final String oldValue, final String newValue) {
+                    if (field.getText().length() > 2) {
+                        String s = field.getText().substring(0, 2);
+                        field.setText(s);
+                    }
+                }
+            });
+        }
+    }
+    
     /**
      * Fills repeatInput ComboBox
      */
@@ -187,6 +208,9 @@ public class DisplayEventFXMLController implements Initializable {
             setContent(event);
             initPriorityOptions();
             initRepeatOptions();
+            TextField[] timeFields = {startHourInput, startMinuteInput, endHourInput,
+            endMinuteInput, alertHourInput, alertMinuteInput};
+            setTimeInputConstraints(timeFields);
             setEditableFields(false);
             submitButton.setVisible(false);
         } catch (ItemNotFoundException e) {
