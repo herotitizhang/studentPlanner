@@ -258,9 +258,6 @@ public class DashboardViewFXMLController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        System.out.println("1");
-        Font.loadFont(getClass().getResource("coolvetica.ttf").toExternalForm(), 10);
-        System.out.println("2");
         deleteCategoryButton.setVisible(false);
         editCategoryButton.setVisible(false);
         initEventBox();

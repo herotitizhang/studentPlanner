@@ -35,5 +35,6 @@
 }
 
 .largeHeader {
-    -fx-font-size: 40;
+    -fx-font-family: 'Oswald', sans-serif;
+    -fx-font-size: 47;
 }
